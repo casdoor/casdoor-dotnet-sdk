@@ -1,6 +1,6 @@
-﻿namespace Casdoor;
+﻿namespace Casdoor.Client;
 
-public class User
+public class CasdoorUser
 {
     public string? Owner { get; set; }
     public string? Name { get; set; }

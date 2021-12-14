@@ -5,12 +5,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>10.0</LangVersion>
         <Nullable>enable</Nullable>
-        <RootNamespace>Casdoor</RootNamespace>
+        <RootNamespace>Casdoor.Client</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup>
         <PackageId>Casdoor.Client</PackageId>
-        <PackageIcon>casbin.png</PackageIcon>
+        <PackageIcon>casdoor.png</PackageIcon>
         <Description>This is Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
         <Authors>Casdoor</Authors>
         <Product>Casdoor</Product>
@@ -23,6 +23,15 @@
 
     <ItemGroup>
         <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
+        <None Remove="Casdoor.Client.csproj.DotSettings" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="IdentityModel" Version="5.2.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
     </ItemGroup>
 
 </Project>
