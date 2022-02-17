@@ -1,6 +1,6 @@
-﻿using IdentityModel.Client;
+﻿using Casdoor.Client.Entity;
 
-namespace Casdoor.Client;
+namespace Casdoor.Client.Abstractions;
 
 public interface ICasdoorUserClient
 {
@@ -11,10 +11,12 @@ public interface ICasdoorUserClient
     public Task<bool> AddUserAsync(CasdoorUser user);
     public Task<bool> UpdateUserAsync(CasdoorUser user, params string[] propertyNames);
     public Task<bool> DeleteUserAsync(string name);
-
-    public Task<UserResource> UploadResourceAsync(string user, string tag, string parent, string fullFilePath, Stream fileStream,
-        string createdTime = "", string description = "");
-
     public Task<bool> CheckUserPasswordAsync(string name);
+
+    public Task<CasdoorUserResource> UploadResourceAsync(string user, string tag, string parent, string fullFilePath, Stream fileStream,
+        string createdTime = "", string description = "");
+    public Task<CasdoorResponse> DeleteResourceAsync(string name);
+
     public Task SendSmsAsync(string content, params string[] receivers);
+    public Task SendEmailAsync(string title, string content, string sender, string[] receivers);
 }
