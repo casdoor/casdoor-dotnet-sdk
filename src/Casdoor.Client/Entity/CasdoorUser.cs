@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SqlSugar;
 
-namespace Casdoor.Client;
+namespace Casdoor.Client.Entity;
 
 /// <summary>
 /// CasdoorUser has the same definition as https://github.com/casdoor/casdoor/blob/master/object/user.go#L24
@@ -9,7 +9,7 @@ namespace Casdoor.Client;
 public class CasdoorUser
 {
     // TODO: test for xml, json: marshal & unmarshal
-    // TODO: export NuGet dependencies: SqlSugar >= 5.0.5.4; Newtonsoft.Json >= 13.0.1
+    // NuGet dependencies: SqlSugar >= 5.0.5.4; Newtonsoft.Json >= 13.0.1
 
     [SugarColumn(ColumnDataType = "varchar(100)", IsNullable = false, IsPrimaryKey = true), JsonProperty("owner")]
     public string? Owner { get; set; }

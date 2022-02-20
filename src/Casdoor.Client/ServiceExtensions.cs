@@ -1,4 +1,5 @@
-﻿using IdentityModel.Client;
+﻿using Casdoor.Client.Config;
+using IdentityModel.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 

@@ -1,5 +1,9 @@
-﻿namespace Casdoor.Client;
+﻿namespace Casdoor.Client.Config;
 
+/// <summary>
+/// CasdoorClientOptions is the core configuration.
+/// The first step to use this SDK is to initialize the global CasdoorClientOptions.
+/// </summary>
 public class CasdoorClientOptions
 {
     public string Endpoint { get; set; } = string.Empty;
