@@ -21,17 +21,17 @@
                 ?? throw new ArgumentNullException(nameof(orginazationName));
         }
 
-        public string endPoint { get; set; }
+        public string endPoint { get; set; } = string.Empty;
 
-        public string clientId { get; set; }
+        public string clientId { get; set; } = string.Empty;
 
-        public string clientSecret { get; set; }
+        public string clientSecret { get; set; } = string.Empty;
 
-        public string jwtPublicKey { get; set; }
+        public string jwtPublicKey { get; set; } = string.Empty;
 
-        public string orginazationName { get; set; }
+        public string orginazationName { get; set; } = string.Empty;
 
-        public string applicationName { get; set; }
+        public string applicationName { get; set; } = string.Empty;
 
     }
 
