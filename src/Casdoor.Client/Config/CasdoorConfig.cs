@@ -21,15 +21,17 @@
                 ?? throw new ArgumentNullException(nameof(orginazationName));
         }
 
-        private string endPoint { get; set; }
+        public string endPoint { get; set; }
 
-        private string clientId { get; set; }
+        public string clientId { get; set; }
 
-        private string clientSecret { get; set; }
+        public string clientSecret { get; set; }
 
-        private string jwtPublicKey { get; set; }
+        public string jwtPublicKey { get; set; }
 
-        private string orginazationName { get; set; }
+        public string orginazationName { get; set; }
+
+        public string applicationName { get; set; }
 
     }
 
