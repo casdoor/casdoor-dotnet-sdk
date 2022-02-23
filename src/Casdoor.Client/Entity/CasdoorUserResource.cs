@@ -1,15 +1,14 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Casdoor.Client.Entity;
 
 /// <summary>
 /// /UserResource.cs -> /Entity/CasdoorUserResource.cs
-/// using Newtonsoft.Json to make it serializable
 /// </summary>
 public class CasdoorUserResource
 {
-    [JsonProperty("owner")] public string? Owner { get; set; }
-    [JsonProperty("name")] public string? Name { get; set; }
+    [JsonPropertyName("owner")] public string? Owner { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
 
     public CasdoorUserResource(string owner, string name)
     {

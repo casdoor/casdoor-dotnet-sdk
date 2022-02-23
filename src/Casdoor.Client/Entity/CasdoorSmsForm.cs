@@ -1,12 +1,12 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Casdoor.Client.Entity;
 
 public class CasdoorSmsForm
 {
-    [JsonProperty("organizationId")] public string OrganizationId { get; set; }
-    [JsonProperty("content")] public string Content { get; set; }
-    [JsonProperty("receivers")] public string[] Receivers { get; set; }
+    [JsonPropertyName("organizationId")] public string OrganizationId { get; set; }
+    [JsonPropertyName("content")] public string Content { get; set; }
+    [JsonPropertyName("receivers")] public string[] Receivers { get; set; }
 
     public CasdoorSmsForm(string organizationId, string content, string[] receivers)
     {

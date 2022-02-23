@@ -2,23 +2,23 @@ using System.Text;
 using System.Web;
 using Casdoor.Client.Config;
 
-namespace Casdoor.Client.Client;
+namespace Casdoor.Client;
 
 public class CasdoorAuthClient
 {
-    private readonly CasdoorClientOptions _option;
+    private readonly CasdoorClientOptions _options;
 
     public CasdoorAuthClient(CasdoorClientOptions? options)
     {
-        _option = options ?? throw new ArgumentNullException(nameof(options));
+        _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
     public string GetSigninUrl(string redirectUrl)
     {
         string scope = "read";
-        string state = _option.ApplicationName;
+        string state = _options.ApplicationName;
         return
-            $"{_option.Endpoint}/login/oauth/authorize?client_id={_option.ClientId}&response_type=code&redirect_uri={HttpUtility.UrlEncode(redirectUrl, Encoding.UTF8)}&scope={scope}&state={state}";
+            $"{_options.Endpoint}/login/oauth/authorize?client_id={_options.ClientId}&response_type=code&redirect_uri={HttpUtility.UrlEncode(redirectUrl, Encoding.UTF8)}&scope={scope}&state={state}";
     }
 
     public string GetSignupUrl()
@@ -34,7 +34,7 @@ public class CasdoorAuthClient
     private string GetSignupUrl(bool enablePassword, string redirectUrl)
     {
         return enablePassword
-            ? $"{_option.Endpoint}/signup/{_option.ApplicationName}"
+            ? $"{_options.Endpoint}/signup/{_options.ApplicationName}"
             : GetSigninUrl(redirectUrl).Replace("/login/oauth/authorize", "/signup/oauth/authorize");
     }
 
@@ -46,7 +46,7 @@ public class CasdoorAuthClient
             param = "?access_token=" + accessToken;
         }
 
-        return $"{_option.Endpoint}/users/{_option.OrganizationName}/{username}{param}";
+        return $"{_options.Endpoint}/users/{_options.OrganizationName}/{username}{param}";
     }
 
     public string GetMyProfileUrl(string? accessToken)
@@ -57,6 +57,6 @@ public class CasdoorAuthClient
             param = "?access_token=" + accessToken;
         }
 
-        return $"{_option.Endpoint}/account{param}";
+        return $"{_options.Endpoint}/account{param}";
     }
 }

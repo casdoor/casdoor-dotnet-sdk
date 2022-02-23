@@ -1,14 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Casdoor.Client.Config;
 using Casdoor.Client.Entity;
 using Casdoor.Client.Exception;
 using IdentityModel.Client;
-using Microsoft.IdentityModel.Tokens;
 
-namespace Casdoor.Client.Client;
+namespace Casdoor.Client;
 
 public class CasdoorTokenClient : ICasdoorTokenClient
 {
@@ -29,17 +27,10 @@ public class CasdoorTokenClient : ICasdoorTokenClient
         // parse jwt token
         var handler = new JwtSecurityTokenHandler();
         JwtSecurityToken? decodedJwt = null;
-        try
+        decodedJwt = handler.ReadJwtToken(token);
+        if (decodedJwt == null)
         {
-            decodedJwt = handler.ReadJwtToken(token);
-            if (decodedJwt == null)
-            {
-                throw new CasdoorException("decoded JWT is null");
-            }
-        }
-        catch (System.Exception e)
-        {
-            throw new CasdoorAuthException("unable to decode the JWT token", e);
+            throw new CasdoorException("decoded JWT is null");
         }
 
         // verify the jwt public key
@@ -61,25 +52,11 @@ public class CasdoorTokenClient : ICasdoorTokenClient
         //         out _);
         // }
 
-        try
-        {
-            X509Certificate _ = new(_options.JwtPublicKey);
-        }
-        catch (System.Exception e)
-        {
-            throw new CasdoorAuthException("Cannot verify signature.", e);
-        }
+        X509Certificate _ = new(_options.JwtPublicKey);
 
         // convert to CasdoorUser
-        try
-        {
-            CasdoorUser casdoorUser = CopyProperties(decodedJwt.Claims, new CasdoorUser());
-            return casdoorUser;
-        }
-        catch (System.Exception e)
-        {
-            throw new CasdoorAuthException("Cannot convert claims to CasdoorUser", e);
-        }
+        CasdoorUser casdoorUser = CopyProperties(decodedJwt.Claims, new CasdoorUser());
+        return casdoorUser;
     }
 
     /// <summary>
@@ -101,8 +78,8 @@ public class CasdoorTokenClient : ICasdoorTokenClient
                 continue;
             }
 
-            var value = sProp.GetValue(source);
-            PropertyInfo? propertyInfo = target.GetType().GetProperty(sProp.Name);
+            object? value = sProp.GetValue(source);
+            PropertyInfo? propertyInfo = target?.GetType().GetProperty(sProp.Name);
             propertyInfo?.SetValue(target, value);
         }
 

@@ -1,11 +1,13 @@
+using System.Text.Json.Serialization;
+
 namespace Casdoor.Client.Entity;
 
 public class CasdoorEmailForm
 {
-    private string Title { get; set; }
-    private string Content { get; set; }
-    private string Sender { get; set; }
-    private string[] Receivers { get; set; }
+    [JsonPropertyName("title")] public string Title { get; set; }
+    [JsonPropertyName("content")] public string Content { get; set; }
+    [JsonPropertyName("sender")] public string Sender { get; set; }
+    [JsonPropertyName("receivers")] public string[] Receivers { get; set; }
 
     public CasdoorEmailForm(string title, string content, string sender, string[] receivers)
     {

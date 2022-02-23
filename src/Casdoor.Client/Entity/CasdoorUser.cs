@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using SqlSugar;
+﻿using System.Text.Json.Serialization;
 
 namespace Casdoor.Client.Entity;
 
@@ -8,175 +7,63 @@ namespace Casdoor.Client.Entity;
 /// </summary>
 public class CasdoorUser
 {
-    // TODO: test for xml, json: marshal & unmarshal
-    // NuGet dependencies: SqlSugar >= 5.0.5.4; Newtonsoft.Json >= 13.0.1
+    [JsonPropertyName("owner")] public string? Owner { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
+    [JsonPropertyName("createdTime")] public string? CreatedTime { get; set; }
+    [JsonPropertyName("updatedTime")] public string? UpdatedTime { get; set; }
 
-    [SugarColumn(ColumnDataType = "varchar(100)", IsNullable = false, IsPrimaryKey = true), JsonProperty("owner")]
-    public string? Owner { get; set; }
+    [JsonPropertyName("id")] public string? Id { get; set; }
+    [JsonPropertyName("type")] public string? Type { get; set; }
+    [JsonPropertyName("password")] public string? Password { get; set; }
+    [JsonPropertyName("passwordSalt")] public string? PasswordSalt { get; set; }
+    [JsonPropertyName("displayName")] public string? DisplayName { get; set; }
+    [JsonPropertyName("avatar")] public string? Avatar { get; set; }
+    [JsonPropertyName("permanentAvatar")] public string? PermanentAvatar { get; set; }
+    [JsonPropertyName("email")] public string? Email { get; set; }
+    [JsonPropertyName("phone")] public string? Phone { get; set; }
+    [JsonPropertyName("location")] public string? Location { get; set; }
+    [JsonPropertyName("address")] public IEnumerable<string>? Address { get; set; }
+    [JsonPropertyName("affiliation")] public string? Affiliation { get; set; }
+    [JsonPropertyName("title")] public string? Title { get; set; }
+    [JsonPropertyName("idCardType")] public string? IdCardType { get; set; }
+    [JsonPropertyName("idCard")] public string? IdCard { get; set; }
+    [JsonPropertyName("homePage")] public string? Homepage { get; set; }
+    [JsonPropertyName("bio")] public string? Bio { get; set; }
+    [JsonPropertyName("tag")] public string? Tag { get; set; }
+    [JsonPropertyName("region")] public string? Region { get; set; }
+    [JsonPropertyName("language")] public string? Language { get; set; }
+    [JsonPropertyName("gender")] public string? Gender { get; set; }
+    [JsonPropertyName("birthday")] public string? Birthday { get; set; }
+    [JsonPropertyName("education")] public string? Education { get; set; }
+    [JsonPropertyName("score")] public int Score { get; set; }
+    [JsonPropertyName("ranking")] public int Ranking { get; set; }
+    [JsonPropertyName("isDefaultAvatar")] public bool IsDefaultAvatar { get; set; }
+    [JsonPropertyName("isOnline")] public bool IsOnline { get; set; }
+    [JsonPropertyName("isAdmin")] public bool IsAdmin { get; set; }
+    [JsonPropertyName("isGlobalAdmin")] public bool IsGlobalAdmin { get; set; }
+    [JsonPropertyName("isForbidden")] public bool IsForbidden { get; set; }
+    [JsonPropertyName("isDeleted")] public bool IsDeleted { get; set; }
+    [JsonPropertyName("signupApplication")] public string? SignupApplication { get; set; }
+    [JsonPropertyName("hash")] public string? Hash { get; set; }
+    [JsonPropertyName("preHash")] public string? PreHash { get; set; }
 
-    [SugarColumn(ColumnDataType = "varchar(100)", IsNullable = false, IsPrimaryKey = true), JsonProperty("name")]
-    public string? Name { get; set; }
+    [JsonPropertyName("createdIp")] public string? CreatedIp { get; set; }
+    [JsonPropertyName("lastSigninTime")] public string? LastSigninTime { get; set; }
+    [JsonPropertyName("lastSigninIp")] public string? LastSigninIp { get; set; }
 
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("createdTime")]
-    public string? CreatedTime { get; set; }
+    [JsonPropertyName("github")] public string? Github { get; set; }
+    [JsonPropertyName("google")] public string? Google { get; set; }
+    [JsonPropertyName("qq")] public string? QQ { get; set; }
+    [JsonPropertyName("wechat")] public string? WeChat { get; set; }
+    [JsonPropertyName("facebook")] public string? Facebook { get; set; }
+    [JsonPropertyName("dingtalk")] public string? DingTalk { get; set; }
+    [JsonPropertyName("weibo")] public string? Weibo { get; set; }
+    [JsonPropertyName("gitee")] public string? Gitee { get; set; }
+    [JsonPropertyName("linkedin")] public string? LinkedIn { get; set; }
+    [JsonPropertyName("wecom")] public string? Wecom { get; set; }
+    [JsonPropertyName("lark")] public string? Lark { get; set; }
+    [JsonPropertyName("gitlab")] public string? Gitlab { get; set; }
 
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("updatedTime")]
-    public string? UpdatedTime { get; set; }
-
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("id")]
-    public string? Id { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("type")]
-    public string? Type { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("password")]
-    public string? Password { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("passwordSalt")]
-    public string? PasswordSalt { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("displayName")]
-    public string? DisplayName { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("avatar")]
-    public string? Avatar { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("permanentAvatar")]
-    public string? PermanentAvatar { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("email")]
-    public string? Email { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("phone")]
-    public string? Phone { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("location")]
-    public string? Location { get; set; }
-
-    [JsonProperty("address")]
-    public IEnumerable<string>? Address { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("affiliation")]
-    public string? Affiliation { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("title")]
-    public string? Title { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("idCardType")]
-    public string? IdCardType { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("idCard")]
-    public string? IdCard { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("homePage")]
-    public string? Homepage { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("bio")]
-    public string? Bio { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("tag")]
-    public string? Tag { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("region")]
-    public string? Region { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("language")]
-    public string? Language { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("gender")]
-    public string? Gender { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("birthday")]
-    public string? Birthday { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("education")]
-    public string? Education { get; set; }
-
-    [JsonProperty("score")]
-    public int Score { get; set; }
-
-    [JsonProperty("ranking")]
-    public int Ranking { get; set; }
-
-    [JsonProperty("isDefaultAvatar")]
-    public bool IsDefaultAvatar { get; set; }
-
-    [JsonProperty("isOnline")]
-    public bool IsOnline { get; set; }
-
-    [JsonProperty("isAdmin")]
-    public bool IsAdmin { get; set; }
-
-    [JsonProperty("isGlobalAdmin")]
-    public bool IsGlobalAdmin { get; set; }
-
-    [JsonProperty("isForbidden")]
-    public bool IsForbidden { get; set; }
-
-    [JsonProperty("isDeleted")]
-    public bool IsDeleted { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("signupApplication")]
-    public string? SignupApplication { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("hash")]
-    public string? Hash { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("preHash")]
-    public string? PreHash { get; set; }
-
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("createdIp")]
-    public string? CreatedIp { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("lastSigninTime")]
-    public string? LastSigninTime { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("lastSigninIp")]
-    public string? LastSigninIp { get; set; }
-
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("github")]
-    public string? Github { get; set; }
-
-    [SugarColumn(ColumnDataType = "varchar(100)"), JsonProperty("google")]
-    public string? Google { get; set; }
-
-    [SugarColumn(ColumnName = "qq", ColumnDataType = "varchar(100)"), JsonProperty("qq")]
-    public string? QQ { get; set; }
-
-    [SugarColumn(ColumnName = "wechat", ColumnDataType = "varchar(100)"), JsonProperty("wechat")]
-    public string? WeChat { get; set; }
-
-    [SugarColumn(ColumnName = "facebook", ColumnDataType = "varchar(100)"), JsonProperty("facebook")]
-    public string? Facebook { get; set; }
-
-    [SugarColumn(ColumnName = "dingtalk", ColumnDataType = "varchar(100)"), JsonProperty("dingtalk")]
-    public string? DingTalk { get; set; }
-
-    [SugarColumn(ColumnName = "weibo", ColumnDataType = "varchar(100)"), JsonProperty("weibo")]
-    public string? Weibo { get; set; }
-
-    [SugarColumn(ColumnName = "gitee", ColumnDataType = "varchar(100)"), JsonProperty("gitee")]
-    public string? Gitee { get; set; }
-
-    [SugarColumn(ColumnName = "linkedin", ColumnDataType = "varchar(100)"), JsonProperty("linkedin")]
-    public string? LinkedIn { get; set; }
-
-    [SugarColumn(ColumnName = "wecom", ColumnDataType = "varchar(100)"), JsonProperty("wecom")]
-    public string? Wecom { get; set; }
-
-    [SugarColumn(ColumnName = "lark", ColumnDataType = "varchar(100)"), JsonProperty("lark")]
-    public string? Lark { get; set; }
-
-    [SugarColumn(ColumnName = "gitlab", ColumnDataType = "varchar(100)"), JsonProperty("gitlab")]
-    public string? Gitlab { get; set; }
-
-
-    [SugarColumn(ColumnName = "ldap", ColumnDataType = "varchar(100)"), JsonProperty("ldap")]
-    public string? Ldap { get; set; }
-
-    [JsonProperty("properties")]
-    public IDictionary<string, string>? Properties { get; set; }
+    [JsonPropertyName("ldap")] public string? Ldap { get; set; }
+    [JsonPropertyName("properties")] public IDictionary<string, string>? Properties { get; set; }
 }
