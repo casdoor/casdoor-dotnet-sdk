@@ -1,8 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casdoor.Client", "src\Casdoor.Client\Casdoor.Client.csproj", "{2FE60DBF-D12F-40B4-A79F-76438A86EAD2}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casdoor.Client", "src\Casdoor.Client\Casdoor.Client.csproj", "{2FE60DBF-D12F-40B4-A79F-76438A86EAD2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EA7BAC8-C8F5-4204-92F4-AC6B43355D57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestPackage", "TestPackage", "{08328DBB-6E4B-4E91-9E0F-6B8BF975596B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "casDoorUnitTest", "casDoorUnitTest\casDoorUnitTest.csproj", "{7900C69A-2612-4AC1-B88C-E2F1F1CB8DD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,5 +21,18 @@ Global
 		{2FE60DBF-D12F-40B4-A79F-76438A86EAD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FE60DBF-D12F-40B4-A79F-76438A86EAD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FE60DBF-D12F-40B4-A79F-76438A86EAD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7900C69A-2612-4AC1-B88C-E2F1F1CB8DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7900C69A-2612-4AC1-B88C-E2F1F1CB8DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7900C69A-2612-4AC1-B88C-E2F1F1CB8DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7900C69A-2612-4AC1-B88C-E2F1F1CB8DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7900C69A-2612-4AC1-B88C-E2F1F1CB8DD1} = {08328DBB-6E4B-4E91-9E0F-6B8BF975596B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59771371-C000-4959-82EE-40B0B7F9619B}
 	EndGlobalSection
 EndGlobal

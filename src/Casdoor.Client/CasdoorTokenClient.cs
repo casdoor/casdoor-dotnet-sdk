@@ -4,8 +4,8 @@ namespace Casdoor.Client;
 
 public class CasdoorTokenClient : ICasdoorTokenClient
 {
-    private readonly TokenClient _tokenClient;
-    private readonly CasdoorClientOptions _options;
+    public readonly TokenClient _tokenClient;
+    public readonly CasdoorClientOptions _options;
 
     public CasdoorTokenClient(TokenClient tokenClient, CasdoorClientOptions options)
     {
@@ -13,8 +13,5 @@ public class CasdoorTokenClient : ICasdoorTokenClient
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
-    public Task<TokenResponse> GetTokenAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public virtual Task<TokenResponse> GetTokenAsync(string code) => throw new NotImplementedException();
 }

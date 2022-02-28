@@ -1,6 +1,4 @@
-﻿using IdentityModel.Client;
-
-namespace Casdoor.Client;
+﻿namespace Casdoor.Client;
 
 public interface ICasdoorUserClient
 {

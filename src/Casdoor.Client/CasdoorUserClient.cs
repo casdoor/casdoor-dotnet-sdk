@@ -1,7 +1,4 @@
-﻿using IdentityModel.Client;
-using Microsoft.Extensions.Options;
-
-namespace Casdoor.Client;
+﻿namespace Casdoor.Client;
 
 public class CasdoorUserClient : ICasdoorUserClient
 {
