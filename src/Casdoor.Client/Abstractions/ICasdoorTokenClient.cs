@@ -4,5 +4,5 @@ namespace Casdoor.Client;
 
 public interface ICasdoorTokenClient
 {
-    public Task<TokenResponse> GetTokenAsync();
+    public Task<TokenResponse> GetTokenAsync(string code);
 }

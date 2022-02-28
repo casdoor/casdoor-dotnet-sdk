@@ -12,31 +12,36 @@ namespace Casdoor.Client.Services
 {
     public class CasdoorAuthService
     {
-        private static HttpClient? _httpClient;
+        private static CasdoorConfig? _config;
 
-        private CasdoorConfig? _config;
+        private TokenClient _client;
 
-        private static CasdoorClientOptions opts;
+        private CasdoorClientOptions _options;
 
-        public CasdoorAuthService(CasdoorConfig configIn)
+        private TokenRequest? _authCodeReq;
+
+
+        public CasdoorAuthService(CasdoorTokenClient cli)
         {
-            _config = configIn;
+            _client = cli._tokenClient ?? throw new ArgumentNullException(nameof(_client));
+            _options = cli._options ?? throw new ArgumentNullException(nameof(_options));
+            _authCodeReq = new TokenRequest
+            {
+                Address = $"{_options.TokenEndpoint}",
+                ClientId = _config?.clientId,
+                ClientSecret = _config?.clientSecret,
+            };
         }
 
-        public string getOauthToken(string code, string state)
+        public Task<TokenResponse> getOauthToken(string code, string state = "")
         {
-            using (_httpClient = new HttpClient())
+            using (var _httpClient = new HttpClient())
+            using (AuthorizationCodeTokenRequest req1 = (_authCodeReq.Clone()) as AuthorizationCodeTokenRequest)
             {
                 try
                 {
-                    var response = _httpClient.RequestTokenAsync(new AuthorizationCodeTokenRequest()
-                    {
-                        Address = $"{opts.TokenEndpoint}",
-                        ClientId = _config.clientId,
-                        ClientSecret = _config.clientSecret,
-                        Code = code,
-                    });
-                    return response.Result.AccessToken;
+                    req1.Code = code;
+                    return _client.RequestAuthorizationCodeTokenAsync(req1.Code, req1.RedirectUri);
                 }
                 catch (Exception)
                 {
@@ -51,20 +56,19 @@ namespace Casdoor.Client.Services
             var handler = new JwtSecurityTokenHandler();
             try
             {
-                var parsed = handler.ReadJwtToken(token);
-                X509Certificate cert = new X509Certificate2(Encoding.UTF8.GetBytes(_config.jwtPublicKey));
+                var parsed = handler.ReadJwtToken(token.Trim());
+                X509Certificate cert = new X509Certificate2(Encoding.UTF8.GetBytes(_config?.jwtPublicKey));
                 handler.ValidateToken(token, new TokenValidationParameters
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(cert.GetPublicKey())
                 }, out SecurityToken tem);
 
-                Dictionary<string, object> claims = new Dictionary<string, object>(parsed.Claims.Count());
+                var claims = new List<KeyValuePair<string, object>>();
                 foreach (var item in parsed.Claims)
                 {
-                    claims.Add(item.ValueType, item.Value);
+                    claims.Add(new KeyValuePair<string, object>(item.ValueType, item.Value));
                 }
-                CasdoorUser casdoorInstance = new CasdoorUser();
-                return CastUtil.classify(claims, casdoorInstance);
+                return CastUtil.classify(claims, new CasdoorUser());
             }
             catch (Exception exp)
             {
@@ -75,10 +79,10 @@ namespace Casdoor.Client.Services
         public string getSignInUrl(string redirectUrl)
         {
             string scope = "read";
-            string state = _config.applicationName ?? throw new ArgumentNullException(nameof(_config.applicationName));
+            string state = _config?.applicationName ?? throw new ArgumentNullException(nameof(_config.applicationName));
             try
             {
-                return $"{opts.AuthorizeEndpoint}?client_id={_config.clientId}&response_type=code" +
+                return $"{_options.AuthorizeEndpoint}?client_id={_config?.clientId}&response_type=code" +
                     $"&redirect_uri={HttpUtility.UrlEncode(redirectUrl, Encoding.UTF8)}&scope={scope}&state={state}";
             }
             catch (Exception)
@@ -100,30 +104,20 @@ namespace Casdoor.Client.Services
         private string getSignUpUrl(bool enablePassWord, string redirectUrl)
         {
             return enablePassWord
-                ? $"{_config.endPoint}/signup/{_config.applicationName}"
+                ? $"{_config?.endPoint}/signup/{_config?.applicationName}"
                 : getSignUpUrl(redirectUrl).Replace("/login/oauth/authorize", "/signup/oauth/authorize");
         }
 
         public string getUserProfileUrl(string userName, string accessToken)
         {
             if (string.IsNullOrEmpty(accessToken)) throw new ArgumentNullException(nameof(accessToken));
-            string param = "";
-            if (!string.IsNullOrEmpty(accessToken.Trim()))
-            {
-                param = "?access_token=" + accessToken;
-            }
-            return $"{_config.endPoint}/users/{_config.orginazationName}/{userName}{param}";
+            return $"{_config?.endPoint}/users/{_config?.orginazationName}/{userName}{string.Concat("?access_token=", accessToken.Trim())}";
         }
 
         public string getMyProfileUrl(string accessToken)
         {
             if (string.IsNullOrEmpty(accessToken)) throw new ArgumentNullException(nameof(accessToken));
-            string param = "";
-            if (!string.IsNullOrEmpty(accessToken.Trim()))
-            {
-                param = "?access_token=" + accessToken;
-            }
-            return $"{_config.endPoint}/account{param}";
+            return $"{_config?.endPoint}/account{string.Concat("?access_token=", accessToken.Trim())}";
         }
     }
 }
