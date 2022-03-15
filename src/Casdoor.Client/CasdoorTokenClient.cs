@@ -1,10 +1,14 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Text.Json;
+using Casdoor.Client.Abstractions;
 using Casdoor.Client.Config;
 using Casdoor.Client.Entity;
 using Casdoor.Client.Exception;
 using IdentityModel.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
@@ -12,77 +16,57 @@ public class CasdoorTokenClient : ICasdoorTokenClient
 {
     private readonly TokenClient _tokenClient;
     private readonly CasdoorClientOptions _options;
+    private readonly JwtSecurityTokenHandler _jwtHandler;
+    private readonly X509Certificate _x509Cert;
+    private readonly RsaSecurityKey _issuerSigningKey;
+
+    private SecurityToken _securityToken;
 
     public CasdoorTokenClient(TokenClient tokenClient, CasdoorClientOptions options)
     {
         _tokenClient = tokenClient ?? throw new ArgumentNullException(nameof(tokenClient));
         _options = options ?? throw new ArgumentNullException(nameof(options));
+        _jwtHandler = new JwtSecurityTokenHandler();
+        _x509Cert = new X509Certificate(_options.JwtPublicKey);
+        _securityToken = new JwtSecurityToken();
+
+        // verify the jwt public key once
+        // X.509 encoded
+        RSACryptoServiceProvider rsaServiceProvider = new();
+        rsaServiceProvider.ImportCspBlob(Encoding.UTF8.GetBytes(_options.JwtPublicKey));
+        rsaServiceProvider.ImportParameters(new RSAParameters());
+
+        _issuerSigningKey = new RsaSecurityKey(rsaServiceProvider);
     }
 
-    // TODO: impl
-    public Task<TokenResponse> GetTokenAsync() => throw new NotImplementedException();
+    public virtual Task<TokenResponse> GetTokenAsync()
+    {
+        return _tokenClient.RequestTokenAsync(
+            "Authorization_Code"
+            // FIXME: borrowed from https://github.com/casdoor/casdoor-java-sdk/blob/master/src/main/java/org/casbin/casdoor/service/CasdoorAuthService.java#L57
+            // new Parameters()
+        );
+    }
 
-    public CasdoorUser ParseJwtToken(string token)
+    public virtual CasdoorUser? ParseJwtToken(string token)
     {
         // parse jwt token
-        var handler = new JwtSecurityTokenHandler();
-        JwtSecurityToken? decodedJwt = null;
-        decodedJwt = handler.ReadJwtToken(token);
-        if (decodedJwt == null)
+        JwtSecurityToken? decodedJwt = _jwtHandler.ReadJwtToken(token);
+        if (decodedJwt is null)
         {
-            throw new CasdoorException("decoded JWT is null");
+            throw new CasdoorApiException("decoded JWT is null");
         }
 
-        // verify the jwt public key
-        // RSACryptoServiceProvider rsa = new();
-        // rsa.ImportSubjectPublicKeyInfo(Convert.FromBase64String(_options.JwtPublicKey), out _); // X.509 encoded
-        // rsa.ImportParameters(new RSAParameters());
-
-        // var tokenHandler = new JwtSecurityTokenHandler();
-        // try
-        // {
-        //     tokenHandler.ValidateToken(_options.JwtPublicKey,
-        //         new TokenValidationParameters
-        //         {
-        //             ValidateAudience = false,
-        //             ValidateLifetime = false,
-        //             ValidateIssuer = false,
-        //             IssuerSigningKey = new RsaSecurityKey(rsa)
-        //         },
-        //         out _);
-        // }
-
-        X509Certificate _ = new(_options.JwtPublicKey);
-
-        // convert to CasdoorUser
-        CasdoorUser casdoorUser = CopyProperties(decodedJwt.Claims, new CasdoorUser());
-        return casdoorUser;
-    }
-
-    /// <summary>
-    /// adapted from https://stackoverflow.com/questions/36054547/how-to-copy-properties-from-one-net-object-to-another
-    /// </summary>
-    private static TTarget CopyProperties<TSource, TTarget>(TSource source, TTarget target)
-    {
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
-
-        foreach (var sProp in source.GetType().GetProperties())
-        {
-            bool isMatched = target != null && target.GetType().GetProperties().Any(tProp =>
-                tProp.Name == sProp.Name && tProp.GetType() == sProp.GetType() && tProp.CanWrite);
-            if (!isMatched)
+        _jwtHandler.ValidateToken(_options.JwtPublicKey,
+            new TokenValidationParameters
             {
-                continue;
-            }
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ValidateIssuer = false,
+                IssuerSigningKey = _issuerSigningKey
+            },
+            out _securityToken);
 
-            object? value = sProp.GetValue(source);
-            PropertyInfo? propertyInfo = target?.GetType().GetProperty(sProp.Name);
-            propertyInfo?.SetValue(target, value);
-        }
-
-        return target;
+        return JsonSerializer.Deserialize<CasdoorUser>(decodedJwt.RawData);
     }
 }

@@ -2,9 +2,6 @@ using System.Text.Json.Serialization;
 
 namespace Casdoor.Client.Entity;
 
-/// <summary>
-/// /UserResource.cs -> /Entity/CasdoorUserResource.cs
-/// </summary>
 public class CasdoorUserResource
 {
     [JsonPropertyName("owner")] public string? Owner { get; set; }

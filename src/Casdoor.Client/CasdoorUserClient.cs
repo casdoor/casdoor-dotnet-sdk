@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Casdoor.Client.Abstractions;
 using Casdoor.Client.Config;
 using Casdoor.Client.Entity;
 using Casdoor.Client.Exception;
-using Casdoor.Client.Util;
 
 namespace Casdoor.Client;
 
@@ -18,131 +18,144 @@ public class CasdoorUserClient : ICasdoorUserClient
         _httpClient = new CasdoorHttpClient(_options);
     }
 
+
     public virtual async Task<IEnumerable<CasdoorUser>> GetUsersAsync()
     {
-        Dictionary<string, string> queryMap = new() {{"owner", _options.OrganizationName}};
+        var queryMap = new List<KeyValuePair<string, string>> {new("owner", _options.OrganizationName)};
 
         string url = _httpClient.GetUrl("get-users", queryMap);
         string str = await _httpClient.DoGetStringAsync(url);
 
         using MemoryStream ms = new(Encoding.UTF8.GetBytes(str));
-        List<CasdoorUser> users = await JsonSerializer.DeserializeAsync<List<CasdoorUser>>(ms)
-                                  ?? throw new CasdoorException("unable to deserialize json");
-        return users;
+        return (await JsonSerializer.DeserializeAsync<List<CasdoorUser>>(ms))!;
     }
 
     public virtual async Task<IEnumerable<CasdoorUser>> GetSortedUsersAsync(string sorter, int limit)
     {
-        Dictionary<string, string> queryMap = new()
+        var queryMap = new List<KeyValuePair<string, string>>()
         {
-            {"owner", _options.OrganizationName}, {"sorter", sorter}, {"limit", limit.ToString()},
+            new("owner", _options.OrganizationName), new("sorter", sorter), new("limit", limit.ToString())
         };
 
         string url = _httpClient.GetUrl("get-sorted-users", queryMap);
         string str = await _httpClient.DoGetStringAsync(url);
 
         using MemoryStream ms = new(Encoding.UTF8.GetBytes(str));
-        CasdoorUser[] users = await JsonSerializer.DeserializeAsync<CasdoorUser[]>(ms)
-                              ?? throw new CasdoorException("unable to deserialize json");
-        return users;
+        return (await JsonSerializer.DeserializeAsync<CasdoorUser[]>(ms))!;
     }
 
     public virtual async Task<CasdoorUser> GetUserAsync(string name)
     {
-        Dictionary<string, string> queryMap = new() {{"id", string.Concat(_options.OrganizationName, "/", name)}};
+        var queryMap =
+            new List<KeyValuePair<string, string>> {new("id", string.Concat(_options.OrganizationName, "/", name))};
 
         string url = _httpClient.GetUrl("get-user", queryMap);
         string str = await _httpClient.DoGetStringAsync(url);
 
         using MemoryStream ms = new(Encoding.UTF8.GetBytes(str));
-        CasdoorUser users = await JsonSerializer.DeserializeAsync<CasdoorUser>(ms)
-                            ?? throw new CasdoorException("unable to deserialize json");
-        return users;
+        return (await JsonSerializer.DeserializeAsync<CasdoorUser>(ms))!;
     }
 
     public virtual async Task<CasdoorUser> GetUserByEmailAsync(string email)
     {
-        Dictionary<string, string> queryMap = new() {{"owner", _options.OrganizationName}, {"email", email},};
+        var queryMap =
+            new List<KeyValuePair<string, string>> {new("owner", _options.OrganizationName), new("email", email)};
 
         string url = _httpClient.GetUrl("get-user", queryMap);
         string str = await _httpClient.DoGetStringAsync(url);
 
         using MemoryStream ms = new(Encoding.UTF8.GetBytes(str));
-        CasdoorUser users = await JsonSerializer.DeserializeAsync<CasdoorUser>(ms)
-                            ?? throw new CasdoorException("unable to deserialize json");
-        return users;
+        return (await JsonSerializer.DeserializeAsync<CasdoorUser>(ms))!;
     }
 
     public virtual async Task<bool> AddUserAsync(CasdoorUser user)
     {
-        (_, bool ok) = await _httpClient.ModifyUserAsync("add-user", user, null);
-        return ok;
+        var resp = await _httpClient.ModifyUserAsync("add-user", user, null);
+        return resp.Data is "Affected";
     }
 
     public virtual async Task<bool> UpdateUserAsync(CasdoorUser user, params string[] propertyNames)
     {
-        (_, bool ok) = await _httpClient.ModifyUserAsync("update-user", user, propertyNames);
-        return ok;
+        var resp = await _httpClient.ModifyUserAsync("update-user", user, propertyNames);
+        return resp.Data is "Affected";
     }
 
     public virtual async Task<bool> DeleteUserAsync(string name)
     {
         var user = await GetUserAsync(name);
-        (_, bool ok) = await _httpClient.ModifyUserAsync("delete-user", user, null);
-        return ok;
-    }
-
-    // TODO: what are `createdTime` and `description` for?
-    public async Task<CasdoorUserResource> UploadResourceAsync(
-        string user, string tag, string parent, string fullFilePath,
-        Stream fileStream,
-        string createdTime = "", string description = "")
-    {
-        var queryMap = new Dictionary<string, string>
-        {
-            {"owner", _options.OrganizationName},
-            {"user", user},
-            {"application", _options.ApplicationName},
-            {"tag", tag},
-            {"parent", parent},
-            {"fullFilePath", fullFilePath},
-        };
-
-        using MemoryStream ms = new();
-        await fileStream.CopyToAsync(ms);
-        byte[] fileBytes = ms.ToArray();
-
-        var resp = await _httpClient.DoPostAsync(
-            "upload-resource", queryMap, fileBytes, true);
-
-        if (!"ok".Equals(resp.Status))
-        {
-            throw new CasdoorException(resp.Msg);
-        }
-
-        // FIXME: Data2 ?= user
-        return new CasdoorUserResource(
-            (string)(resp.Data2 ?? string.Empty),
-            (string)(resp.Data ?? string.Empty));
+        var resp = await _httpClient.ModifyUserAsync("delete-user", user, null);
+        return resp.Data is "Affected";
     }
 
     public virtual async Task<bool> CheckUserPasswordAsync(string name)
     {
         var user = await GetUserAsync(name);
-        (CasdoorResponse resp, _) =
+        CasdoorResponse resp =
             await _httpClient.ModifyUserAsync("check-user-password", user, null);
-        return "ok".Equals(resp.Status);
+        return resp.Status is "ok";
     }
 
-    public async Task SendSmsAsync(string content, params string[] receivers)
+
+    // FIXME: what are `createdTime` and `description` for?
+    public virtual async Task<CasdoorUserResource> UploadResourceAsync(
+        string user, string tag, string parent, string fullFilePath,
+        Stream fileStream,
+        string createdTime = "", string description = "")
+    {
+        var queryMap = new List<KeyValuePair<string, string>>
+        {
+            new("owner", _options.OrganizationName),
+            new("user", user),
+            new("application", _options.ApplicationName),
+            new("tag", tag),
+            new("parent", parent),
+            new("fullFilePath", fullFilePath)
+        };
+
+        var resp = await _httpClient.DoPostFileAsync(
+            "upload-resource", queryMap, new StreamContent(fileStream));
+
+        if (resp.Status is not "ok")
+        {
+            throw new CasdoorApiException(resp.Msg);
+        }
+
+        return new CasdoorUserResource(
+            (string)(resp.Data2 ?? string.Empty),
+            (string)(resp.Data ?? string.Empty));
+    }
+
+    public virtual async Task<CasdoorResponse> DeleteResourceAsync(string name)
+    {
+        CasdoorUserResource resource = new(_options.OrganizationName, name);
+        string resStr = JsonSerializer.Serialize(resource);
+
+        return await _httpClient.DoPostStringAsync("delete-resource",
+            null, resStr);
+    }
+
+
+    public virtual async Task SendSmsAsync(string content, params string[] receivers)
     {
         var form = new CasdoorSmsForm(string.Concat("admin/", _options.OrganizationName), content, receivers);
-        byte[] postBytes = JsonSerializer.SerializeToUtf8Bytes(form);
+        string smsFormStr = JsonSerializer.Serialize(form);
 
-        CasdoorResponse resp = await _httpClient.DoPostAsync("send-sms", null, postBytes, false);
-        if (!"ok".Equals(resp.Status))
+        CasdoorResponse resp = await _httpClient.DoPostStringAsync("send-sms", null, smsFormStr);
+        if (resp.Status is not "ok")
         {
-            throw new CasdoorException(resp.Msg);
+            throw new CasdoorApiException(resp.Msg);
+        }
+    }
+
+    public virtual async Task SendEmailAsync(string title, string content, string sender, string[] receivers)
+    {
+        CasdoorEmailForm casdoorEmailForm = new(title, content, sender, receivers);
+        string emailFormStr = JsonSerializer.Serialize(casdoorEmailForm);
+
+        CasdoorResponse resp = await _httpClient.DoPostStringAsync("send-email", null, emailFormStr);
+        if (resp.Status is not "ok")
+        {
+            throw new CasdoorApiException(resp.Msg);
         }
     }
 }

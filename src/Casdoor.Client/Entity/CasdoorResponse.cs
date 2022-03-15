@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Casdoor.Client.Util;
+namespace Casdoor.Client.Entity;
 
 public class CasdoorResponse
 {

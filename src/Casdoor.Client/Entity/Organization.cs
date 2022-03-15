@@ -2,13 +2,13 @@ namespace Casdoor.Client.Entity;
 
 public class Organization
 {
-    private string? Owner { get; set; }
-    private string? Name { get; set; }
-    private string? CreatedTime { get; set; }
-    private string? DisplayName { get; set; }
-    private string? WebsiteUrl { get; set; }
-    private string? Favicon { get; set; }
-    private string? PasswordType { get; set; }
-    private string? PasswordSalt { get; set; }
-    private string? PhonePrefix { get; set; }
+    public string? Owner { get; set; }
+    public string? Name { get; set; }
+    public string? CreatedTime { get; set; }
+    public string? DisplayName { get; set; }
+    public string? WebsiteUrl { get; set; }
+    public string? Favicon { get; set; }
+    public string? PasswordType { get; set; }
+    public string? PasswordSalt { get; set; }
+    public string? PhonePrefix { get; set; }
 }
