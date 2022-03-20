@@ -1,4 +1,4 @@
-﻿// Copyright 2022 The Casdoor Authors. All Rights Reserved.
+// Copyright 2022 The Casdoor Authors. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using IdentityModel.Client;
+using System.Text.Json.Serialization;
 
 namespace Casdoor.Client;
 
-public interface ICasdoorTokenClient
+public class CasdoorUserResource
 {
-    public Task<TokenResponse> GetTokenAsync(string code, string state = "");
-    public CasdoorUser? ParseJwtToken(string token);
+    public CasdoorUserResource(string owner, string name)
+    {
+        Owner = owner;
+        Name = name;
+    }
+
+    [JsonPropertyName("owner")] public string? Owner { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
 }

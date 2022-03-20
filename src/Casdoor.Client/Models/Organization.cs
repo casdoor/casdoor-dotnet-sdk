@@ -1,4 +1,4 @@
-﻿// Copyright 2022 The Casdoor Authors. All Rights Reserved.
+// Copyright 2022 The Casdoor Authors. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using IdentityModel.Client;
-
 namespace Casdoor.Client;
 
-public interface ICasdoorTokenClient
+public class Organization
 {
-    public Task<TokenResponse> GetTokenAsync(string code, string state = "");
-    public CasdoorUser? ParseJwtToken(string token);
+    public string? Owner { get; set; }
+    public string? Name { get; set; }
+    public string? CreatedTime { get; set; }
+    public string? DisplayName { get; set; }
+    public string? WebsiteUrl { get; set; }
+    public string? Favicon { get; set; }
+    public string? PasswordType { get; set; }
+    public string? PasswordSalt { get; set; }
+    public string? PhonePrefix { get; set; }
 }

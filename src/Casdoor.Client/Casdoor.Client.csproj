@@ -1,37 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.1;netstandard2.0</TargetFrameworks>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <LangVersion>10.0</LangVersion>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Casdoor.Client</RootNamespace>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>10.0</LangVersion>
+    <RootNamespace>Casdoor.Client</RootNamespace>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <PackageId>Casdoor.Client</PackageId>
-        <PackageIcon>casdoor.png</PackageIcon>
-        <Description>This is Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
-        <Authors>Casdoor</Authors>
-        <Product>Casdoor</Product>
-        <RepositoryType>GIT</RepositoryType>
-        <Copyright>Apache License 2.0</Copyright>
-        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/casdoor/casdoor-dotnet-sdk</RepositoryUrl>
-        <PackageProjectUrl>https://github.com/casdoor/casdoor-dotnet-sdk</PackageProjectUrl>
-    </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Casdoor.Client</PackageId>
+    <PackageIcon>casdoor.png</PackageIcon>
+    <Description>This is Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
+    <Authors>Casdoor</Authors>
+    <Product>Casdoor</Product>
+    <RepositoryType>GIT</RepositoryType>
+    <Copyright>Apache License 2.0</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/casdoor/casdoor-dotnet-sdk</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/casdoor/casdoor-dotnet-sdk</PackageProjectUrl>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
-        <None Remove="Casdoor.Client.csproj.DotSettings" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath=""/>
+    <None Remove="Casdoor.Client.csproj.DotSettings"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="IdentityModel" Version="5.2.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="5.2.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0"/>
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0"/>
+  </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Web"/>
+  </ItemGroup>
 </Project>
