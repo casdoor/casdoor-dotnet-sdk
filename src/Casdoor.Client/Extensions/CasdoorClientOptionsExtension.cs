@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
@@ -83,5 +85,29 @@ public static class CasdoorClientOptionsExtension
         }
 
         return $"{options.Endpoint}/account{param}";
+    }
+
+    private static TokenValidationParameters DefaultTokenValidationParameters => new TokenValidationParameters
+    {
+        ValidateActor = true, ValidateIssuer = true, ValidateAudience = true, ValidateIssuerSigningKey = true,
+    };
+
+    internal static void LoadJwtPublicKey(this CasdoorClientOptions options)
+    {
+        if (string.IsNullOrWhiteSpace(options.JwtPublicKey))
+        {
+            return;
+        }
+
+        RSA rsa = RSA.Create();
+#if NETCOREAPP3_1
+        rsa.ImportRSAPublicKey(Encoding.UTF8.GetBytes(options.JwtPublicKey), out _);
+#elif NETSTANDARD2_1
+        rsa.ImportRSAPublicKey(Encoding.UTF8.GetBytes(options.JwtPublicKey), out _);
+#else
+        rsa.ImportFromPem(options.JwtPublicKey);
+#endif
+        options.TokenValidationParameters ??= DefaultTokenValidationParameters;
+        options.TokenValidationParameters.IssuerSigningKey = new RsaSecurityKey(rsa);
     }
 }

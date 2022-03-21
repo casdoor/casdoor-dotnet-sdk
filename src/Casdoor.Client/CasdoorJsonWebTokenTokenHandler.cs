@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using IdentityModel.Client;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
-public interface ICasdoorTokenClient
+public sealed class CasdoorJsonWebTokenTokenHandler : JsonWebTokenHandler
 {
-    public Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "");
+    private readonly CasdoorClientOptions _options;
+    public CasdoorJsonWebTokenTokenHandler(CasdoorClientOptions options)
+    {
+        _options = options;
+    }
+
+    public Task<TokenValidationResult> ValidateTokenAsync(string token)
+    {
+        return base.ValidateTokenAsync(token, _options.TokenValidationParameters);
+    }
 }

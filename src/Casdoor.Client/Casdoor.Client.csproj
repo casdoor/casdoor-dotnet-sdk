@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.1;</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>10.0</LangVersion>
@@ -22,20 +22,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath=""/>
-    <None Remove="Casdoor.Client.csproj.DotSettings"/>
+    <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
+    <None Remove="Casdoor.Client.csproj.DotSettings" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="5.2.0"/>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.0"/>
-    <PackageReference Include="System.Net.Http.Json" Version="6.0.0"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <Reference Include="System.Web"/>
+    <PackageReference Include="IdentityModel" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.16.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
 </Project>
