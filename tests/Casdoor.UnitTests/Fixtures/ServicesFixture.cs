@@ -28,7 +28,7 @@ public class ServicesFixture
                 options.ApplicationName = "app-built-in";
                 options.ClientId = "e47ada02bd296997a4e8";
                 options.ClientSecret = "760b303f6bbdce805ba8f2b765b71e07306b8134";
-                options.JwtPublicKey = @"
+                options.TokenOptions.JwtPublicKey = @"
 -----BEGIN CERTIFICATE-----
 MIIE+TCCAuGgAwIBAgIDAeJAMA0GCSqGSIb3DQEBCwUAMDYxHTAbBgNVBAoTFENh
 c2Rvb3IgT3JnYW5pemF0aW9uMRUwEwYDVQQDEwxDYXNkb29yIENlcnQwHhcNMjEx
@@ -59,7 +59,6 @@ nCCJHBcAyFnm1hdvdwEdH33jDBjNB6ciotJZrf/3VYaIWSalADosHAgMWfXuWP+h
 8XKXmzlxuHbTMQYtZPDgspS5aK+S4Q9wb8RRAYo=
 -----END CERTIFICATE-----
 ";
-
             }).BuildServiceProvider();
     }
 

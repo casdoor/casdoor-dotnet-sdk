@@ -27,20 +27,35 @@ public class CasdoorClientOptions
     public string Endpoint { get; set; } = string.Empty;
     public string ClientId { get; set; } = string.Empty;
     public string ClientSecret { get; set; } = string.Empty;
-    public string JwtPublicKey { get; set; } = string.Empty;
     public string OrganizationName { get; set; } = string.Empty;
     public string ApplicationName { get; set; } = string.Empty;
-    public TokenValidationParameters? TokenValidationParameters { get; set; } = new TokenValidationParameters
-    {
-        ValidateActor = true,
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-    };
+
+    // ReSharper disable once FieldCanBeMadeReadOnly.Global
+    public CasdoorTokenOptions TokenOptions = new CasdoorTokenOptions();
+
+    // ReSharper disable once FieldCanBeMadeReadOnly.Global
+    public CasdoorPathOptions PathOptions = new CasdoorPathOptions();
+}
+
+public class CasdoorPathOptions {
 
     public string ApiPath { get; set; } = "/api";
     public string LoginAuthorizePath { get; set; } = "/api/login/oauth/authorize";
-    public string SignupAuthorizePath { get; set; } = "api/signup/oauth/authorize";
+    public string SignupAuthorizePath { get; set; } = "/api/signup/oauth/authorize";
 
     public string TokenPath { get; set; } = "/api/login/oauth/access_token";
+}
+
+public class CasdoorTokenOptions
+{
+    public bool AutoDiscovery { get; set; } = true;
+
+    public string Authority { get; set; } = string.Empty;
+
+    public string Issuer { get; set; } = string.Empty;
+
+    public string Audience { get; set; } = string.Empty;
+    public string JwtPublicKey { get; set; } = string.Empty;
+    public TokenValidationParameters? TokenValidationParameters { get; set; } =
+        CasdoorClientOptionsExtension.DefaultTokenValidationParameters;
 }
