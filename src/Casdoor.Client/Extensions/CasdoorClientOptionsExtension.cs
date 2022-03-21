@@ -15,10 +15,12 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using IdentityModel.Client;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
+// TODO: Need to support PKCE
 public static class CasdoorClientOptionsExtension
 {
     public static string GetSigninUrl(this CasdoorClientOptions options, string redirectUrl)
@@ -26,8 +28,7 @@ public static class CasdoorClientOptionsExtension
         const string scope = "read";
         string state = options.ApplicationName;
         string urlEncodeRedirectUrl = HttpUtility.UrlEncode(redirectUrl, Encoding.UTF8);
-        return
-            $"{options.LoginAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={urlEncodeRedirectUrl}&scope={scope}&state={state}";
+        return $"{options.PathOptions.LoginAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={urlEncodeRedirectUrl}&scope={scope}&state={state}";
     }
 
     public static string GetActionUrl(this CasdoorClientOptions options, string action,
@@ -62,7 +63,7 @@ public static class CasdoorClientOptionsExtension
         string state = options.ApplicationName;
         string urlEncodeRedirectUrl = HttpUtility.UrlEncode(redirectUrl, Encoding.UTF8);
         return
-            $"{options.SignupAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={urlEncodeRedirectUrl}&scope={scope}&state={state}";
+            $"{options.PathOptions.SignupAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={urlEncodeRedirectUrl}&scope={scope}&state={state}";
     }
 
     public static string GetUserProfileUrl(this CasdoorClientOptions options, string username, string accessToken = "")
@@ -87,27 +88,33 @@ public static class CasdoorClientOptionsExtension
         return $"{options.Endpoint}/account{param}";
     }
 
-    private static TokenValidationParameters DefaultTokenValidationParameters => new TokenValidationParameters
+    internal static TokenValidationParameters DefaultTokenValidationParameters => new TokenValidationParameters
     {
         ValidateActor = true, ValidateIssuer = true, ValidateAudience = true, ValidateIssuerSigningKey = true,
     };
 
+    internal static void LoadFromDiscoveryDocument(this CasdoorClientOptions options, DiscoveryDocumentResponse documentResponse)
+    {
+        // TODO: discovery options
+        throw new NotImplementedException();
+    }
+
     internal static void LoadJwtPublicKey(this CasdoorClientOptions options)
     {
-        if (string.IsNullOrWhiteSpace(options.JwtPublicKey))
+        if (string.IsNullOrWhiteSpace(options.TokenOptions.JwtPublicKey))
         {
             return;
         }
 
         RSA rsa = RSA.Create();
 #if NETCOREAPP3_1
-        rsa.ImportRSAPublicKey(Encoding.UTF8.GetBytes(options.JwtPublicKey), out _);
+        rsa.ImportRSAPublicKey(Encoding.UTF8.GetBytes(options.TokenOptions.JwtPublicKey), out _);
 #elif NETSTANDARD2_1
-        rsa.ImportRSAPublicKey(Encoding.UTF8.GetBytes(options.JwtPublicKey), out _);
+        rsa.ImportRSAPublicKey(Encoding.UTF8.GetBytes(options.TokenOptions.JwtPublicKey), out _);
 #else
-        rsa.ImportFromPem(options.JwtPublicKey);
+        rsa.ImportFromPem(options.TokenOptions.JwtPublicKey);
 #endif
-        options.TokenValidationParameters ??= DefaultTokenValidationParameters;
-        options.TokenValidationParameters.IssuerSigningKey = new RsaSecurityKey(rsa);
+        options.TokenOptions.TokenValidationParameters ??= DefaultTokenValidationParameters;
+        options.TokenOptions.TokenValidationParameters.IssuerSigningKey = new RsaSecurityKey(rsa);
     }
 }

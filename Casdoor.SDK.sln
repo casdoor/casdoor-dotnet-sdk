@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DD84CDD1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casdoor.UnitTests", "tests\Casdoor.UnitTests\Casdoor.UnitTests.csproj", "{5B4776A6-64C9-4206-A0D2-BE3A3F416809}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "samples\ConsoleApp\ConsoleApp.csproj", "{02FAA5BF-B604-4835-A628-01906EAC1E2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +28,14 @@ Global
 		{5B4776A6-64C9-4206-A0D2-BE3A3F416809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B4776A6-64C9-4206-A0D2-BE3A3F416809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B4776A6-64C9-4206-A0D2-BE3A3F416809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02FAA5BF-B604-4835-A628-01906EAC1E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02FAA5BF-B604-4835-A628-01906EAC1E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02FAA5BF-B604-4835-A628-01906EAC1E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02FAA5BF-B604-4835-A628-01906EAC1E2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2FE60DBF-D12F-40B4-A79F-76438A86EAD2} = {2132EE39-6E83-49EA-B071-739F9B9EC6C7}
 		{5B4776A6-64C9-4206-A0D2-BE3A3F416809} = {DD84CDD1-8787-4E2E-8E4E-F69782E4417E}
+		{02FAA5BF-B604-4835-A628-01906EAC1E2A} = {F629D29E-312F-4F44-BE79-88518699B713}
 	EndGlobalSection
 EndGlobal

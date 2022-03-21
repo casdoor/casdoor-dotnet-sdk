@@ -27,8 +27,23 @@ public class CasdoorTokenClient : ICasdoorTokenClient
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
+    public virtual Task<TokenResponse> RequestClientCredentialsTokenAsync()
+    {
+        return _tokenClient.RequestClientCredentialsTokenAsync();
+    }
+
+    public virtual Task<TokenResponse> RequestPasswordTokenAsync(string username, string password)
+    {
+        return _tokenClient.RequestPasswordTokenAsync(username, password);
+    }
+
     public virtual Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "")
     {
         return _tokenClient.RequestAuthorizationCodeTokenAsync(code, redirectUri, codeVerifier);
+    }
+
+    public virtual Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken)
+    {
+        return _tokenClient.RequestRefreshTokenAsync(refreshToken);
     }
 }

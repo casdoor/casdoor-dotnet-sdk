@@ -27,6 +27,6 @@ public sealed class CasdoorJsonWebTokenTokenHandler : JsonWebTokenHandler
 
     public Task<TokenValidationResult> ValidateTokenAsync(string token)
     {
-        return base.ValidateTokenAsync(token, _options.TokenValidationParameters);
+        return base.ValidateTokenAsync(token, _options.TokenOptions.TokenValidationParameters);
     }
 }

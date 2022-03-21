@@ -1,5 +1,6 @@
 using Casdoor.Client;
 using Casdoor.UnitTests.Fixtures;
+using IdentityModel.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Casdoor.UnitTests;

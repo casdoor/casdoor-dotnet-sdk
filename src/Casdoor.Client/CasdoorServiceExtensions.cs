@@ -16,8 +16,6 @@ using IdentityModel.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
@@ -50,8 +48,8 @@ public static class CasdoorServiceExtensions
             options.ClientSecret = clientOptions.ClientSecret;
             options.Parameters.Add("state", clientOptions.ApplicationName);
         });
-        services.AddTransient(p => p.GetRequiredService<IOptions<TokenClientOptions>>().Value);
-        services.AddTransient(p => p.GetRequiredService<IOptions<CasdoorClientOptions>>().Value);
+        services.TryAddTransient(p => p.GetRequiredService<IOptions<TokenClientOptions>>().Value);
+        services.TryAddTransient(p => p.GetRequiredService<IOptions<CasdoorClientOptions>>().Value);
         services.AddHttpClient<TokenClient>();
         services.AddHttpClient<TUserClient>();
         services.AddHttpClient<TTokenClient>();
