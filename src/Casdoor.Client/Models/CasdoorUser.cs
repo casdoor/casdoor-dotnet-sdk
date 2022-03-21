@@ -1,9 +1,23 @@
-﻿using System.Text.Json.Serialization;
+﻿// Copyright 2022 The Casdoor Authors. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-namespace Casdoor.Client.Entity;
+using System.Text.Json.Serialization;
+
+namespace Casdoor.Client;
 
 /// <summary>
-/// CasdoorUser has the same definition as https://github.com/casdoor/casdoor/blob/master/object/user.go#L24
+///     CasdoorUser has the same definition as https://github.com/casdoor/casdoor/blob/master/object/user.go#L24
 /// </summary>
 public class CasdoorUser
 {
@@ -43,7 +57,10 @@ public class CasdoorUser
     [JsonPropertyName("isGlobalAdmin")] public bool IsGlobalAdmin { get; set; }
     [JsonPropertyName("isForbidden")] public bool IsForbidden { get; set; }
     [JsonPropertyName("isDeleted")] public bool IsDeleted { get; set; }
-    [JsonPropertyName("signupApplication")] public string? SignupApplication { get; set; }
+
+    [JsonPropertyName("signupApplication")]
+    public string? SignupApplication { get; set; }
+
     [JsonPropertyName("hash")] public string? Hash { get; set; }
     [JsonPropertyName("preHash")] public string? PreHash { get; set; }
 

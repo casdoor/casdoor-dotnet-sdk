@@ -1,4 +1,4 @@
-﻿// Copyright 2022 The Casdoor Authors. All Rights Reserved.
+// Copyright 2022 The Casdoor Authors. All Rights Reserved.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using IdentityModel.Client;
+using System.Text.Json.Serialization;
 
 namespace Casdoor.Client;
 
-public interface ICasdoorTokenClient
+public class CasdoorSmsForm
 {
-    public Task<TokenResponse> GetTokenAsync(string code, string state = "");
-    public CasdoorUser? ParseJwtToken(string token);
+    public CasdoorSmsForm(string organizationId, string content, string[] receivers)
+    {
+        OrganizationId = organizationId;
+        Content = content;
+        Receivers = receivers;
+    }
+
+    [JsonPropertyName("organizationId")] public string OrganizationId { get; set; }
+    [JsonPropertyName("content")] public string Content { get; set; }
+    [JsonPropertyName("receivers")] public string[] Receivers { get; set; }
 }
