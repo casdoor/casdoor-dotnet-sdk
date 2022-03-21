@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using IdentityModel.Client;
+using System.Security.Claims;
 
 namespace Casdoor.Client;
 
-public interface ICasdoorTokenClient
+public static class ClaimsPrincipalExtension
 {
-    public Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "");
+    public static CasdoorUser AsCasdoorUser(this ClaimsPrincipal claimsPrincipal)
+    {
+        var claims = claimsPrincipal.Claims;
+        var user = new CasdoorUser();
+        user.Properties ??= new Dictionary<string, string>();
+        foreach (var claim in claims)
+        {
+            user.SetClaim(claim);
+        }
+        return user;
+    }
 }
