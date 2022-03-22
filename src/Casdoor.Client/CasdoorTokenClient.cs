@@ -13,20 +13,21 @@
 // limitations under the License.
 
 using IdentityModel.Client;
+using Microsoft.Extensions.Options;
 
 namespace Casdoor.Client;
 
 public class CasdoorTokenClient : ICasdoorTokenClient
 {
-    private readonly CasdoorClientOptions _options;
+    private readonly CasdoorOptions _options;
     private readonly TokenClient _tokenClient;
 
-    public CasdoorTokenClient(HttpClient httpClient, TokenClient tokenClient, CasdoorClientOptions options)
+    public CasdoorTokenClient(TokenClient tokenClient, CasdoorOptions options)
     {
         _tokenClient = tokenClient ?? throw new ArgumentNullException(nameof(tokenClient));
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
-
+    
     public virtual Task<TokenResponse> RequestClientCredentialsTokenAsync()
     {
         return _tokenClient.RequestClientCredentialsTokenAsync();

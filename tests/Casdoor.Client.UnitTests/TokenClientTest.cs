@@ -1,9 +1,10 @@
 using Casdoor.Client;
-using Casdoor.UnitTests.Fixtures;
+using Casdoor.Client.UnitTests.Fixtures;
 using IdentityModel.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.JsonWebTokens;
 
-namespace Casdoor.UnitTests;
+namespace Casdoor.Client.UnitTests;
 
 public class CasdoorTokenClientTest : IClassFixture<ServicesFixture>
 {
@@ -17,7 +18,7 @@ public class CasdoorTokenClientTest : IClassFixture<ServicesFixture>
     [Fact]
     public void ShouldParseToken()
     {
-        var tokenHandler = _servicesFixture.ServiceProvider.GetService<CasdoorJsonWebTokenTokenHandler>();
+        var tokenHandler = _servicesFixture.ServiceProvider.GetService<JsonWebTokenHandler>();
         Assert.NotNull(tokenHandler);
     }
 }

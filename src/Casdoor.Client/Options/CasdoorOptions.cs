@@ -14,27 +14,31 @@
 
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
 /// <summary>
-///     CasdoorClientOptions is the core configuration.
-///     The first step to use this SDK is to config an instance of CasdoorClientOptions.
+///     CasdoorOptions is the core configuration.
+///     The first step to use this SDK is to config an instance of CasdoorOptions.
 /// </summary>
-public class CasdoorClientOptions
+public class CasdoorOptions
 {
     public string Endpoint { get; set; } = string.Empty;
     public string ClientId { get; set; } = string.Empty;
     public string ClientSecret { get; set; } = string.Empty;
     public string OrganizationName { get; set; } = string.Empty;
     public string ApplicationName { get; set; } = string.Empty;
+    public string ApplicationType { get; set; } = string.Empty;
+    public string CallBackPath { get; set; } = "/casdoor/signin-oidc";
+    public bool RequireHttpsMetadata { get; set; } = true;
 
-    // ReSharper disable once FieldCanBeMadeReadOnly.Global
-    public CasdoorTokenOptions TokenOptions = new CasdoorTokenOptions();
+    public CasdoorProtocolsOptions Protocols { get; set; } = new();
+    public CasdoorPathOptions Path { get; set; } = new();
 
-    // ReSharper disable once FieldCanBeMadeReadOnly.Global
-    public CasdoorPathOptions PathOptions = new CasdoorPathOptions();
+    public IConfigurationManager<OpenIdConnectConfiguration>? ConfigurationManager { get; set; }
 }
 
 public class CasdoorPathOptions {
@@ -46,16 +50,24 @@ public class CasdoorPathOptions {
     public string TokenPath { get; set; } = "/api/login/oauth/access_token";
 }
 
-public class CasdoorTokenOptions
+public class CasdoorProtocolsOptions
 {
     public bool AutoDiscovery { get; set; } = true;
-
     public string Authority { get; set; } = string.Empty;
-
     public string Issuer { get; set; } = string.Empty;
-
     public string Audience { get; set; } = string.Empty;
-    public string JwtPublicKey { get; set; } = string.Empty;
-    public TokenValidationParameters? TokenValidationParameters { get; set; } =
-        CasdoorClientOptionsExtension.DefaultTokenValidationParameters;
+    public IReadOnlyList<CasdoorJwtCertOptions> JwtCert { get; set; } = Array.Empty<CasdoorJwtCertOptions>();
+    public TokenValidationParameters? TokenValidationParameters { get; set; }
+
+    public OpenIdConnectConfiguration? OpenIdConnectConfiguration { get; set; } = new OpenIdConnectConfiguration();
+
+    public IConfigurationManager<OpenIdConnectConfiguration>? OpenIdConnectConfigurationManager { get; set; }
+}
+
+public class CasdoorJwtCertOptions
+{
+
+    public string FilePath { get; set; } = string.Empty;
+
+    public string? Password { get; set; }
 }

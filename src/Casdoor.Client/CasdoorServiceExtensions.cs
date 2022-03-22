@@ -16,29 +16,18 @@ using IdentityModel.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Casdoor.Client;
 
 public static class CasdoorServiceExtensions
 {
-    public static IServiceCollection AddCasdoorClient(
-        this IServiceCollection services, Action<CasdoorClientOptions>? optionAction = null) =>
-        services.AddCasdoorClient<CasdoorUserClient, CasdoorTokenClient>();
+    public static IServiceCollection AddCasdoorClient(this IServiceCollection services)
+        => services.AddCasdoorClient(o => { });
 
-    public static IServiceCollection AddCasdoorClient<TUserClient>(
-        this IServiceCollection services,
-        Action<CasdoorClientOptions>? optionAction = null)
-        where TUserClient : class, ICasdoorUserClient =>
-        services.AddCasdoorClient<TUserClient, CasdoorTokenClient>();
-
-    public static IServiceCollection AddCasdoorClient<TUserClient, TTokenClient>(
-        this IServiceCollection services,
-        Action<CasdoorClientOptions>? optionAction = null)
-        where TUserClient : class, ICasdoorUserClient
-        where TTokenClient : class, ICasdoorTokenClient
+    public static IServiceCollection AddCasdoorClient(this IServiceCollection services, Action<CasdoorOptions> optionAction)
     {
-        CasdoorClientOptions clientOptions = new();
-        optionAction ??= options => {};
+        CasdoorOptions clientOptions = new();
         optionAction(clientOptions);
         services.Configure(optionAction);
         services.Configure<TokenClientOptions>(options =>
@@ -46,14 +35,14 @@ public static class CasdoorServiceExtensions
             options.Address = clientOptions.Endpoint;
             options.ClientId = clientOptions.ClientId;
             options.ClientSecret = clientOptions.ClientSecret;
-            options.Parameters.Add("state", clientOptions.ApplicationName);
         });
         services.TryAddTransient(p => p.GetRequiredService<IOptions<TokenClientOptions>>().Value);
-        services.TryAddTransient(p => p.GetRequiredService<IOptions<CasdoorClientOptions>>().Value);
+        services.TryAddTransient(p => p.GetRequiredService<IOptions<CasdoorOptions>>().Value);
         services.AddHttpClient<TokenClient>();
-        services.AddHttpClient<TUserClient>();
-        services.AddHttpClient<TTokenClient>();
-        services.TryAddScoped<CasdoorJsonWebTokenTokenHandler>();
+        services.AddHttpClient<CasdoorApiClient>();
+        services.TryAddSingleton<JsonWebTokenHandler>();
+        services.TryAddScoped<ICasdoorTokenClient, CasdoorTokenClient>();
+        services.TryAddScoped<ICasdoorUserClient, CasdoorUserClient>();
         return services;
     }
 }

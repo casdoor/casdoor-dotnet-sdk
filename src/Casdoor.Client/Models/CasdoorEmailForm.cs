@@ -18,16 +18,15 @@ namespace Casdoor.Client;
 
 public class CasdoorEmailForm
 {
-    public CasdoorEmailForm(string title, string content, string sender, string[] receivers)
-    {
-        Title = title;
-        Content = content;
-        Sender = sender;
-        Receivers = receivers;
-    }
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
 
-    [JsonPropertyName("title")] public string Title { get; set; }
-    [JsonPropertyName("content")] public string Content { get; set; }
-    [JsonPropertyName("sender")] public string Sender { get; set; }
-    [JsonPropertyName("receivers")] public string[] Receivers { get; set; }
+    [JsonPropertyName("content")]
+    public string Content { get; set; } = string.Empty;
+
+    [JsonPropertyName("sender")]
+    public string Sender { get; set; } = string.Empty;
+
+    [JsonPropertyName("receivers")]
+    public string[] Receivers { get; set; } = Array.Empty<string>();
 }
