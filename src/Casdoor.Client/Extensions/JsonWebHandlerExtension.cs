@@ -17,16 +17,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
-public sealed class CasdoorJsonWebTokenTokenHandler : JsonWebTokenHandler
+public static class JsonWebHandlerExtension
 {
-    private readonly CasdoorClientOptions _options;
-    public CasdoorJsonWebTokenTokenHandler(CasdoorClientOptions options)
+    public static Task<TokenValidationResult> ValidateTokenAsync(this JsonWebTokenHandler handler, string token, CasdoorOptions options)
     {
-        _options = options;
-    }
-
-    public Task<TokenValidationResult> ValidateTokenAsync(string token)
-    {
-        return base.ValidateTokenAsync(token, _options.TokenOptions.TokenValidationParameters);
+        return handler.ValidateTokenAsync(token, options.Protocols.TokenValidationParameters);
     }
 }

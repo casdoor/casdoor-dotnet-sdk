@@ -18,56 +18,65 @@ namespace Casdoor.Client;
 
 public class CasdoorUserClient : ICasdoorUserClient
 {
-    private readonly HttpClient _httpClient;
-    private readonly CasdoorClientOptions _options;
+    private readonly CasdoorApiClient _apiClient;
+    private readonly CasdoorOptions _options;
 
-    public CasdoorUserClient(HttpClient httpClient, CasdoorClientOptions options)
+    public CasdoorUserClient(CasdoorApiClient apiClient, CasdoorOptions options)
     {
         _options = options ?? throw new ArgumentNullException(nameof(options));
-        httpClient.SetCasdoorAuthentication(options);
-        _httpClient = httpClient;
+        _apiClient = apiClient;
     }
 
     public virtual Task<IEnumerable<CasdoorUser>?> GetUsersAsync()
     {
-        List<KeyValuePair<string, string>> queryMap = new List<KeyValuePair<string, string>>
-        {
-            new("owner", _options.OrganizationName)
-        };
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string,string?>[]
+            {
+                new("owner", _options.OrganizationName)
+            };
         string url = _options.GetActionUrl("get-users", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
+        return _apiClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
     }
 
     public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit)
     {
-        List<KeyValuePair<string, string>> queryMap = new List<KeyValuePair<string, string>>
-        {
-            new("owner", _options.OrganizationName), new("sorter", sorter), new("limit", limit.ToString())
-        };
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("owner", _options.OrganizationName),
+                new("sorter", sorter), new("limit", limit.ToString())
+            };
         string url = _options.GetActionUrl("get-sorted-users", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
+        return _apiClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
     }
 
     public virtual Task<CasdoorUser?> GetUserAsync(string name)
     {
-        List<KeyValuePair<string, string>> queryMap =
-            new List<KeyValuePair<string, string>> {new("id", string.Concat(_options.OrganizationName, "/", name))};
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("id", string.Concat(_options.OrganizationName, "/", name))
+            };
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
+        return _apiClient.GetFromJsonAsync<CasdoorUser>(url);
     }
 
     public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email)
     {
-        List<KeyValuePair<string, string>> queryMap =
-            new List<KeyValuePair<string, string>> {new("owner", _options.OrganizationName), new("email", email)};
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("owner", _options.OrganizationName), new("email", email)
+            };
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
+        return _apiClient.GetFromJsonAsync<CasdoorUser>(url);
     }
 
-    public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user) => ModifyUserAsync("add-user", user);
+    public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user)
+        => ModifyUserAsync("add-user", user);
 
-    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames) =>
-        ModifyUserAsync("update-user", user, propertyNames);
+    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames)
+        => ModifyUserAsync("update-user", user, propertyNames);
 
     public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name)
     {
@@ -76,7 +85,6 @@ public class CasdoorUserClient : ICasdoorUserClient
         {
             return null;
         }
-
         return await ModifyUserAsync("delete-user", user);
     }
 
@@ -87,16 +95,16 @@ public class CasdoorUserClient : ICasdoorUserClient
         {
             return null;
         }
-
         return await ModifyUserAsync("check-user-password", user);
     }
 
-    // FIXME: what are `createdTime` and `description` for?
+    // TODO: what are `createdTime` and `description` for?
     public virtual Task<CasdoorResponse?> UploadResourceAsync(
         string user, string tag, string parent, string fullFilePath,
         Stream fileStream, string createdTime = "", string description = "")
     {
-        List<KeyValuePair<string, string>> queryMap = new List<KeyValuePair<string, string>>
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
         {
             new("owner", _options.OrganizationName),
             new("user", user),
@@ -106,46 +114,51 @@ public class CasdoorUserClient : ICasdoorUserClient
             new("fullFilePath", fullFilePath)
         };
         string url = _options.GetActionUrl("upload-resource", queryMap);
-        return _httpClient.PostFileAsync(url, new StreamContent(fileStream));
+        return _apiClient.PostFileAsync(url, new StreamContent(fileStream));
     }
 
-    public virtual async Task<CasdoorResponse?> DeleteResourceAsync(string name)
+    public virtual Task<CasdoorResponse?> DeleteResourceAsync(string name)
     {
-        CasdoorUserResource resource = new(_options.OrganizationName, name);
-        HttpResponseMessage resp = await _httpClient.PostAsJsonAsync("delete-resource", resource);
-        return await resp.ToCasdoorResponse();
+        CasdoorUserResource resource = new() {Owner = _options.OrganizationName, Name = name};
+        return _apiClient.PostAsJsonAsync("delete-resource", resource);
     }
 
-    public virtual async Task<CasdoorResponse?> SendSmsAsync(string content, params string[] receivers)
+    public virtual Task<CasdoorResponse?> SendSmsAsync(string content, params string[] receivers)
     {
-        CasdoorSmsForm form = new(string.Concat("admin/", _options.OrganizationName), content, receivers);
+        CasdoorSmsForm form = new()
+        {
+            OrganizationId = string.Concat("admin/", _options.OrganizationName),
+            Content = content,
+            Receivers = receivers,
+        };
         string url = _options.GetActionUrl("send-sms");
-        HttpResponseMessage resp = await _httpClient.PostAsJsonAsync(url, form);
-        return await resp.ToCasdoorResponse();
+        return _apiClient.PostAsJsonAsync(url, form);
     }
 
-    public virtual async Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
+    public virtual Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
         string[] receivers)
     {
-        CasdoorEmailForm form = new(title, content, sender, receivers);
+        CasdoorEmailForm form = new()
+        {
+            Title = title, Content = content, Receivers = receivers, Sender = sender
+        };
         string url = _options.GetActionUrl("send-email");
-        HttpResponseMessage resp = await _httpClient.PostAsJsonAsync(url, form);
-        return await resp.ToCasdoorResponse();
+        return _apiClient.PostAsJsonAsync(url, form);
     }
 
-    private async Task<CasdoorResponse?> ModifyUserAsync(
-        string action, CasdoorUser user, string[]? columns = null)
+    private Task<CasdoorResponse?> ModifyUserAsync(
+        string action, CasdoorUser user, params string[] columns)
     {
-        List<KeyValuePair<string, string>> queryMap =
-            new List<KeyValuePair<string, string>> {new("id", $"{user.Owner}/{user.Name}")};
-        if (columns is not null && columns.Length != 0)
+        List<KeyValuePair<string, string?>> queryMap = new()
         {
-            queryMap.Add(new KeyValuePair<string, string>("columns", string.Join(",", columns)));
+            new KeyValuePair<string, string?>("id", $"{user.Owner}/{user.Name}")
+        };
+        if (columns.Length != 0)
+        {
+            queryMap.Add(new KeyValuePair<string, string?>("columns", string.Join(",", columns)));
         }
-
         user.Owner = _options.OrganizationName;
         string url = _options.GetActionUrl(action, queryMap);
-        HttpResponseMessage resp = await _httpClient.PostAsJsonAsync(url, user);
-        return await resp.ToCasdoorResponse();
+        return _apiClient.PostAsJsonAsync(url, user);
     }
 }

@@ -30,15 +30,15 @@ public static class CasdoorUserExtension
             {
                 continue;
             }
-            PropertyInfos[attribute.Name] = property;
+            s_propertyInfos[attribute.Name] = property;
         }
     }
 
-    private static readonly IDictionary<string, PropertyInfo> PropertyInfos = new Dictionary<string, PropertyInfo>();
+    private static readonly IDictionary<string, PropertyInfo> s_propertyInfos = new Dictionary<string, PropertyInfo>();
 
     internal static void SetClaim(this CasdoorUser user, Claim claim)
     {
-        if (PropertyInfos.TryGetValue(claim.Type, out var propertyInfo) is false)
+        if (s_propertyInfos.TryGetValue(claim.Type, out var propertyInfo) is false)
         {
             user.Properties ??= new Dictionary<string, string>();
             user.Properties[claim.Type] = claim.Value;

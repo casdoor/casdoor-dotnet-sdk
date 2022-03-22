@@ -17,13 +17,12 @@ using IdentityModel.Client;
 
 namespace Casdoor.Client;
 
-// ReSharper disable once InconsistentNaming
 public static class HttpClientExtensions
 {
-    internal static void SetCasdoorAuthentication(this HttpClient client, CasdoorClientOptions options) =>
+    internal static void SetCasdoorAuthentication(this HttpClient client, CasdoorOptions options) =>
         client.SetBasicAuthenticationOAuth(options.ClientId, options.ClientSecret);
 
-    internal static async Task<CasdoorResponse?> PostFileAsync(this HttpClient client, string url,
+    internal static async Task<CasdoorResponse?> PostFileAsync(this HttpClient client, string? url,
         StreamContent postStream)
     {
         using MultipartFormDataContent formData = new MultipartFormDataContent();

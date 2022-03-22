@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netstandard2.1;</TargetFrameworks>
+    <TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1;netstandard2.1;netstandard2.0;net462;net461;</TargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>10.0</LangVersion>
@@ -11,7 +11,7 @@
   <PropertyGroup>
     <PackageId>Casdoor.Client</PackageId>
     <PackageIcon>casdoor.png</PackageIcon>
-    <Description>This is Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
+    <Description>The Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
     <Authors>Casdoor</Authors>
     <Product>Casdoor</Product>
     <RepositoryType>GIT</RepositoryType>
@@ -32,6 +32,11 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.16.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.16.0" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Caching" />
   </ItemGroup>
 </Project>
