@@ -19,11 +19,27 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/casdoor/casdoor-dotnet-sdk</RepositoryUrl>
     <PackageProjectUrl>https://github.com/casdoor/casdoor-dotnet-sdk</PackageProjectUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishDocumentationFile>true</PublishDocumentationFile>
+    <PublishReferencesDocumentationFiles>true</PublishReferencesDocumentationFiles>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EnablePackageValidation>true</EnablePackageValidation>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
     <None Remove="Casdoor.Client.csproj.DotSettings" />
+    <PackageReference Include="Microsoft.SourceLink.Github" Version="1.1.1" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>

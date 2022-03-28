@@ -70,7 +70,7 @@ jobs:
   release-build-version:
     runs-on: windows-latest
     needs: build
-    if: github.repository_owner == 'casbin' && github.event_name == 'push'
+    if: github.repository_owner == 'casdoor' && github.event_name == 'push'
 
     steps:
     - name: Checkout
@@ -106,6 +106,9 @@ jobs:
     - name: Pack packages
       run: |
         $LastTag = git describe --tags (git rev-list --tags --max-count=1);
+        if (!$LastTag) {
+          $LastTag = "v1.0.0";
+        }
         echo "Last tag is: $LastTag";
         $Version = ($LastTag).TrimStart('v');
         echo "Publishing version: $Version";
@@ -122,7 +125,7 @@ jobs:
         path: './packages'
 
     - name: Add myget nuget source
-      run: dotnet nuget add source https://www.myget.org/F/casbin-net/api/v2/package --name myget.org
+      run: dotnet nuget add source https://www.myget.org/F/casdoor/api/v2/package --name myget.org
 
     - name: Push develop packages to myget.org
       run: dotnet nuget push .\packages\*.nupkg -s myget.org -k $env:MYGET_API_TOKEN --skip-duplicate
