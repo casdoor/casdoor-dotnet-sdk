@@ -9,6 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Casdoor.SDK.sln.DotSettings = Casdoor.SDK.sln.DotSettings
 		LICENSE = LICENSE
 		README.md = README.md
+		.github\semantic.yml = .github\semantic.yml
+		.releaserc.json = .releaserc.json
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{2132EE39-6E83-49EA-B071-739F9B9EC6C7}"

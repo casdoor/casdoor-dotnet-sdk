@@ -5,6 +5,19 @@
     <RootNamespace>Casdoor.AspNetCore.Authentication</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>Casdoor.AspNetCore</PackageId>
+    <PackageIcon>casdoor.png</PackageIcon>
+    <Description>The Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
+    <Authors>Casdoor</Authors>
+    <Product>Casdoor</Product>
+    <RepositoryType>GIT</RepositoryType>
+    <Copyright>Apache License 2.0</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/casdoor/casdoor-dotnet-sdk</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/casdoor/casdoor-dotnet-sdk</PackageProjectUrl>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.0-preview.2.22153.2" />
   </ItemGroup>
@@ -30,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
     <None Remove="Casdoor.AspNetCore.csproj.DotSettings" />
   </ItemGroup>
 
