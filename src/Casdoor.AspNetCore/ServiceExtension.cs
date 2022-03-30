@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Casdoor.AspNetCore.Authentication
@@ -28,9 +29,12 @@ namespace Casdoor.AspNetCore.Authentication
 
         public static AuthenticationBuilder AddCasdoor(this AuthenticationBuilder builder, Action<CasdoorOptions> optionAction)
         {
-            var casdoorOptions = new CasdoorOptions();
-            optionAction(casdoorOptions);
-            casdoorOptions.Validate();
+            builder.Services.AddCasdoorClient(optionAction);
+            CasdoorOptions casdoorOptions = null;
+            builder.Services.Configure<IOptions<CasdoorOptions>>(options =>
+            {
+                casdoorOptions = options.Value;
+            });
             return casdoorOptions.ApplicationType switch {
                 CasdoorDefaults.WebAppApplicationType => builder.AddCasdoorWebApp(casdoorOptions, options => {}),
                 CasdoorDefaults.WebApiApplicationType => builder.AddCasdoorWebApi(casdoorOptions, options => {}),

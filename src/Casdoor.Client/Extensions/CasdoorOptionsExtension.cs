@@ -134,6 +134,15 @@ public static class CasdoorClientOptionsExtension
         return options;
     }
 
+    public static Task<OpenIdConnectConfiguration> GetOpenIdConnectConfigurationAsync(this CasdoorOptions options, CancellationToken cancellationToken = default)
+    {
+        if (options.Protocols.OpenIdConnectConfigurationManager is null)
+        {
+            throw new NullReferenceException(nameof(options.Protocols.OpenIdConnectConfigurationManager));
+        }
+        return options.Protocols.OpenIdConnectConfigurationManager.GetConfigurationAsync(cancellationToken);
+    }
+
     public static CasdoorOptions Validate(this CasdoorOptions options)
     {
         if (string.IsNullOrWhiteSpace(options.Endpoint))

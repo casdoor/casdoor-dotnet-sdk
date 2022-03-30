@@ -16,17 +16,8 @@ using System.Net.Http.Json;
 
 namespace Casdoor.Client;
 
-public class CasdoorUserClient : ICasdoorUserClient
+public partial class CasdoorClient
 {
-    private readonly CasdoorApiClient _apiClient;
-    private readonly CasdoorOptions _options;
-
-    public CasdoorUserClient(CasdoorApiClient apiClient, CasdoorOptions options)
-    {
-        _options = options ?? throw new ArgumentNullException(nameof(options));
-        _apiClient = apiClient;
-    }
-
     public virtual Task<IEnumerable<CasdoorUser>?> GetUsersAsync()
     {
         IEnumerable<KeyValuePair<string, string?>> queryMap =
@@ -35,7 +26,7 @@ public class CasdoorUserClient : ICasdoorUserClient
                 new("owner", _options.OrganizationName)
             };
         string url = _options.GetActionUrl("get-users", queryMap);
-        return _apiClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
+        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
     }
 
     public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit)
@@ -47,7 +38,7 @@ public class CasdoorUserClient : ICasdoorUserClient
                 new("sorter", sorter), new("limit", limit.ToString())
             };
         string url = _options.GetActionUrl("get-sorted-users", queryMap);
-        return _apiClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
+        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
     }
 
     public virtual Task<CasdoorUser?> GetUserAsync(string name)
@@ -58,7 +49,7 @@ public class CasdoorUserClient : ICasdoorUserClient
                 new("id", string.Concat(_options.OrganizationName, "/", name))
             };
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _apiClient.GetFromJsonAsync<CasdoorUser>(url);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
     }
 
     public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email)
@@ -69,7 +60,7 @@ public class CasdoorUserClient : ICasdoorUserClient
                 new("owner", _options.OrganizationName), new("email", email)
             };
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _apiClient.GetFromJsonAsync<CasdoorUser>(url);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
     }
 
     public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user)
@@ -98,54 +89,6 @@ public class CasdoorUserClient : ICasdoorUserClient
         return await ModifyUserAsync("check-user-password", user);
     }
 
-    // TODO: what are `createdTime` and `description` for?
-    public virtual Task<CasdoorResponse?> UploadResourceAsync(
-        string user, string tag, string parent, string fullFilePath,
-        Stream fileStream, string createdTime = "", string description = "")
-    {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-        {
-            new("owner", _options.OrganizationName),
-            new("user", user),
-            new("application", _options.ApplicationName),
-            new("tag", tag),
-            new("parent", parent),
-            new("fullFilePath", fullFilePath)
-        };
-        string url = _options.GetActionUrl("upload-resource", queryMap);
-        return _apiClient.PostFileAsync(url, new StreamContent(fileStream));
-    }
-
-    public virtual Task<CasdoorResponse?> DeleteResourceAsync(string name)
-    {
-        CasdoorUserResource resource = new() {Owner = _options.OrganizationName, Name = name};
-        return _apiClient.PostAsJsonAsync("delete-resource", resource);
-    }
-
-    public virtual Task<CasdoorResponse?> SendSmsAsync(string content, params string[] receivers)
-    {
-        CasdoorSmsForm form = new()
-        {
-            OrganizationId = string.Concat("admin/", _options.OrganizationName),
-            Content = content,
-            Receivers = receivers,
-        };
-        string url = _options.GetActionUrl("send-sms");
-        return _apiClient.PostAsJsonAsync(url, form);
-    }
-
-    public virtual Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
-        string[] receivers)
-    {
-        CasdoorEmailForm form = new()
-        {
-            Title = title, Content = content, Receivers = receivers, Sender = sender
-        };
-        string url = _options.GetActionUrl("send-email");
-        return _apiClient.PostAsJsonAsync(url, form);
-    }
-
     private Task<CasdoorResponse?> ModifyUserAsync(
         string action, CasdoorUser user, params string[] columns)
     {
@@ -159,6 +102,6 @@ public class CasdoorUserClient : ICasdoorUserClient
         }
         user.Owner = _options.OrganizationName;
         string url = _options.GetActionUrl(action, queryMap);
-        return _apiClient.PostAsJsonAsync(url, user);
+        return PostAsJsonAsync(url, user);
     }
 }

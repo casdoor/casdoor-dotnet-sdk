@@ -16,20 +16,12 @@ using System.Net.Http.Json;
 
 namespace Casdoor.Client;
 
-public class CasdoorApiClient
+public partial class CasdoorClient
 {
-    private readonly HttpClient _httpClient;
-
-    public CasdoorApiClient(HttpClient httpClient, CasdoorOptions options)
-    {
-        _httpClient = httpClient;
-        _httpClient.SetCasdoorAuthentication(options);
-    }
-
-    public Task<TValue?> GetFromJsonAsync<TValue>(string? requestUri, CancellationToken cancellationToken = default)
+    internal Task<TValue?> GetFromJsonAsync<TValue>(string? requestUri, CancellationToken cancellationToken = default)
         => _httpClient.GetFromJsonAsync<TValue>(requestUri, cancellationToken);
 
-    public async Task<CasdoorResponse?> PostAsJsonAsync<TValue>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
+    internal async Task<CasdoorResponse?> PostAsJsonAsync<TValue>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
     {
         HttpResponseMessage resp = await _httpClient.PostAsJsonAsync(requestUri, value, cancellationToken);
         return await resp.ToCasdoorResponse();

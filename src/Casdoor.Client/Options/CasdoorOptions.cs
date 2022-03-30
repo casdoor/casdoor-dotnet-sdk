@@ -33,20 +33,18 @@ public class CasdoorOptions
     public string ApplicationName { get; set; } = string.Empty;
     public string ApplicationType { get; set; } = string.Empty;
     public string CallBackPath { get; set; } = "/casdoor/signin-oidc";
-    public bool RequireHttpsMetadata { get; set; } = true;
 
+    public string Scope { get; set; } = "openid profile email";
+    public bool RequireHttpsMetadata { get; set; } = true;
     public CasdoorProtocolsOptions Protocols { get; set; } = new();
     public CasdoorPathOptions Path { get; set; } = new();
-
-    public IConfigurationManager<OpenIdConnectConfiguration>? ConfigurationManager { get; set; }
 }
 
-public class CasdoorPathOptions {
-
+public class CasdoorPathOptions
+{
     public string ApiPath { get; set; } = "/api";
     public string LoginAuthorizePath { get; set; } = "/api/login/oauth/authorize";
     public string SignupAuthorizePath { get; set; } = "/api/signup/oauth/authorize";
-
     public string TokenPath { get; set; } = "/api/login/oauth/access_token";
 }
 
@@ -58,16 +56,12 @@ public class CasdoorProtocolsOptions
     public string Audience { get; set; } = string.Empty;
     public IReadOnlyList<CasdoorJwtCertOptions> JwtCert { get; set; } = Array.Empty<CasdoorJwtCertOptions>();
     public TokenValidationParameters? TokenValidationParameters { get; set; }
-
-    public OpenIdConnectConfiguration? OpenIdConnectConfiguration { get; set; } = new OpenIdConnectConfiguration();
-
+    public OpenIdConnectConfiguration? OpenIdConnectConfiguration { get; set; } = new();
     public IConfigurationManager<OpenIdConnectConfiguration>? OpenIdConnectConfigurationManager { get; set; }
 }
 
 public class CasdoorJwtCertOptions
 {
-
     public string FilePath { get; set; } = string.Empty;
-
     public string? Password { get; set; }
 }

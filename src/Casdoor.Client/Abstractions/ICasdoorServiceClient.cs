@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using IdentityModel.Client;
-
 namespace Casdoor.Client;
 
-public interface ICasdoorTokenClient
+public interface ICasdoorServiceClient
 {
-    public Task<TokenResponse> RequestClientCredentialsTokenAsync();
-    public Task<TokenResponse> RequestPasswordTokenAsync(string username, string password);
-    public Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "");
-    public Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken);
+    public Task<CasdoorResponse?> SendSmsAsync(string content, params string[] receivers);
+
+    public Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
+        string[] receivers);
 }

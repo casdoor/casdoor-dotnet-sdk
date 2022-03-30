@@ -34,4 +34,5 @@ public static class HttpClientExtensions
 
     internal static Task<CasdoorResponse?> ToCasdoorResponse(this HttpResponseMessage response) =>
         response.Content.ReadFromJsonAsync<CasdoorResponse>();
+
 }
