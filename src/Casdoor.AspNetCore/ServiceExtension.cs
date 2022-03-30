@@ -30,11 +30,7 @@ namespace Casdoor.AspNetCore.Authentication
         public static AuthenticationBuilder AddCasdoor(this AuthenticationBuilder builder, Action<CasdoorOptions> optionAction)
         {
             builder.Services.AddCasdoorClient(optionAction);
-            CasdoorOptions casdoorOptions = null;
-            builder.Services.Configure<IOptions<CasdoorOptions>>(options =>
-            {
-                casdoorOptions = options.Value;
-            });
+            CasdoorOptions casdoorOptions = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<CasdoorOptions>>().Value;
             return casdoorOptions.ApplicationType switch {
                 CasdoorDefaults.WebAppApplicationType => builder.AddCasdoorWebApp(casdoorOptions, options => {}),
                 CasdoorDefaults.WebApiApplicationType => builder.AddCasdoorWebApi(casdoorOptions, options => {}),
