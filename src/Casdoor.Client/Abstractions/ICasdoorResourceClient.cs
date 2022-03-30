@@ -16,7 +16,6 @@ namespace Casdoor.Client;
 
 public interface ICasdoorResourceClient
 {
-
     public Task<CasdoorResponse?> UploadResourceAsync(
         string user, string tag, string parent, string fullFilePath,
         Stream fileStream, string createdTime = "", string description = "");

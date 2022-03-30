@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
@@ -33,7 +31,6 @@ public class CasdoorOptions
     public string ApplicationName { get; set; } = string.Empty;
     public string ApplicationType { get; set; } = string.Empty;
     public string CallBackPath { get; set; } = "/casdoor/signin-oidc";
-
     public string Scope { get; set; } = "openid profile email";
     public bool RequireHttpsMetadata { get; set; } = true;
     public CasdoorProtocolsOptions Protocols { get; set; } = new();

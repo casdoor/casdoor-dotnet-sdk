@@ -12,22 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net.Http.Json;
-using IdentityModel.Client;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-
 namespace Casdoor.Client;
 
 public partial class CasdoorClient : ICasdoorClient
 {
     private readonly HttpClient _httpClient;
-    private readonly TokenClient _tokenClient;
     private readonly CasdoorOptions _options;
-
-    public CasdoorClient(HttpClient httpClient, TokenClient tokenClient, CasdoorOptions options)
+    
+    public CasdoorClient(HttpClient httpClient, CasdoorOptions options)
     {
         _httpClient = httpClient;
-        _tokenClient = tokenClient;
         _options = options;
     }
 }

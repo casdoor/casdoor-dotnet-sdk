@@ -27,23 +27,13 @@ public static class CasdoorServiceExtensions
 
     public static IServiceCollection AddCasdoorClient(this IServiceCollection services, Action<CasdoorOptions> optionAction)
     {
-        CasdoorOptions clientOptions = new();
         services.Configure<CasdoorOptions>(options =>
         {
             optionAction(options);
             options.Validate();
         });
-        services.Configure<TokenClientOptions>(options =>
-        {
-            options.Address = clientOptions.Endpoint;
-            options.ClientId = clientOptions.ClientId;
-            options.ClientSecret = clientOptions.ClientSecret;
-        });
-
-        services.TryAddTransient(p => p.GetRequiredService<IOptions<TokenClientOptions>>().Value);
-        services.TryAddTransient(p => p.GetRequiredService<IOptions<CasdoorOptions>>().Value);
-        services.AddHttpClient<TokenClient>();
         services.TryAddSingleton<JsonWebTokenHandler>();
+        services.TryAddTransient(p => p.GetRequiredService<IOptions<CasdoorOptions>>().Value);
         services.AddHttpClient<ICasdoorClient, CasdoorClient>();
         return services;
     }
