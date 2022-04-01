@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using Casdoor.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Casdoor.AspNetCore.Authentication
@@ -29,40 +26,43 @@ namespace Casdoor.AspNetCore.Authentication
 
         public static AuthenticationBuilder AddCasdoor(this AuthenticationBuilder builder, Action<CasdoorOptions> optionAction)
         {
+            var options = new CasdoorOptions();
+            optionAction?.Invoke(options);
+            return builder.AddCasdoor(options.ApplicationType, optionAction);
+        }
+
+        public static AuthenticationBuilder AddCasdoor(this AuthenticationBuilder builder, string applicationType, Action<CasdoorOptions> optionAction)
+        {
             builder.Services.AddCasdoorClient(optionAction);
-            CasdoorOptions casdoorOptions = builder.Services.BuildServiceProvider().GetRequiredService<IOptions<CasdoorOptions>>().Value;
-            return casdoorOptions.ApplicationType switch {
-                CasdoorDefaults.WebAppApplicationType => builder.AddCasdoorWebApp(casdoorOptions, options => {}),
-                CasdoorDefaults.WebApiApplicationType => builder.AddCasdoorWebApi(casdoorOptions, options => {}),
-                _ => throw new ArgumentOutOfRangeException(nameof(casdoorOptions.ApplicationType))
+            return applicationType switch {
+                CasdoorDefaults.WebAppApplicationType => builder.AddCasdoorWebApp(o => {}),
+                CasdoorDefaults.WebApiApplicationType => builder.AddCasdoorWebApi(o => {}),
+                _ => throw new ArgumentOutOfRangeException(nameof(applicationType))
             };
         }
 
-        public static AuthenticationBuilder AddCasdoorWebApp(this AuthenticationBuilder builder,
-            CasdoorOptions casdoorOptions,
-            Action<OpenIdConnectOptions> openIdOptionAction)
+        public static AuthenticationBuilder AddCasdoorWebApp(this AuthenticationBuilder builder, Action<OpenIdConnectOptions> openIdOptionAction)
         {
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultChallengeScheme = CasdoorDefaults.AuthenticationScheme;
             });
-            builder.AddOpenIdConnect(CasdoorDefaults.AuthenticationScheme, options =>
-            {
-                options.Authority = casdoorOptions.Protocols.Authority;
-                options.CallbackPath = casdoorOptions.CallBackPath;
-                options.ClientId = casdoorOptions.ClientId;
-                options.ClientSecret = casdoorOptions.ClientSecret;
-                options.RequireHttpsMetadata = casdoorOptions.RequireHttpsMetadata;
-                options.ResponseMode = OpenIdConnectResponseMode.Query;
-                options.ResponseType = OpenIdConnectResponseType.Code;
-                openIdOptionAction(options);
-            });
+            builder.Services.AddOptions<OpenIdConnectOptions>(CasdoorDefaults.AuthenticationScheme).Configure<CasdoorOptions>(
+                (options, casdoorOptions) =>
+                {
+                    options.Authority = casdoorOptions.Protocols.Authority;
+                    options.CallbackPath = casdoorOptions.CallBackPath;
+                    options.ClientId = casdoorOptions.ClientId;
+                    options.ClientSecret = casdoorOptions.ClientSecret;
+                    options.RequireHttpsMetadata = casdoorOptions.RequireHttpsMetadata;
+                    options.ResponseMode = OpenIdConnectResponseMode.Query;
+                    options.ResponseType = OpenIdConnectResponseType.Code;
+                });
+            builder.AddOpenIdConnect(CasdoorDefaults.AuthenticationScheme, CasdoorDefaults.AuthenticationScheme, openIdOptionAction);
             return builder;
         }
 
-        public static AuthenticationBuilder AddCasdoorWebApi(this AuthenticationBuilder builder,
-            CasdoorOptions casdoorOptions,
-            Action<OpenIdConnectOptions> openIdOptionAction)
+        public static AuthenticationBuilder AddCasdoorWebApi(this AuthenticationBuilder builder, Action<OpenIdConnectOptions> openIdOptionAction)
         {
             throw new NotImplementedException("WebApi is not supported yet.");
         }
