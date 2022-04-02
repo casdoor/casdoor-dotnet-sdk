@@ -12,16 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using IdentityModel.Client;
+
 namespace Casdoor.Client;
 
 public partial class CasdoorClient : ICasdoorClient
 {
     private readonly HttpClient _httpClient;
     private readonly CasdoorOptions _options;
-    
+
     public CasdoorClient(HttpClient httpClient, CasdoorOptions options)
     {
-        _httpClient = httpClient;
-        _options = options;
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _options = options ?? throw new ArgumentNullException(nameof(options));
+        options.Validate();
+    }
+
+    public CasdoorClient SetBearerToken(string accessToken)
+    {
+        _httpClient.SetBearerToken(accessToken);
+        return this;
     }
 }

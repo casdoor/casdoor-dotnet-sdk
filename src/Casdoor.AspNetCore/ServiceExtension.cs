@@ -51,7 +51,7 @@ namespace Casdoor.AspNetCore.Authentication
                 (options, casdoorOptions) =>
                 {
                     options.Authority = casdoorOptions.Protocols.Authority;
-                    options.CallbackPath = casdoorOptions.CallBackPath;
+                    options.CallbackPath = casdoorOptions.CallbackPath;
                     options.ClientId = casdoorOptions.ClientId;
                     options.ClientSecret = casdoorOptions.ClientSecret;
                     options.RequireHttpsMetadata = casdoorOptions.RequireHttpsMetadata;

@@ -106,11 +106,9 @@ public static class CasdoorClientOptionsExtension
         ValidateActor = true, ValidateIssuer = true, ValidateAudience = true, ValidateIssuerSigningKey = true,
     };
 
-    internal static IConfigurationManager<OpenIdConnectConfiguration> DefaultOpenIdConnectConfigurationManager(
-        string metaAddress) =>
-        new ConfigurationManager<OpenIdConnectConfiguration>(
-            metaAddress, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever()
-        );
+    internal static IConfigurationManager<OpenIdConnectConfiguration> DefaultOpenIdConnectConfigurationManager(string metaAddress) =>
+        new ConfigurationManager<OpenIdConnectConfiguration>(metaAddress, new OpenIdConnectConfigurationRetriever(), new HttpDocumentRetriever()
+     );
 
     internal static CasdoorOptions LoadJwtPublicKey(this CasdoorOptions options)
     {
@@ -225,7 +223,13 @@ public static class CasdoorClientOptionsExtension
                     .OpenIdConnectConfiguration);
         }
 
-        options.Protocols.OpenIdConnectConfigurationManager ??= DefaultOpenIdConnectConfigurationManager(options.Protocols.Authority);
+        string metadataAddress = options.Protocols.Authority;
+        if (metadataAddress.EndsWith("/", StringComparison.Ordinal) is false)
+        {
+            metadataAddress += "/";
+        }
+        metadataAddress += ".well-known/openid-configuration";
+        options.Protocols.OpenIdConnectConfigurationManager ??= DefaultOpenIdConnectConfigurationManager(metadataAddress);
         return options;
     }
 }
