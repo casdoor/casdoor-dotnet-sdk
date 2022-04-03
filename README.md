@@ -17,8 +17,7 @@ This SDK is built using the following packages for different platforms:
 
 ## Casdoor Client
 Casdoor.Client is a base package for the specific platform SDKs. It contains follow features.
-- CasdoorClient
-A API client implementation for the Casdoor. You can use to call the Casdoor APIs.
+- CasdoorClient: A API client implementation for the Casdoor. You can use to call the Casdoor APIs.
 ##### Usage
 ```cs
 var httpClient = new HttpClient();
