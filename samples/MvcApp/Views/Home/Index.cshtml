@@ -1,8 +1,24 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div style="text-align: left">
+        <h2 >Claims:</h2>
+        @foreach (Claim claim in User.Claims)
+        {
+            if (string.IsNullOrWhiteSpace(claim.Value) is false)
+            {
+                <ul>
+                    <li>
+                        <strong>@claim.Type:</strong>
+                        <pre>@claim.Value</pre>
+                    </li>
+                </ul>
+            }
+        }
+    </div>
 </div>

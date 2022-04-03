@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using Casdoor.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web;
 using MvcApp.Models;
 
 namespace MvcApp.Controllers;

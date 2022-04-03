@@ -1,17 +1,20 @@
 ﻿@using System.Security.Principal
+@using Casdoor.Client
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject CasdoorOptions Options
 
 <ul class="navbar-nav">
     @if (User.Identity?.IsAuthenticated == true)
     {
         <span class="navbar-text text-dark">Hello @User.Identity?.Name!</span>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a>
+            <a class="nav-link text-dark" href="@Options.Endpoint">Profile</a>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">Sign in</a>
+            <a class="nav-link text-dark" href="@Options.Endpoint">Sign in</a>
         </li>
     }
 </ul>
