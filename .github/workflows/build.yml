@@ -115,6 +115,7 @@ jobs:
         $NowBranchName = git rev-parse --abbrev-ref HEAD;
         echo "Now branch name: $NowBranchName";
         $PackageVersion = ($LastTag).TrimStart('v') + "-" + $env:BUILD_RUN_NUMBER + "." + $NowBranchName + "." + $env:SHA.SubString(0, 7);
+        $PackageVersion = $PackageVersion.Replace("#", ".");
         echo "Publishing package version: ${PackageVersion}";
         dotnet pack -c Release -o packages /p:PackageVersion=$PackageVersion /p:Version=$Version;
 
