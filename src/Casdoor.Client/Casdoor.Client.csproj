@@ -52,8 +52,4 @@
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.16.0" />
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Caching" />
-  </ItemGroup>
 </Project>
