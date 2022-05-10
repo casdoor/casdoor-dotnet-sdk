@@ -7,11 +7,11 @@ var options = new CasdoorOptions
 {
     // Require: Basic options
     Endpoint = "https://door.casdoor.com",
-    OrganizationName = "build-in",
+    OrganizationName = "casbin",
     ApplicationName = "app-build-in",
     ApplicationType = "native", // webapp, webapi or native
-    ClientId = "541738959670d221d59d",
-    ClientSecret = "66863369a64a5863827cf949bab70ed560ba24bf",
+    ClientId = "b800a86702dd4d29ec4d",
+    ClientSecret = "1219843a8db4695155699be3a67f10796f2ec1d5",
 
     // Optional: The callback path that the client will be redirected to
     // after the user has authenticated. default is "/casdoor/signin-callback"
