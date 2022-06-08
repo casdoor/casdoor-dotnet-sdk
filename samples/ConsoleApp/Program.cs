@@ -7,8 +7,8 @@ var options = new CasdoorOptions
 {
     // Require: Basic options
     Endpoint = "https://door.casdoor.com",
-    OrganizationName = "build-in",
-    ApplicationName = "app-build-in",
+    OrganizationName = "built-in",
+    ApplicationName = "app-built-in",
     ApplicationType = "native", // webapp, webapi or native
     ClientId = "541738959670d221d59d",
     ClientSecret = "66863369a64a5863827cf949bab70ed560ba24bf",
@@ -43,6 +43,23 @@ ConsoleExtension.JsonWriteLine(new
 
 var token = await client.RequestPasswordTokenAsync("admin", "123");
 ConsoleExtension.WriteLine("Get tokens by username and password...");
+if (token is null)
+{
+    Console.WriteLine("Failed to get the token.");
+    return;
+}
+client.SetBearerToken(token.AccessToken);
+Console.WriteLine($"token : {token.AccessToken}");
+
+var user = await client.GetUserAsync("admin");
+if (user is null)
+{
+    Console.WriteLine("Failed to get the user.");
+    return;
+}
+var res = await client.SetPasswordAsync(user, "123", "123"); // Switch to your own account and modify the password.
+Console.WriteLine($"The status of password setting: {res?.Status}");
+
 if (token.IsError is false)
 {
     ConsoleExtension.JsonWriteLine(new
