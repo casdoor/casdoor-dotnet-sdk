@@ -50,7 +50,7 @@ public static class CasdoorClientOptionsExtension
             }
         }
         string query = queryBuilder.ToString();
-        return $"{options.Endpoint}/api/{action}?{query}";
+        return $"{options.Endpoint}/api/{action}{query}";
     }
 
     private static void AppendKeyValuePair(this StringBuilder builder, in KeyValuePair<string, string?> pair,
