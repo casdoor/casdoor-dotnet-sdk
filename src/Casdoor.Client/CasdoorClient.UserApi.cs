@@ -18,7 +18,7 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<IEnumerable<CasdoorUser>?> GetUsersAsync()
+    public virtual Task<IEnumerable<CasdoorUser>?> GetUsersAsync(CancellationToken cancellationToken = default)
     {
         IEnumerable<KeyValuePair<string, string?>> queryMap =
             new KeyValuePair<string,string?>[]
@@ -26,10 +26,11 @@ public partial class CasdoorClient
                 new("owner", _options.OrganizationName)
             };
         string url = _options.GetActionUrl("get-users", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
+        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
     }
 
-    public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit)
+    public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, 
+        CancellationToken cancellationToken = default)
     {
         IEnumerable<KeyValuePair<string, string?>> queryMap =
             new KeyValuePair<string, string?>[]
@@ -38,10 +39,10 @@ public partial class CasdoorClient
                 new("sorter", sorter), new("limit", limit.ToString())
             };
         string url = _options.GetActionUrl("get-sorted-users", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
+        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
     }
 
-    public virtual Task<CasdoorUser?> GetUserAsync(string name)
+    public virtual Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default)
     {
         IEnumerable<KeyValuePair<string, string?>> queryMap =
             new KeyValuePair<string, string?>[]
@@ -49,10 +50,21 @@ public partial class CasdoorClient
                 new("id", string.Concat(_options.OrganizationName, "/", name))
             };
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
-    public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email)
+    public virtual Task<CasdoorUser?> GetUseByIdrAsync(string id, CancellationToken cancellationToken = default)
+    {
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("id", id)
+            };
+        string url = _options.GetActionUrl("get-user", queryMap);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+    }
+
+    public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         IEnumerable<KeyValuePair<string, string?>> queryMap =
             new KeyValuePair<string, string?>[]
@@ -60,14 +72,21 @@ public partial class CasdoorClient
                 new("owner", _options.OrganizationName), new("email", email)
             };
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user)
         => ModifyUserAsync("add-user", user);
+    
+    public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken)
+        => ModifyUserAsync("add-user", user, cancellationToken);
 
     public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames)
         => ModifyUserAsync("update-user", user, propertyNames);
+
+    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, CancellationToken cancellationToken, 
+        params string[] propertyNames)
+        => ModifyUserAsync("update-user", user, cancellationToken, propertyNames);
 
     public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name)
     {
@@ -79,6 +98,16 @@ public partial class CasdoorClient
         return await ModifyUserAsync("delete-user", user);
     }
 
+    public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name, CancellationToken cancellationToken)
+    {
+        CasdoorUser? user = await GetUserAsync(name);
+        if (user is null)
+        {
+            return null;
+        }
+        return await ModifyUserAsync("delete-user", user, cancellationToken);
+    }
+
     public virtual async Task<CasdoorResponse?> CheckUserPasswordAsync(string name)
     {
         CasdoorUser? user = await GetUserAsync(name);
@@ -87,6 +116,16 @@ public partial class CasdoorClient
             return null;
         }
         return await ModifyUserAsync("check-user-password", user);
+    }
+
+    public virtual async Task<CasdoorResponse?> CheckUserPasswordAsync(string name, CancellationToken cancellationToken)
+    {
+        CasdoorUser? user = await GetUserAsync(name);
+        if (user is null)
+        {
+            return null;
+        }
+        return await ModifyUserAsync("check-user-password", user, cancellationToken);
     }
 
     private Task<CasdoorResponse?> ModifyUserAsync(
@@ -103,5 +142,21 @@ public partial class CasdoorClient
         user.Owner = _options.OrganizationName;
         string url = _options.GetActionUrl(action, queryMap);
         return PostAsJsonAsync(url, user);
+    }
+
+    private Task<CasdoorResponse?> ModifyUserAsync(
+        string action, CasdoorUser user, CancellationToken cancellationToken, params string[] columns)
+    {
+        List<KeyValuePair<string, string?>> queryMap = new()
+        {
+            new KeyValuePair<string, string?>("id", $"{user.Owner}/{user.Name}")
+        };
+        if (columns.Length != 0)
+        {
+            queryMap.Add(new KeyValuePair<string, string?>("columns", string.Join(",", columns)));
+        }
+        user.Owner = _options.OrganizationName;
+        string url = _options.GetActionUrl(action, queryMap);
+        return PostAsJsonAsync(url, user, cancellationToken);
     }
 }
