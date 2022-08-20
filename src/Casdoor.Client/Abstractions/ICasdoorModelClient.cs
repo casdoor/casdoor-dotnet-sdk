@@ -1,4 +1,4 @@
-﻿// Copyright 2022 The Casdoor Authors. All Rights Reserved.
+// Copyright 2022 The Casdoor Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 namespace Casdoor.Client;
 
-public interface ICasdoorClient :
-    ICasdoorUserClient, ICasdoorTokenClient, ICasdoorResourceClient, ICasdoorServiceClient, ICasdoorModelClient
+public interface ICasdoorModelClient
 {
-
+    public Task<CasdoorModel?> GetModelAsync(string id);
+    public Task<IEnumerable<CasdoorModel>?> GetModelsAsync();
 }
