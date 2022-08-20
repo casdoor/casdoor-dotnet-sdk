@@ -18,8 +18,11 @@ public interface ICasdoorUserClient
 {
     public Task<IEnumerable<CasdoorUser>?> GetUsersAsync();
     public Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit);
+    public Task<bool> GetUserCountAsync(string isOnline);
     public Task<CasdoorUser?> GetUserAsync(string name);
     public Task<CasdoorUser?> GetUserByEmailAsync(string email);
+    public Task<CasdoorUser?> GetUserByPhoneAsync(string phone);
+    public Task<CasdoorUser?> GetUserByUserIdAsync(string userId);
     public Task<CasdoorResponse?> AddUserAsync(CasdoorUser user);
     public Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames);
     public Task<CasdoorResponse?> DeleteUserAsync(string name);

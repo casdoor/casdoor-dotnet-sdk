@@ -41,6 +41,18 @@ public partial class CasdoorClient
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url);
     }
 
+    public virtual Task<bool> GetUserCountAsync(string isOnline)
+    {
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("owner", _options.OrganizationName),
+                new("isOnline", isOnline)
+            };
+        string url = _options.GetActionUrl("get-user-count", queryMap);
+        return _httpClient.GetFromJsonAsync<bool>(url);
+    }
+
     public virtual Task<CasdoorUser?> GetUserAsync(string name)
     {
         IEnumerable<KeyValuePair<string, string?>> queryMap =
@@ -58,6 +70,28 @@ public partial class CasdoorClient
             new KeyValuePair<string, string?>[]
             {
                 new("owner", _options.OrganizationName), new("email", email)
+            };
+        string url = _options.GetActionUrl("get-user", queryMap);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
+    }
+
+    public virtual Task<CasdoorUser?> GetUserByPhoneAsync(string phone)
+    {
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("owner", _options.OrganizationName), new("phone", phone)
+            };
+        string url = _options.GetActionUrl("get-user", queryMap);
+        return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
+    }
+
+    public virtual Task<CasdoorUser?> GetUserByUserIdAsync(string userId)
+    {
+        IEnumerable<KeyValuePair<string, string?>> queryMap =
+            new KeyValuePair<string, string?>[]
+            {
+                new("owner", _options.OrganizationName), new("userId", userId)
             };
         string url = _options.GetActionUrl("get-user", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorUser>(url);
