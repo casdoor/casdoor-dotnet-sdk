@@ -16,10 +16,10 @@ namespace Casdoor.Client;
 
 public interface ICasdoorUserClient
 {
-    public Task<IEnumerable<CasdoorUser>?> GetUsersAsync();
-    public Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit);
-    public Task<CasdoorUser?> GetUserAsync(string name);
-    public Task<CasdoorUser?> GetUserByEmailAsync(string email);
+    public Task<IEnumerable<CasdoorUser>?> GetUsersAsync(CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, CancellationToken cancellationToken = default);
+    public Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default);
+    public Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default);
     public Task<CasdoorResponse?> AddUserAsync(CasdoorUser user);
     public Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames);
     public Task<CasdoorResponse?> DeleteUserAsync(string name);
