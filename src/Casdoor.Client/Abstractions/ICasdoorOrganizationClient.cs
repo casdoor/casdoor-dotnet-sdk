@@ -1,4 +1,4 @@
-﻿// Copyright 2022 The Casdoor Authors. All Rights Reserved.
+// Copyright 2022 The Casdoor Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
 
 namespace Casdoor.Client;
 
-public interface ICasdoorClient :
-    ICasdoorUserClient, ICasdoorTokenClient, ICasdoorResourceClient, ICasdoorServiceClient, ICasdoorModelClient,
-    ICasdoorApplicationClient, ICasdoorOrganizationClient
+public interface ICasdoorOrganizationClient
 {
-
+    public Task<CasdoorResponse?> AddOrganizationAsync(CasdoorOrganization organization);
+    public Task<CasdoorResponse?> DeleteOrganizationAsync(string name);
+    public Task<CasdoorResponse?> UpdateOrganizationAsync(string id, CasdoorOrganization newOrganization);
+    public Task<CasdoorOrganization?> GetOrganizationAsync(string id);
+    public Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner);
 }
