@@ -48,6 +48,12 @@ public class CasdoorUser
     [JsonPropertyName("displayName")]
     public string? DisplayName { get; set; }
 
+    [JsonPropertyName("firstName")]
+    public string? FirstName { get; set; }
+
+    [JsonPropertyName("lastName")]
+    public string? LastName { get; set; }
+
     [JsonPropertyName("avatar")]
     public string? Avatar { get; set; }
 
@@ -104,6 +110,9 @@ public class CasdoorUser
 
     [JsonPropertyName("score")]
     public int Score { get; set; }
+
+    [JsonPropertyName("karma")]
+    public int Karma { get; set; }
 
     [JsonPropertyName("ranking")]
     public int Ranking { get; set; }
@@ -179,6 +188,45 @@ public class CasdoorUser
 
     [JsonPropertyName("gitlab")]
     public string? Gitlab { get; set; }
+
+    [JsonPropertyName("adfs")]
+    public string? Adfs { get; set; }
+
+    [JsonPropertyName("baidu")]
+    public string? Baidu { get; set; }
+
+    [JsonPropertyName("alipay")]
+    public string? Alipay { get; set; }
+
+    [JsonPropertyName("casdoor")]
+    public string? Casdoor { get; set; }
+
+    [JsonPropertyName("infoflow")]
+    public string? Infoflow { get; set; }
+
+    [JsonPropertyName("apple")]
+    public string? Apple { get; set; }
+
+    [JsonPropertyName("azuread")]
+    public string? AzureAD { get; set; }
+
+    [JsonPropertyName("slack")]
+    public string? Slack { get; set; }
+
+    [JsonPropertyName("steam")]
+    public string? Steam { get; set; }
+
+    [JsonPropertyName("bilibili")]
+    public string? Bilibili { get; set; }
+
+    [JsonPropertyName("okta")]
+    public string? Okta { get; set; }
+
+    [JsonPropertyName("douyin")]
+    public string? Douyin { get; set; }
+
+    [JsonPropertyName("custom")]
+    public string? Custom { get; set; }
 
     [JsonPropertyName("ldap")]
     public string? Ldap { get; set; }
