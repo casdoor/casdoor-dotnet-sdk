@@ -35,6 +35,10 @@ var token = await client.RequestClientCredentialsTokenAsync();
 client.SetBearerToken(token);
 // Request user info
 var users = await client.GetUsersAsync();
+// Request roles 
+var roles = await client.GetRolesAsync();
+// Request Permissions
+var persmissions = await client.GetPermissionsAsync();
 ```
 - CasdoorOptions (Updating)
 - Extensions (Updating)
