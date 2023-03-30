@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.Text;
+using System.Text.Json;
 using IdentityModel.Client;
 
 namespace Casdoor.Client;
@@ -60,5 +64,14 @@ public partial class CasdoorClient
         var request = new RefreshTokenRequest {RefreshToken = refreshToken};
         request = await ApplyConfigurationAsync(request);
         return await _httpClient.RequestRefreshTokenAsync(request);
+    }
+
+    public virtual CasdoorUser? ParseJwtToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadJwtToken(token);
+        var payload = jsonToken.Payload;
+        var result = JsonSerializer.Deserialize<CasdoorUser>(payload.SerializeToJson());
+        return result;
     }
 }
