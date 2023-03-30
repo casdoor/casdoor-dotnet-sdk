@@ -233,4 +233,10 @@ public class CasdoorUser
 
     [JsonPropertyName("properties")]
     public IDictionary<string, string>? Properties { get; set; }
+
+    [JsonPropertyName("roles")]
+    public IEnumerable<CasdoorRole>? Roles { get; set; }
+
+    [JsonPropertyName("permissions")]
+    public IEnumerable<CasdoorPermission>? Permissions { get; set; }
 }
