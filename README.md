@@ -33,12 +33,26 @@ var client = new CasdoorClient(HttpClient, new CasdoorOptions{
 // Request tokens (You should enable credentials flow in your Casdoor application)
 var token = await client.RequestClientCredentialsTokenAsync();
 client.SetBearerToken(token);
+
+var currentUser = client.ParseJwtToken(token.AccessToken);
+
 // Request user info
 var users = await client.GetUsersAsync();
 // Request roles 
 var roles = await client.GetRolesAsync();
 // Request Permissions
 var persmissions = await client.GetPermissionsAsync();
+
+var policy = new CasdoorPermissionRule()
+{
+    Id = $"{currentUser.Owner}/{persmissions.First().Name}",
+    V0 = $"{currentUser.Owner}/{currentUser.Name}",
+    V1 = "example-resource",
+    V2 = "example-action" 
+};
+
+var isPermissionAvaliable = await client.EnforceAsync(policy);
+
 ```
 - CasdoorOptions (Updating)
 - Extensions (Updating)
