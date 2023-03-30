@@ -15,6 +15,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using IdentityModel.Client;
 
 namespace Casdoor.Client;
 
@@ -42,6 +43,7 @@ public partial class CasdoorClient
                 "application/json")
         };
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        request.SetBasicAuthentication(_options.ClientId, _options.ClientSecret);
 
         var response = await _httpClient.SendAsync(request);
         string responseContent = await response.Content.ReadAsStringAsync();
