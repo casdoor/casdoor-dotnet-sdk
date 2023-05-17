@@ -130,7 +130,7 @@ namespace Casdoor.AspNetCore.Authentication
         /// <returns></returns>
         public async Task<IdentityResult> UpdateAsync(CasdoorUser user, CancellationToken cancellationToken)
         {
-            var response = await _casdoorClient.UpdateUserAsync(user, CasdoorCanstants.AllUserProperties);
+            var response = await _casdoorClient.UpdateUserAsync(user, CasdoorConstants.AllUserProperties);
             return CasdoorResponse2IdenityResult(response);
         }
         public void Dispose()
@@ -139,7 +139,7 @@ namespace Casdoor.AspNetCore.Authentication
         }
         private IdentityResult CasdoorResponse2IdenityResult(CasdoorResponse response)
         {
-            return response.Status.Equals(CasdoorCanstants.DefaultCasdoorSeccessStatus) ? 
+            return response.Status.Equals(CasdoorConstants.DefaultCasdoorSuccessStatus) ? 
                 IdentityResult.Success : IdentityResult.Failed(new IdentityError(){ Description = response.Msg });
         }
     }

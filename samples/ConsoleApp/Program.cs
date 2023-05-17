@@ -51,6 +51,9 @@ if (token is null)
 client.SetBearerToken(token.AccessToken);
 Console.WriteLine($"token : {token.AccessToken}");
 
+var apps = await client.GetApplicationsAsync("admin");
+ConsoleExtension.JsonWriteLine(apps, ConsoleColor.Blue);
+
 var user = await client.GetUserAsync("admin");
 if (user is null)
 {
