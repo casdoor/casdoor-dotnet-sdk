@@ -16,9 +16,9 @@ namespace Casdoor.Client;
 
 public interface ICasdoorOrganizationClient
 {
-    public Task<CasdoorResponse?> AddOrganizationAsync(CasdoorOrganization organization);
-    public Task<CasdoorResponse?> DeleteOrganizationAsync(string name);
-    public Task<CasdoorResponse?> UpdateOrganizationAsync(string id, CasdoorOrganization newOrganization);
-    public Task<CasdoorOrganization?> GetOrganizationAsync(string id);
-    public Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner);
+    public Task<CasdoorResponse?> AddOrganizationAsync(CasdoorOrganization organization, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> DeleteOrganizationAsync(string name, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateOrganizationAsync(string id, CasdoorOrganization newOrganization, CancellationToken cancellationToken = default);
+    public Task<CasdoorOrganization?> GetOrganizationAsync(string id, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner, CancellationToken cancellationToken = default);
 }

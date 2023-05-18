@@ -16,9 +16,8 @@ namespace Casdoor.Client;
 
 public interface ICasdoorResourceClient
 {
-    public Task<CasdoorResponse?> UploadResourceAsync(
-        string user, string tag, string parent, string fullFilePath,
-        Stream fileStream, string createdTime = "", string description = "");
+    public Task<CasdoorResponse?> UploadResourceAsync(string user, string tag, string parent, string fullFilePath,
+        Stream fileStream, string createdTime = "", string description = "", CancellationToken cancellationToken = default);
 
-    public Task<CasdoorResponse?> DeleteResourceAsync(string name);
+    public Task<CasdoorResponse?> DeleteResourceAsync(string name, CancellationToken cancellationToken = default);
 }

@@ -18,24 +18,24 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual async Task<CasdoorResponse?> AddOrganizationAsync(CasdoorOrganization organization)
+    public virtual async Task<CasdoorResponse?> AddOrganizationAsync(CasdoorOrganization organization, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(organization.Owner))
         {
             organization.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
         var url = _options.GetActionUrl("add-organization");
-        return await PostAsJsonAsync(url, organization);
+        return await PostAsJsonAsync(url, organization, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> DeleteOrganizationAsync(string name)
+    public virtual async Task<CasdoorResponse?> DeleteOrganizationAsync(string name, CancellationToken cancellationToken = default)
     {
         var organization = new CasdoorOrganization {Owner = CasdoorConstants.DefaultCasdoorOwner, Name = name};
         var url = _options.GetActionUrl("delete-organization");
-        return await PostAsJsonAsync(url, organization);
+        return await PostAsJsonAsync(url, organization, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> UpdateOrganizationAsync(string id, CasdoorOrganization newOrganization)
+    public virtual async Task<CasdoorResponse?> UpdateOrganizationAsync(string id, CasdoorOrganization newOrganization, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
         if (string.IsNullOrEmpty(newOrganization.Owner))
@@ -43,20 +43,20 @@ public partial class CasdoorClient
             newOrganization.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
         var url = _options.GetActionUrl("update-organization", queryMap);
-        return await PostAsJsonAsync(url, newOrganization);
+        return await PostAsJsonAsync(url, newOrganization, cancellationToken);
     }
 
-    public virtual Task<CasdoorOrganization?> GetOrganizationAsync(string id)
+    public virtual Task<CasdoorOrganization?> GetOrganizationAsync(string id, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
         var url = _options.GetActionUrl("get-organization", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorOrganization>(url);
+        return _httpClient.GetFromJsonAsync<CasdoorOrganization>(url, cancellationToken: cancellationToken);
     }
 
-    public virtual Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner)
+    public virtual Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).GetMap();
         var url = _options.GetActionUrl("get-organizations", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorOrganization>>(url);
+        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorOrganization>>(url, cancellationToken: cancellationToken);
     }
 }

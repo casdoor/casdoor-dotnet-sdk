@@ -20,11 +20,7 @@ public partial class CasdoorClient
 {
     public virtual Task<IEnumerable<CasdoorRole>?> GetRolesAsync(CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("owner", _options.OrganizationName)
-            };
+        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).GetMap();
         string url = _options.GetActionUrl("get-roles", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorRole>>(url, cancellationToken);
     }

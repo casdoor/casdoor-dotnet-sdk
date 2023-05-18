@@ -1,6 +1,6 @@
 namespace Casdoor.Client;
 
-public class QueryMapBuilder
+internal class QueryMapBuilder
 {
     private readonly Dictionary<string, string?> _map = new();
 

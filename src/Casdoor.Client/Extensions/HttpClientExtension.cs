@@ -23,16 +23,16 @@ public static class HttpClientExtensions
         client.SetBasicAuthenticationOAuth(options.ClientId, options.ClientSecret);
 
     internal static async Task<CasdoorResponse?> PostFileAsync(this HttpClient client, string? url,
-        StreamContent postStream)
+        StreamContent postStream, CancellationToken cancellationToken = default)
     {
         using MultipartFormDataContent formData = new MultipartFormDataContent();
         formData.Add(postStream, "file", "file");
 
-        HttpResponseMessage resp = await client.PostAsync(url, formData);
-        return await resp.ToCasdoorResponse();
+        HttpResponseMessage resp = await client.PostAsync(url, formData, cancellationToken);
+        return await resp.ToCasdoorResponse(cancellationToken);
     }
 
-    internal static Task<CasdoorResponse?> ToCasdoorResponse(this HttpResponseMessage response) =>
-        response.Content.ReadFromJsonAsync<CasdoorResponse>();
+    internal static Task<CasdoorResponse?> ToCasdoorResponse(this HttpResponseMessage response, CancellationToken cancellationToken) =>
+        response.Content.ReadFromJsonAsync<CasdoorResponse>(cancellationToken: cancellationToken);
 
 }

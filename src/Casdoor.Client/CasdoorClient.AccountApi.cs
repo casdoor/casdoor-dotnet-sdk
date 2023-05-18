@@ -16,16 +16,16 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual async Task<CasdoorResponse?> SetPasswordAsync(CasdoorUser user, string oldPassword, string newPassword)
+    public virtual async Task<CasdoorResponse?> SetPasswordAsync(CasdoorUser user, string oldPassword, string newPassword, CancellationToken cancellationToken = default)
     {
-        List<KeyValuePair<string, string?>> queryMap = new()
-        {
-            new KeyValuePair<string, string?>("userOwner", $"{user.Owner}"),
-            new KeyValuePair<string, string?>("userName", $"{user.Name}"),
-            new KeyValuePair<string, string?>("oldPassword", oldPassword),
-            new KeyValuePair<string, string?>("newPassword", newPassword)
-        };
+        var queryMap = new QueryMapBuilder()
+            .Add("userOwner", user.Owner ?? string.Empty)
+            .Add("userName", user.Name ?? string.Empty)
+            .Add("oldPassword", oldPassword)
+            .Add("newPassword", newPassword)
+            .GetMap();
+
         string url = _options.GetActionUrl("set-password", queryMap);
-        return await PostAsJsonAsync(url, user);
+        return await PostAsJsonAsync(url, user, cancellationToken);
     }
 }
