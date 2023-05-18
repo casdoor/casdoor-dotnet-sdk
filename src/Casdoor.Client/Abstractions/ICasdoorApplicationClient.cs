@@ -16,12 +16,12 @@ namespace Casdoor.Client;
 
 public interface ICasdoorApplicationClient
 {
-    public Task<CasdoorResponse?> AddApplicationAsync(CasdoorApplication application);
-    public Task<CasdoorResponse?> DeleteApplicationAsync(string name);
-    public Task<CasdoorResponse?> UpdateApplicationAsync(string id, CasdoorApplication newApplication);
-    public Task<CasdoorApplication?> GetApplicationAsync(string id);
-    
-    public Task<IEnumerable<CasdoorApplication>?> GetApplicationsAsync(string owner);
-    public Task<IEnumerable<CasdoorApplication>?> GetOrganizationApplicationsAsync(string organization);
-    public Task<CasdoorApplication?> GetUserApplicationAsync(string id);
+    public Task<CasdoorResponse?> AddApplicationAsync(CasdoorApplication application, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> DeleteApplicationAsync(string name, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateApplicationAsync(string id, CasdoorApplication newApplication, CancellationToken cancellationToken = default);
+    public Task<CasdoorApplication?> GetApplicationAsync(string id, CancellationToken cancellationToken = default);
+
+    public Task<IEnumerable<CasdoorApplication>?> GetApplicationsAsync(string owner, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorApplication>?> GetOrganizationApplicationsAsync(string organization, CancellationToken cancellationToken = default);
+    public Task<CasdoorApplication?> GetUserApplicationAsync(string id, CancellationToken cancellationToken = default);
 }

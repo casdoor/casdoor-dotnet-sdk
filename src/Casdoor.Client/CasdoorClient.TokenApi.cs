@@ -24,46 +24,46 @@ public partial class CasdoorClient
 {
     private readonly ClientCredentialsTokenRequest _credentialsTokenRequest = new ClientCredentialsTokenRequest();
 
-    private async Task<T> ApplyConfigurationAsync<T>(T request) where T : TokenRequest
+    private async Task<T> ApplyConfigurationAsync<T>(T request, CancellationToken cancellationToken = default) where T : TokenRequest
     {
-        var configuration = await _options.GetOpenIdConnectConfigurationAsync();
+        var configuration = await _options.GetOpenIdConnectConfigurationAsync(cancellationToken: cancellationToken);
         request.Address = configuration.TokenEndpoint;
         request.ClientId = _options.ClientId;
         request.ClientSecret = _options.ClientSecret;
         return request;
     }
 
-    public virtual async Task<TokenResponse> RequestClientCredentialsTokenAsync()
+    public virtual async Task<TokenResponse> RequestClientCredentialsTokenAsync(CancellationToken cancellationToken = default)
     {
         var request = _credentialsTokenRequest;
         request.Scope = _options.Scope;
-        request = await ApplyConfigurationAsync(request);
-        return await _httpClient.RequestClientCredentialsTokenAsync(request);
+        request = await ApplyConfigurationAsync(request, cancellationToken);
+        return await _httpClient.RequestClientCredentialsTokenAsync(request, cancellationToken: cancellationToken);
     }
 
-    public virtual async Task<TokenResponse> RequestPasswordTokenAsync(string username, string password)
+    public virtual async Task<TokenResponse> RequestPasswordTokenAsync(string username, string password, CancellationToken cancellationToken = default)
     {
         var request = new PasswordTokenRequest {UserName = username, Password = password};
-        request = await ApplyConfigurationAsync(request);
-        return await _httpClient.RequestPasswordTokenAsync(request);
+        request = await ApplyConfigurationAsync(request, cancellationToken);
+        return await _httpClient.RequestPasswordTokenAsync(request, cancellationToken: cancellationToken);
     }
 
     public virtual async Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri,
-        string codeVerifier = "")
+        string codeVerifier = "", CancellationToken cancellationToken = default)
     {
         var request = new AuthorizationCodeTokenRequest
         {
             Code = code, RedirectUri = redirectUri, CodeVerifier = codeVerifier
         };
-        request = await ApplyConfigurationAsync(request);
-        return await _httpClient.RequestAuthorizationCodeTokenAsync(request);
+        request = await ApplyConfigurationAsync(request, cancellationToken);
+        return await _httpClient.RequestAuthorizationCodeTokenAsync(request, cancellationToken: cancellationToken);
     }
 
-    public virtual async Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken)
+    public virtual async Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
         var request = new RefreshTokenRequest {RefreshToken = refreshToken};
-        request = await ApplyConfigurationAsync(request);
-        return await _httpClient.RequestRefreshTokenAsync(request);
+        request = await ApplyConfigurationAsync(request, cancellationToken);
+        return await _httpClient.RequestRefreshTokenAsync(request, cancellationToken: cancellationToken);
     }
 
     public virtual CasdoorUser? ParseJwtToken(string token)

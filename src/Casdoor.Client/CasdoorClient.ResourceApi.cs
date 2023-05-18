@@ -19,25 +19,23 @@ public partial class CasdoorClient
     // TODO: what are `createdTime` and `description` for?
     public virtual Task<CasdoorResponse?> UploadResourceAsync(
         string user, string tag, string parent, string fullFilePath,
-        Stream fileStream, string createdTime = "", string description = "")
+        Stream fileStream, string createdTime = "", string description = "", CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("owner", _options.OrganizationName),
-                new("user", user),
-                new("application", _options.ApplicationName),
-                new("tag", tag),
-                new("parent", parent),
-                new("fullFilePath", fullFilePath)
-            };
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", _options.OrganizationName)
+            .Add("user", user)
+            .Add("application", _options.ApplicationName)
+            .Add("tag", tag)
+            .Add("parent", parent)
+            .Add("fullFilePath", fullFilePath)
+            .GetMap();
         string url = _options.GetActionUrl("upload-resource", queryMap);
-        return _httpClient.PostFileAsync(url, new StreamContent(fileStream));
+        return _httpClient.PostFileAsync(url, new StreamContent(fileStream), cancellationToken: cancellationToken);
     }
 
-    public virtual Task<CasdoorResponse?> DeleteResourceAsync(string name)
+    public virtual Task<CasdoorResponse?> DeleteResourceAsync(string name, CancellationToken cancellationToken = default)
     {
         CasdoorUserResource resource = new() {Owner = _options.OrganizationName, Name = name};
-        return PostAsJsonAsync("delete-resource", resource);
+        return PostAsJsonAsync("delete-resource", resource, cancellationToken);
     }
 }

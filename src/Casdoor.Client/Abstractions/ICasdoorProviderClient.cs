@@ -16,10 +16,10 @@ namespace Casdoor.Client;
 
 public interface ICasdoorProviderClient
 {
-    public Task<CasdoorResponse?> AddProviderAsync(CasdoorProvider provider);
-    public Task<CasdoorResponse?> DeleteProviderAsync(string name);
-    public Task<CasdoorResponse?> UpdateProviderAsync(string id, CasdoorProvider newProvider);
-    public Task<CasdoorProvider?> GetProviderAsync(string id);
-    public Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner);
-    public Task<IEnumerable<CasdoorProvider>?> GetGlobalProvidersAsync();
+    public Task<CasdoorResponse?> AddProviderAsync(CasdoorProvider provider, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> DeleteProviderAsync(string name, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateProviderAsync(string id, CasdoorProvider newProvider, CancellationToken cancellationToken = default);
+    public Task<CasdoorProvider?> GetProviderAsync(string id, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorProvider>?> GetGlobalProvidersAsync(CancellationToken cancellationToken = default);
 }

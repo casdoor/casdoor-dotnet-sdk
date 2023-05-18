@@ -18,8 +18,8 @@ namespace Casdoor.Client;
 
 public interface ICasdoorTokenClient
 {
-    public Task<TokenResponse> RequestClientCredentialsTokenAsync();
-    public Task<TokenResponse> RequestPasswordTokenAsync(string username, string password);
-    public Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "");
-    public Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken);
+    public Task<TokenResponse> RequestClientCredentialsTokenAsync(CancellationToken cancellationToken = default);
+    public Task<TokenResponse> RequestPasswordTokenAsync(string username, string password, CancellationToken cancellationToken = default);
+    public Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "", CancellationToken cancellationToken = default);
+    public Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
 }
