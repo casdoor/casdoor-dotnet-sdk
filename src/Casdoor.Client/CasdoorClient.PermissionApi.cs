@@ -20,14 +20,14 @@ public partial class CasdoorClient
 {
     public virtual Task<IEnumerable<CasdoorPermission>?> GetPermissionsAsync(CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).GetMap();
+        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-permissions", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorPermission>>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorResponse<IEnumerable<CasdoorPermission>>?> GetPermissionsByRoleAsync(string name, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").GetMap();
+        var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
         string url = _options.GetActionUrl("get-permissions-by-role", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorResponse<IEnumerable<CasdoorPermission>>>(url, cancellationToken);
     }

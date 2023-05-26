@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace Casdoor.AspNetCore.Authentication
 {
     public class CasdoorIdentityUserStore : IUserStore<CasdoorUser>
     {
-        private CasdoorClient _casdoorClient;
+        private readonly CasdoorClient _casdoorClient;
         public CasdoorIdentityUserStore(CasdoorClient casdoorClient)
         {
             _casdoorClient = casdoorClient;
@@ -35,7 +36,7 @@ namespace Casdoor.AspNetCore.Authentication
         public async Task<IdentityResult> CreateAsync(CasdoorUser user, CancellationToken cancellationToken)
         {
             var response = await _casdoorClient.AddUserAsync(user, cancellationToken);
-            return CasdoorResponse2IdenityResult(response);
+            return CasdoorResponse2IdentityResult(response);
         }
         /// <summary>
         /// Deletes the specified user from the user store.
@@ -45,8 +46,13 @@ namespace Casdoor.AspNetCore.Authentication
         /// <returns></returns>
         public async Task<IdentityResult> DeleteAsync(CasdoorUser user, CancellationToken cancellationToken)
         {
+            if (user.Name == null)
+            {
+                throw new ArgumentException($"{nameof(user)}.{nameof(user.Name)} should not be null");
+            }
+
             var response = await _casdoorClient.DeleteUserAsync(user.Name, cancellationToken);
-            return CasdoorResponse2IdenityResult(response);
+            return CasdoorResponse2IdentityResult(response);
         }
         /// <summary>
         /// Finds and returns a user, if any, who has the specified userId.
@@ -108,7 +114,7 @@ namespace Casdoor.AspNetCore.Authentication
         public async Task SetNormalizedUserNameAsync(CasdoorUser user, string normalizedName, CancellationToken cancellationToken)
         {
             user.Name = normalizedName;
-            await _casdoorClient.UpdateUserAsync(user, "name");
+            await _casdoorClient.UpdateUserAsync(user, new[] {"name"}, cancellationToken);
         }
         /// <summary>
         /// Sets the given userName for the specified user.
@@ -120,7 +126,7 @@ namespace Casdoor.AspNetCore.Authentication
         public async Task SetUserNameAsync(CasdoorUser user, string userName, CancellationToken cancellationToken)
         {
             user.Name = userName;
-            await _casdoorClient.UpdateUserAsync(user, "name");
+            await _casdoorClient.UpdateUserAsync(user, new[] {"name"}, cancellationToken);
         }
         /// <summary>
         /// Updates the specified user in the user store.
@@ -130,17 +136,17 @@ namespace Casdoor.AspNetCore.Authentication
         /// <returns></returns>
         public async Task<IdentityResult> UpdateAsync(CasdoorUser user, CancellationToken cancellationToken)
         {
-            var response = await _casdoorClient.UpdateUserAsync(user, CasdoorConstants.AllUserProperties);
-            return CasdoorResponse2IdenityResult(response);
+            var response = await _casdoorClient.UpdateUserAsync(user, CasdoorConstants.AllUserProperties, cancellationToken);
+            return CasdoorResponse2IdentityResult(response);
         }
         public void Dispose()
         {
-            
+
         }
-        private IdentityResult CasdoorResponse2IdenityResult(CasdoorResponse response)
+        private IdentityResult CasdoorResponse2IdentityResult(CasdoorResponse response)
         {
-            return response.Status.Equals(CasdoorConstants.DefaultCasdoorSuccessStatus) ? 
-                IdentityResult.Success : IdentityResult.Failed(new IdentityError(){ Description = response.Msg });
+            return response.Status?.Equals(CasdoorConstants.DefaultCasdoorSuccessStatus) == true ?
+                IdentityResult.Success : IdentityResult.Failed(new IdentityError { Description = response.Msg ?? string.Empty });
         }
     }
 }

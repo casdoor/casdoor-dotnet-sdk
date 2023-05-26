@@ -27,8 +27,7 @@ public partial class CasdoorClient
             .Add("application", _options.ApplicationName)
             .Add("tag", tag)
             .Add("parent", parent)
-            .Add("fullFilePath", fullFilePath)
-            .GetMap();
+            .Add("fullFilePath", fullFilePath).QueryMap;
         string url = _options.GetActionUrl("upload-resource", queryMap);
         return _httpClient.PostFileAsync(url, new StreamContent(fileStream), cancellationToken: cancellationToken);
     }

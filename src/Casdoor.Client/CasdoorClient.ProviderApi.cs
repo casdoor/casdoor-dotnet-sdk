@@ -37,7 +37,7 @@ public partial class CasdoorClient
 
     public virtual async Task<CasdoorResponse?> UpdateProviderAsync(string id, CasdoorProvider newProvider, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         if (string.IsNullOrEmpty(newProvider.Owner))
         {
             newProvider.Owner = CasdoorConstants.DefaultCasdoorOwner;
@@ -48,14 +48,14 @@ public partial class CasdoorClient
 
     public virtual Task<CasdoorProvider?> GetProviderAsync(string id, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-provider", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorProvider>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("owner", owner).GetMap();
+        var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-providers", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
     }

@@ -1,6 +1,5 @@
 using Casdoor.Client.UnitTests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Casdoor.Client.UnitTests.ApiClientTests;
 

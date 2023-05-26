@@ -16,27 +16,27 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<CasdoorResponse?> SendSmsAsync(string content, params string[] receivers) =>
-        SendSmsAsync(content, default, receivers);
-
-    public virtual Task<CasdoorResponse?> SendSmsAsync(string content, CancellationToken cancellationToken, params string[] receivers)
+    public virtual Task<CasdoorResponse?> SendSmsAsync(string content, IEnumerable<string> receivers, CancellationToken cancellationToken = default)
     {
         CasdoorSmsForm form = new()
         {
             OrganizationId = string.Concat("admin/", _options.OrganizationName),
             Content = content,
-            Receivers = receivers,
+            Receivers = receivers as string[] ?? receivers.ToArray(),
         };
         string url = _options.GetActionUrl("send-sms");
         return PostAsJsonAsync(url, form, cancellationToken);
     }
 
     public virtual Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
-        string[] receivers, CancellationToken cancellationToken = default)
+        IEnumerable<string> receivers, CancellationToken cancellationToken = default)
     {
         CasdoorEmailForm form = new()
         {
-            Title = title, Content = content, Receivers = receivers, Sender = sender
+            Title = title,
+            Content = content,
+            Receivers = receivers as string[] ?? receivers.ToArray(),
+            Sender = sender
         };
         string url = _options.GetActionUrl("send-email");
         return PostAsJsonAsync(url, form, cancellationToken);

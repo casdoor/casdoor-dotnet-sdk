@@ -37,7 +37,7 @@ public partial class CasdoorClient
 
     public virtual async Task<CasdoorResponse?> UpdateOrganizationAsync(string id, CasdoorOrganization newOrganization, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         if (string.IsNullOrEmpty(newOrganization.Owner))
         {
             newOrganization.Owner = CasdoorConstants.DefaultCasdoorOwner;
@@ -48,14 +48,14 @@ public partial class CasdoorClient
 
     public virtual Task<CasdoorOrganization?> GetOrganizationAsync(string id, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-organization", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorOrganization>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("owner", owner).GetMap();
+        var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-organizations", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorOrganization>>(url, cancellationToken: cancellationToken);
     }

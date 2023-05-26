@@ -22,8 +22,7 @@ public partial class CasdoorClient
             .Add("userOwner", user.Owner ?? string.Empty)
             .Add("userName", user.Name ?? string.Empty)
             .Add("oldPassword", oldPassword)
-            .Add("newPassword", newPassword)
-            .GetMap();
+            .Add("newPassword", newPassword).QueryMap;
 
         string url = _options.GetActionUrl("set-password", queryMap);
         return await PostAsJsonAsync(url, user, cancellationToken);

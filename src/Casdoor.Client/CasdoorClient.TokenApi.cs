@@ -13,8 +13,6 @@
 // limitations under the License.
 
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Text;
 using System.Text.Json;
 using IdentityModel.Client;
 

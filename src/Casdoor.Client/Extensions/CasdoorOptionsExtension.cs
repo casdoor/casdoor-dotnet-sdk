@@ -15,8 +15,6 @@
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Web;
-using IdentityModel.Client;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;

@@ -16,9 +16,8 @@ namespace Casdoor.Client;
 
 public interface ICasdoorServiceClient
 {
-    public Task<CasdoorResponse?> SendSmsAsync(string content, params string[] receivers);
-    public Task<CasdoorResponse?> SendSmsAsync(string content, CancellationToken cancellationToken , params string[] receivers);
+    public Task<CasdoorResponse?> SendSmsAsync(string content, IEnumerable<string> receivers, CancellationToken cancellationToken = default);
 
     public Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
-        string[] receivers, CancellationToken cancellationToken = default);
+        IEnumerable<string> receivers, CancellationToken cancellationToken = default);
 }

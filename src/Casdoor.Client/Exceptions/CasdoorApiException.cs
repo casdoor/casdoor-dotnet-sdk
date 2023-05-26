@@ -16,7 +16,7 @@ using System.Runtime.Serialization;
 
 namespace Casdoor.Client;
 
-public class CasdoorApiException : System.Exception
+public class CasdoorApiException : Exception
 {
     public CasdoorApiException()
     {
@@ -30,7 +30,7 @@ public class CasdoorApiException : System.Exception
     {
     }
 
-    public CasdoorApiException(string? message, System.Exception? innerException) : base(message, innerException)
+    public CasdoorApiException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 }
