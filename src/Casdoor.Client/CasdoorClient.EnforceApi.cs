@@ -21,17 +21,17 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<CasdoorResponse<bool>> EnforceAsync(CasdoorPermissionRule permissionRule)
+    public virtual Task<CasdoorResponse<bool>> EnforceAsync(CasdoorPermissionRule permissionRule, CancellationToken cancellationToken = default)
     {
-        return DoEnforceAsync<bool>("enforce",  JsonSerializer.Serialize(permissionRule));
+        return DoEnforceAsync<bool>("enforce",  JsonSerializer.Serialize(permissionRule), cancellationToken);
     }
 
-    public virtual Task<CasdoorResponse<IEnumerable<bool>>> BatchEnforceAsync(IEnumerable<CasdoorPermissionRule> permissionRule)
+    public virtual Task<CasdoorResponse<IEnumerable<bool>>> BatchEnforceAsync(IEnumerable<CasdoorPermissionRule> permissionRule, CancellationToken cancellationToken = default)
     {
-        return DoEnforceAsync<IEnumerable<bool>>("batch-enforce", JsonSerializer.Serialize(permissionRule));
+        return DoEnforceAsync<IEnumerable<bool>>("batch-enforce", JsonSerializer.Serialize(permissionRule), cancellationToken);
     }
 
-    private async Task<CasdoorResponse<T>> DoEnforceAsync<T>(string url, string data)
+    private async Task<CasdoorResponse<T>> DoEnforceAsync<T>(string url, string data, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage
         {
@@ -45,8 +45,8 @@ public partial class CasdoorClient
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
         request.SetBasicAuthentication(_options.ClientId, _options.ClientSecret);
 
-        var response = await _httpClient.SendAsync(request);
-        string responseContent = await response.Content.ReadAsStringAsync();
+        var response = await _httpClient.SendAsync(request, cancellationToken);
+        string responseContent = await response.Content.ReadAsStringAsync(); // netstandard2.0 does not support cancellationToken
 
         var result = new CasdoorResponse<T>
         {

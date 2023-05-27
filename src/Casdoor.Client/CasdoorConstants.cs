@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Casdoor
+namespace Casdoor.Client
 {
     public static class CasdoorConstants
     {
