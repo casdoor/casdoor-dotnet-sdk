@@ -20,143 +20,83 @@ public partial class CasdoorClient
 {
     public virtual Task<IEnumerable<CasdoorUser>?> GetUsersAsync(CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string,string?>[]
-            {
-                new("owner", _options.OrganizationName)
-            };
+        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-users", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
     }
 
-    public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, 
-        CancellationToken cancellationToken = default)
+    public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("owner", _options.OrganizationName),
-                new("sorter", sorter), new("limit", limit.ToString())
-            };
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", _options.OrganizationName)
+            .Add("sorter", sorter)
+            .Add("limit", limit.ToString()).QueryMap;
         string url = _options.GetActionUrl("get-sorted-users", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("id", string.Concat(_options.OrganizationName, "/", name))
-            };
+        var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorUser?> GetUseByIdrAsync(string id, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("id", id)
-            };
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("owner", _options.OrganizationName), new("email", email)
-            };
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", _options.OrganizationName)
+            .Add("email", email).QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
         return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
-    public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user)
-        => ModifyUserAsync("add-user", user);
-    
-    public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken)
-        => ModifyUserAsync("add-user", user, cancellationToken);
+    public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken = default)
+        => ModifyUserAsync("add-user", user, null, cancellationToken);
 
-    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames)
-        => ModifyUserAsync("update-user", user, propertyNames);
+    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user,  IEnumerable<string> propertyNames, CancellationToken cancellationToken = default)
+        => ModifyUserAsync("update-user", user, propertyNames, cancellationToken);
 
-    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, CancellationToken cancellationToken, 
-        params string[] propertyNames)
-        => ModifyUserAsync("update-user", user, cancellationToken, propertyNames);
-
-    public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name)
+    public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name, CancellationToken cancellationToken = default)
     {
-        CasdoorUser? user = await GetUserAsync(name);
+        CasdoorUser? user = await GetUserAsync(name, cancellationToken);
         if (user is null)
         {
             return null;
         }
-        return await ModifyUserAsync("delete-user", user);
+        return await ModifyUserAsync("delete-user", user, null, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name, CancellationToken cancellationToken)
+    public virtual async Task<CasdoorResponse?> CheckUserPasswordAsync(string name, CancellationToken cancellationToken = default)
     {
-        CasdoorUser? user = await GetUserAsync(name);
+        CasdoorUser? user = await GetUserAsync(name, cancellationToken);
         if (user is null)
         {
             return null;
         }
-        return await ModifyUserAsync("delete-user", user, cancellationToken);
+        return await ModifyUserAsync("check-user-password", user, null, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> CheckUserPasswordAsync(string name)
+    private Task<CasdoorResponse?> ModifyUserAsync(string action, CasdoorUser user, IEnumerable<string>? columns, CancellationToken cancellationToken = default)
     {
-        CasdoorUser? user = await GetUserAsync(name);
-        if (user is null)
-        {
-            return null;
-        }
-        return await ModifyUserAsync("check-user-password", user);
-    }
+        var queryMapBuilder = new QueryMapBuilder().Add("id", $"{user.Owner}/{user.Name}");
 
-    public virtual async Task<CasdoorResponse?> CheckUserPasswordAsync(string name, CancellationToken cancellationToken)
-    {
-        CasdoorUser? user = await GetUserAsync(name);
-        if (user is null)
-        {
-            return null;
-        }
-        return await ModifyUserAsync("check-user-password", user, cancellationToken);
-    }
+        string columnsValue = string.Join(",", columns ?? Array.Empty<string>());
 
-    private Task<CasdoorResponse?> ModifyUserAsync(
-        string action, CasdoorUser user, params string[] columns)
-    {
-        List<KeyValuePair<string, string?>> queryMap = new()
+        if (!string.IsNullOrEmpty(columnsValue))
         {
-            new KeyValuePair<string, string?>("id", $"{user.Owner}/{user.Name}")
-        };
-        if (columns.Length != 0)
-        {
-            queryMap.Add(new KeyValuePair<string, string?>("columns", string.Join(",", columns)));
+            queryMapBuilder.Add("columns", columnsValue);
         }
+
         user.Owner = _options.OrganizationName;
-        string url = _options.GetActionUrl(action, queryMap);
-        return PostAsJsonAsync(url, user);
-    }
-
-    private Task<CasdoorResponse?> ModifyUserAsync(
-        string action, CasdoorUser user, CancellationToken cancellationToken, params string[] columns)
-    {
-        List<KeyValuePair<string, string?>> queryMap = new()
-        {
-            new KeyValuePair<string, string?>("id", $"{user.Owner}/{user.Name}")
-        };
-        if (columns.Length != 0)
-        {
-            queryMap.Add(new KeyValuePair<string, string?>("columns", string.Join(",", columns)));
-        }
-        user.Owner = _options.OrganizationName;
-        string url = _options.GetActionUrl(action, queryMap);
+        string url = _options.GetActionUrl(action, queryMapBuilder.QueryMap);
         return PostAsJsonAsync(url, user, cancellationToken);
     }
 }

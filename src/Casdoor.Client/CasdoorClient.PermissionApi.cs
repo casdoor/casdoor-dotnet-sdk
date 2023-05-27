@@ -20,24 +20,15 @@ public partial class CasdoorClient
 {
     public virtual Task<IEnumerable<CasdoorPermission>?> GetPermissionsAsync(CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("owner", _options.OrganizationName)
-            };
+        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-permissions", queryMap);
         return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorPermission>>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorResponse<IEnumerable<CasdoorPermission>>?> GetPermissionsByRoleAsync(string name, CancellationToken cancellationToken = default)
     {
-        IEnumerable<KeyValuePair<string, string?>> queryMap =
-            new KeyValuePair<string, string?>[]
-            {
-                new("id", $"{_options.OrganizationName}/{name}")
-            };
+        var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
         string url = _options.GetActionUrl("get-permissions-by-role", queryMap);
-
         return _httpClient.GetFromJsonAsync<CasdoorResponse<IEnumerable<CasdoorPermission>>>(url, cancellationToken);
     }
 }

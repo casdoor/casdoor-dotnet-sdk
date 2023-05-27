@@ -20,8 +20,8 @@ public interface ICasdoorUserClient
     public Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, CancellationToken cancellationToken = default);
     public Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default);
     public Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default);
-    public Task<CasdoorResponse?> AddUserAsync(CasdoorUser user);
-    public Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, params string[] propertyNames);
-    public Task<CasdoorResponse?> DeleteUserAsync(string name);
-    public Task<CasdoorResponse?> CheckUserPasswordAsync(string name);
+    public Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, IEnumerable<string> propertyNames, CancellationToken cancellationToken = default );
+    public Task<CasdoorResponse?> DeleteUserAsync(string name, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> CheckUserPasswordAsync(string name, CancellationToken cancellationToken = default);
 }

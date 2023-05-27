@@ -1,5 +1,4 @@
-﻿using System;
-namespace Casdoor.Client;
+﻿namespace Casdoor.Client;
 
 public class CasdoorPermissionRule
 {

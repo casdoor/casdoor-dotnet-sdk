@@ -1,14 +1,18 @@
 namespace Casdoor.Client;
 
-public class QueryMapBuilder
+internal readonly struct QueryMapBuilder
 {
-    private readonly Dictionary<string, string?> _map = new();
+    private readonly List<KeyValuePair<string, string?>> _map = new();
+
+    public QueryMapBuilder()
+    {
+    }
 
     public QueryMapBuilder Add(string key, string? value = null)
     {
-        _map.Add(key, value);
+        _map.Add(new KeyValuePair<string, string?>(key, value));
         return this;
     }
 
-    public IEnumerable<KeyValuePair<string, string?>> GetMap() => _map;
+    public IEnumerable<KeyValuePair<string, string?>> QueryMap => _map;
 }
