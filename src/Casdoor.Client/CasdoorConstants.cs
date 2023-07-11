@@ -31,5 +31,6 @@ namespace Casdoor.Client
         };
 
         public static readonly string DefaultCasdoorOwner = "admin";
+        public static readonly string DefaultCasdoorLdapServerName = "Example LDAP Server";
     }
 }

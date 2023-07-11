@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.Json;
+
 namespace Casdoor.Client;
 
-public interface ICasdoorClient :
-    ICasdoorUserClient, ICasdoorTokenClient, ICasdoorResourceClient, ICasdoorServiceClient,
-    ICasdoorApplicationClient, ICasdoorOrganizationClient, ICasdoorProviderClient, ICasdoorAccountClient
+public static class CasdoorResponseExtension
 {
+    internal static T? DeserializeData<T>(this CasdoorResponse? response)
+    {
+        if (response?.Data is JsonElement element)
+        {
+            return element.Deserialize<T>();
+        }
 
+        return default;
+    }
 }
