@@ -42,9 +42,9 @@ public partial class CasdoorClient
         return PostAsJsonAsync(url, ldap, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> DeleteLdapAsync(string owner, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorResponse?> DeleteLdapAsync(string owner, string id, CancellationToken cancellationToken = default)
     {
-        var application = new CasdoorApplication { Owner = owner };
+        var application = new CasdoorLdap { Owner = owner, Id = id };
         var url = _options.GetActionUrl("delete-ldap");
         return await PostAsJsonAsync(url, application, cancellationToken);
     }

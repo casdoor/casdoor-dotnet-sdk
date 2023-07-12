@@ -18,7 +18,7 @@ public interface ICasdoorAccountClient
 {
     public Task<CasdoorResponse?> AddLdapAsync(CasdoorLdap ldap, CancellationToken cancellationToken = default);
 
-    public Task<CasdoorResponse?> DeleteLdapAsync(string owner, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> DeleteLdapAsync(string owner, string id, CancellationToken cancellationToken = default);
 
     public Task<CasdoorLdap?> GetLdapAsync(string owner, string id, CancellationToken cancellationToken = default);
 
