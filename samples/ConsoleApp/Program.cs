@@ -41,6 +41,9 @@ ConsoleExtension.JsonWriteLine(new
     configuration.UserInfoEndpoint,
 }, ConsoleColor.DarkBlue);
 
+var roles = await client.GetRolesAsync();
+ConsoleExtension.JsonWriteLine(roles, ConsoleColor.DarkCyan);
+
 var token = await client.RequestPasswordTokenAsync("admin", "123");
 ConsoleExtension.WriteLine("Get tokens by username and password...");
 if (token is null)

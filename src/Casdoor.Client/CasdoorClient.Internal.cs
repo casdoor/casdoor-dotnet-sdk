@@ -12,14 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    internal Task<TValue?> GetFromJsonAsync<TValue>(string? requestUri, CancellationToken cancellationToken = default)
-        => _httpClient.GetFromJsonAsync<TValue>(requestUri, cancellationToken);
+    internal async Task<TValue?> GetFromJsonAsync<TValue>(string? requestUri, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.GetAsync(requestUri, cancellationToken);
+        using var stream = await response.Content.ReadAsStreamAsync();
+        TValue? successResult;
+        try
+        {
+            successResult = await JsonSerializer.DeserializeAsync<TValue>(stream, cancellationToken: cancellationToken);
+        }
+        catch (JsonException e)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+            var casdoorResponse = await JsonSerializer.DeserializeAsync<CasdoorResponse>(stream, cancellationToken: cancellationToken);
+            if (casdoorResponse is not null)
+            {
+                throw new CasdoorApiException(casdoorResponse.Msg, e);
+            }
+            throw;
+        }
+        return successResult;
+    }
 
     internal async Task<CasdoorResponse?> PostAsJsonAsync<TValue>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
     {

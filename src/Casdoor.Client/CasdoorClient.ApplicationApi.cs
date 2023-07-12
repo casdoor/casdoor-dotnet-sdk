@@ -24,7 +24,7 @@ public partial class CasdoorClient
         {
             application.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
-        
+
         var url = _options.GetActionUrl("add-application");
         return await PostAsJsonAsync(url, application);
     }
@@ -44,7 +44,7 @@ public partial class CasdoorClient
         {
             newApplication.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
-        
+
         var url = _options.GetActionUrl("update-application", queryMap);
         return await PostAsJsonAsync(url, newApplication);
     }
@@ -53,7 +53,7 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("id", id).GetMap();
         var url = _options.GetActionUrl("get-application", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorApplication>(url);
+        return GetFromJsonAsync<CasdoorApplication>(url);
     }
 
     public virtual Task<IEnumerable<CasdoorApplication>?> GetApplicationsAsync(string owner)
