@@ -50,13 +50,13 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-organization", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorOrganization>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<CasdoorOrganization>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-organizations", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorOrganization>>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorOrganization>>(url, cancellationToken: cancellationToken);
     }
 }

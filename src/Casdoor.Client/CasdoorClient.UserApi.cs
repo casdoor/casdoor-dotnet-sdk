@@ -22,7 +22,7 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-users", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, CancellationToken cancellationToken = default)
@@ -32,14 +32,14 @@ public partial class CasdoorClient
             .Add("sorter", sorter)
             .Add("limit", limit.ToString()).QueryMap;
         string url = _options.GetActionUrl("get-sorted-users", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+        return GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorUser?> GetUseByIdrAsync(string id, CancellationToken cancellationToken = default)
@@ -55,7 +55,7 @@ public partial class CasdoorClient
             .Add("owner", _options.OrganizationName)
             .Add("email", email).QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+        return GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken = default)

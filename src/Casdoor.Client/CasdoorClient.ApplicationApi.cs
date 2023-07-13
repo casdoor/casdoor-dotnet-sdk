@@ -53,27 +53,27 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-application", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorApplication>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<CasdoorApplication>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorApplication>?> GetApplicationsAsync(string owner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-applications", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorApplication>>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorApplication>>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorApplication>?> GetOrganizationApplicationsAsync(string organization, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("organization", organization).QueryMap;
         var url = _options.GetActionUrl("get-organization-applications", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorApplication>>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorApplication>>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<CasdoorApplication?> GetUserApplicationAsync(string id, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-user-application", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorApplication>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<CasdoorApplication>(url, cancellationToken: cancellationToken);
     }
 }
