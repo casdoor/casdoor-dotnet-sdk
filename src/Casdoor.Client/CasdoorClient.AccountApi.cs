@@ -90,8 +90,7 @@ public partial class CasdoorClient
 
     public virtual Task<CasdoorResponse?> SyncLdapUsersAsync(string owner, string ldapId, IEnumerable<CasdoorLdapUser> users, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("owner", owner)
-            .Add("ldapId", ldapId).QueryMap;
+         var queryMap = new QueryMapBuilder().Add("id", $"{owner}/{id}").QueryMap;
 
         var url = _options.GetActionUrl("sync-ldap-users", queryMap);
         return PostAsJsonAsync(url, users, cancellationToken);

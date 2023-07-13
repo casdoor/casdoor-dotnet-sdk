@@ -24,7 +24,7 @@ public interface ICasdoorAccountClient
 
     public Task<IEnumerable<CasdoorLdap>?> GetLdapsAsync(string owner, CancellationToken cancellationToken = default);
 
-    public Task<CasdoorResponse?> SyncLdapUsersAsync(string owner, string ldapId, IEnumerable<CasdoorLdapUser> users, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> SyncLdapUsersAsync(string owner, string id, IEnumerable<CasdoorLdapUser> users, CancellationToken cancellationToken = default);
 
     public Task<CasdoorLdapUsers?> GetLdapUsersAsync(string owner, string id, CancellationToken cancellationToken = default);
 
