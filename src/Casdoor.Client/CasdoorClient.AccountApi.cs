@@ -88,7 +88,7 @@ public partial class CasdoorClient
         return result.DeserializeData<CasdoorLdapUsers?>();
     }
 
-    public virtual Task<CasdoorResponse?> SyncLdapUsersAsync(string owner, string ldapId, IEnumerable<CasdoorLdapUser> users, CancellationToken cancellationToken = default)
+    public virtual Task<CasdoorResponse?> SyncLdapUsersAsync(string owner, string id, IEnumerable<CasdoorLdapUser> users, CancellationToken cancellationToken = default)
     {
          var queryMap = new QueryMapBuilder().Add("id", $"{owner}/{id}").QueryMap;
 
