@@ -30,13 +30,7 @@ public partial class CasdoorClient
         }
         catch (JsonException e)
         {
-            stream.Seek(0, SeekOrigin.Begin);
-            var casdoorResponse = await JsonSerializer.DeserializeAsync<CasdoorResponse>(stream, cancellationToken: cancellationToken);
-            if (casdoorResponse is not null)
-            {
-                throw new CasdoorApiException(casdoorResponse.Msg, e);
-            }
-            throw;
+            throw new CasdoorApiException($"Server response cannot be deserialized as type {typeof(TValue).FullName}. Server API and SDK implementation are inconsistent.", e);
         }
         return successResult;
     }

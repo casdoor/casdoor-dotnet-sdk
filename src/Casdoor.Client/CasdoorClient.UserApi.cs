@@ -46,7 +46,7 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+        return GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
     }
 
     public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
