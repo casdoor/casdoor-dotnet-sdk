@@ -50,7 +50,7 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-organization", queryMap);
-        var response = await _httpClient.GetFromJsonAsync<CasdoorResponse>(url, cancellationToken: cancellationToken);
+        var response = await GetFromJsonAsync<CasdoorResponse>(url, cancellationToken: cancellationToken);
         return response.DeserializeData<CasdoorOrganization>();
     }
 
@@ -58,7 +58,7 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-organizations", queryMap);
-        var response = await _httpClient.GetFromJsonAsync<CasdoorResponse>(url, cancellationToken: cancellationToken);
+        var response = await GetFromJsonAsync<CasdoorResponse>(url, cancellationToken: cancellationToken);
         return response.DeserializeData<IEnumerable<CasdoorOrganization>>();
     }
 }
