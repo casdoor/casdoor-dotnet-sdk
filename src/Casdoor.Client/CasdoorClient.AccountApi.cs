@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net.Http.Json;
+
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual async Task<CasdoorResponse?> SetPasswordAsync(CasdoorUser user, string oldPassword, string newPassword, CancellationToken cancellationToken = default)
+    public virtual Task<CasdoorResponse?> SetPasswordAsync(CasdoorUser user, string oldPassword, string newPassword,
+        CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder()
             .Add("userOwner", user.Owner ?? string.Empty)
@@ -25,6 +28,71 @@ public partial class CasdoorClient
             .Add("newPassword", newPassword).QueryMap;
 
         string url = _options.GetActionUrl("set-password", queryMap);
-        return await PostAsJsonAsync(url, user, cancellationToken);
+        return PostAsJsonAsync(url, user, cancellationToken);
+    }
+
+    public virtual Task<CasdoorResponse?> AddLdapAsync(CasdoorLdap ldap, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(ldap.ServerName))
+        {
+            ldap.ServerName = CasdoorConstants.DefaultCasdoorLdapServerName;
+        }
+
+        var url = _options.GetActionUrl("add-ldap");
+        return PostAsJsonAsync(url, ldap, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorResponse?> DeleteLdapAsync(string owner, string id, CancellationToken cancellationToken = default)
+    {
+        var application = new CasdoorLdap { Owner = owner, Id = id };
+        var url = _options.GetActionUrl("delete-ldap");
+        return await PostAsJsonAsync(url, application, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorLdap?> GetLdapAsync(string owner, string id, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder().Add("id", $"{owner}/{id}").QueryMap;
+        var url = _options.GetActionUrl("get-ldap", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorLdap?>();
+    }
+
+    public virtual async Task<IEnumerable<CasdoorLdap>?> GetLdapsAsync(string owner, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
+        var url = _options.GetActionUrl("get-ldaps", queryMap);
+
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+
+        return result.DeserializeData<IEnumerable<CasdoorLdap>?>();
+    }
+
+    public virtual Task<CasdoorResponse?> UpdateLdapAsync(string id, CasdoorLdap ldap, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(ldap.ServerName))
+        {
+            ldap.ServerName = CasdoorConstants.DefaultCasdoorLdapServerName;
+        }
+
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
+
+        var url = _options.GetActionUrl("update-ldap", queryMap);
+        return PostAsJsonAsync(url, ldap, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorLdapUsers?> GetLdapUsersAsync(string owner, string id, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder().Add("id", $"{owner}/{id}").QueryMap;
+        var url = _options.GetActionUrl("get-ldap-users", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorLdapUsers?>();
+    }
+
+    public virtual Task<CasdoorResponse?> SyncLdapUsersAsync(string owner, string id, IEnumerable<CasdoorLdapUser> users, CancellationToken cancellationToken = default)
+    {
+         var queryMap = new QueryMapBuilder().Add("id", $"{owner}/{id}").QueryMap;
+
+        var url = _options.GetActionUrl("sync-ldap-users", queryMap);
+        return PostAsJsonAsync(url, users, cancellationToken);
     }
 }
