@@ -13,13 +13,27 @@
 // limitations under the License.
 
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    internal Task<TValue?> GetFromJsonAsync<TValue>(string? requestUri, CancellationToken cancellationToken = default)
-        => _httpClient.GetFromJsonAsync<TValue>(requestUri, cancellationToken);
+    internal async Task<TValue?> GetFromJsonAsync<TValue>(string? requestUri, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient.GetAsync(requestUri, cancellationToken);
+        using var stream = await response.Content.ReadAsStreamAsync();
+        TValue? successResult;
+        try
+        {
+            successResult = await JsonSerializer.DeserializeAsync<TValue>(stream, cancellationToken: cancellationToken);
+        }
+        catch (JsonException e)
+        {
+            throw new CasdoorApiException($"Server response cannot be deserialized as type {typeof(TValue).FullName}. Server API and SDK implementation are inconsistent.", e);
+        }
+        return successResult;
+    }
 
     internal async Task<CasdoorResponse?> PostAsJsonAsync<TValue>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
     {
