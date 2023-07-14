@@ -46,17 +46,19 @@ public partial class CasdoorClient
         return await PostAsJsonAsync(url, newOrganization, cancellationToken);
     }
 
-    public virtual Task<CasdoorOrganization?> GetOrganizationAsync(string id, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorOrganization?> GetOrganizationAsync(string id, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-organization", queryMap);
-        return GetFromJsonAsync<CasdoorOrganization>(url, cancellationToken: cancellationToken);
+        var response = await GetFromJsonAsync<CasdoorResponse>(url, cancellationToken: cancellationToken);
+        return response.DeserializeData<CasdoorOrganization>();
     }
 
-    public virtual Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner, CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorOrganization>?> GetOrganizationsAsync(string owner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-organizations", queryMap);
-        return GetFromJsonAsync<IEnumerable<CasdoorOrganization>>(url, cancellationToken: cancellationToken);
+        var response = await GetFromJsonAsync<CasdoorResponse>(url, cancellationToken: cancellationToken);
+        return response.DeserializeData<IEnumerable<CasdoorOrganization>>();
     }
 }
