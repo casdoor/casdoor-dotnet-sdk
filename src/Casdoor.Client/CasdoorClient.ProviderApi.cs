@@ -50,19 +50,19 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-provider", queryMap);
-        return _httpClient.GetFromJsonAsync<CasdoorProvider>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<CasdoorProvider>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-providers", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
     }
 
     public virtual Task<IEnumerable<CasdoorProvider>?> GetGlobalProvidersAsync(CancellationToken cancellationToken = default)
     {
         var url = _options.GetActionUrl("get-global-providers");
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
     }
 }

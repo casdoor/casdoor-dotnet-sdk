@@ -22,6 +22,6 @@ public partial class CasdoorClient
     {
         var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-roles", queryMap);
-        return _httpClient.GetFromJsonAsync<IEnumerable<CasdoorRole>>(url, cancellationToken);
+        return GetFromJsonAsync<IEnumerable<CasdoorRole>>(url, cancellationToken);
     }
 }
