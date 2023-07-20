@@ -17,6 +17,15 @@ using System.Text.Json.Serialization;
 namespace Casdoor.Client;
 
 
+public class CasdoorMfaItem
+{
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("rule")]
+    public string? Rule { get; set; }
+}
+
 public class CasdoorAccountItem
 {
     [JsonPropertyName("name")]
@@ -58,8 +67,11 @@ public class CasdoorOrganization
     [JsonPropertyName("passwordSalt")]
     public string? PasswordSalt { get; set; }
 
-    [JsonPropertyName("phonePrefix")]
-    public string? PhonePrefix { get; set; }
+    [JsonPropertyName("passwordOptions")]
+    public string[]? PasswordOptions { get; set; }
+
+    [JsonPropertyName("countryCodes")]
+    public string[]? CountryCodes { get; set; }
 
     [JsonPropertyName("defaultAvatar")]
     public string? DefaultAvatar { get; set; }
@@ -70,15 +82,27 @@ public class CasdoorOrganization
     [JsonPropertyName("tags")]
     public string[]? Tags { get; set; }
 
+    [JsonPropertyName("languages")]
+    public string[]? Languages { get; set; }
+
+    [JsonPropertyName("themeData")]
+    public CasdoorThemeData? ThemeData { get; set; }
+
     [JsonPropertyName("masterPassword")]
     public string? MasterPassword { get; set; }
+
+    [JsonPropertyName("initScore")]
+    public int? InitScore { get; set; }
 
     [JsonPropertyName("enableSoftDeletion")]
     public bool? EnableSoftDeletion { get; set; }
 
     [JsonPropertyName("isProfilePublic")]
     public bool? IsProfilePublic { get; set; }
-    
+
+    [JsonPropertyName("mfaItems")]
+    public CasdoorMfaItem[]? MfaItems { get; set; }
+
     [JsonPropertyName("accountItems")]
-    CasdoorAccountItem[]? AccountItems { get; set; }
+    public CasdoorAccountItem[]? AccountItems { get; set; }
 }

@@ -72,6 +72,12 @@ public class CasdoorProvider
     [JsonPropertyName("customLogo")]
     public string? CustomLogo { get; set; }
 
+    [JsonPropertyName("scopes")]
+    public string? Scopes { get; set; }
+
+    [JsonPropertyName("userMapping")]
+    public IDictionary<string, string>? UserMapping { get; set; }
+
     [JsonPropertyName("host")]
     public string? Host { get; set; }
 
@@ -113,6 +119,9 @@ public class CasdoorProvider
 
     [JsonPropertyName("bucket")]
     public string? Bucket { get; set; }
+
+    [JsonPropertyName("pathPrefix")]
+    public string? PathPrefix { get; set; }
 
     [JsonPropertyName("metadata")]
     public string? Metadata { get; set; }
