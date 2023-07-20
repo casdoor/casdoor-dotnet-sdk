@@ -58,6 +58,9 @@ public class CasdoorOrganization
     [JsonPropertyName("passwordSalt")]
     public string? PasswordSalt { get; set; }
 
+    [JsonPropertyName("passwordOptions")]
+    public string[]? PasswordOptions { get; set; }
+
     [JsonPropertyName("phonePrefix")]
     public string? PhonePrefix { get; set; }
 
