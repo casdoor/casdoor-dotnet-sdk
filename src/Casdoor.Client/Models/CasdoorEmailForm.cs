@@ -29,4 +29,7 @@ public class CasdoorEmailForm
 
     [JsonPropertyName("receivers")]
     public string[] Receivers { get; set; } = Array.Empty<string>();
+
+    [JsonPropertyName("provider")]
+    public string Provider { get; set; }
 }

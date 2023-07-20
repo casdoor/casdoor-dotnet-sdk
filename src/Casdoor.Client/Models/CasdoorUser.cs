@@ -16,6 +16,22 @@ using System.Text.Json.Serialization;
 
 namespace Casdoor.Client;
 
+
+public class CasdoorManagedAccount
+{
+    [JsonPropertyName("application")]
+    public string? Application { get; set; }
+
+    [JsonPropertyName("username")]
+    public string? Username { get; set; }
+
+    [JsonPropertyName("password")]
+    public string? Password { get; set; }
+
+    [JsonPropertyName("signinUrl")]
+    public string? SigninUrl { get; set; }
+}
+
 /// <summary>
 ///     CasdoorUser has the same definition as https://github.com/casdoor/casdoor/blob/master/object/user.go#L24
 /// </summary>
@@ -45,6 +61,9 @@ public class CasdoorUser
     [JsonPropertyName("passwordSalt")]
     public string? PasswordSalt { get; set; }
 
+    [JsonPropertyName("passwordType")]
+    public string? PasswordType { get; set; }
+
     [JsonPropertyName("displayName")]
     public string? DisplayName { get; set; }
 
@@ -57,14 +76,23 @@ public class CasdoorUser
     [JsonPropertyName("avatar")]
     public string? Avatar { get; set; }
 
+    [JsonPropertyName("avatarType")]
+    public string? AvatarType { get; set; }
+
     [JsonPropertyName("permanentAvatar")]
     public string? PermanentAvatar { get; set; }
 
     [JsonPropertyName("email")]
     public string? Email { get; set; }
 
+    [JsonPropertyName("emailVerified")]
+    public bool? EmailVerified { get; set; }
+
     [JsonPropertyName("phone")]
     public string? Phone { get; set; }
+
+    [JsonPropertyName("countryCode")]
+    public string? CountryCode { get; set; }
 
     [JsonPropertyName("location")]
     public string? Location { get; set; }
@@ -143,6 +171,12 @@ public class CasdoorUser
 
     [JsonPropertyName("preHash")]
     public string? PreHash { get; set; }
+
+    [JsonPropertyName("accessKey")]
+    public string? AccessKey { get; set; }
+
+    [JsonPropertyName("accessSecret")]
+    public string? AccessSecret { get; set; }
 
     [JsonPropertyName("createdIp")]
     public string? CreatedIp { get; set; }
@@ -225,8 +259,173 @@ public class CasdoorUser
     [JsonPropertyName("douyin")]
     public string? Douyin { get; set; }
 
+    [JsonPropertyName("line")]
+    public string? Line { get; set; }
+
+    [JsonPropertyName("amazon")]
+    public string? Amazon { get; set; }
+
+    [JsonPropertyName("auth0")]
+    public string? Auth0 { get; set; }
+
+    [JsonPropertyName("battlenet")]
+    public string? BattleNet { get; set; }
+
+    [JsonPropertyName("bitbucket")]
+    public string? Bitbucket { get; set; }
+
+    [JsonPropertyName("box")]
+    public string? Box { get; set; }
+
+    [JsonPropertyName("cloudfoundry")]
+    public string? CloudFoundry { get; set; }
+
+    [JsonPropertyName("dailymotion")]
+    public string? Dailymotion { get; set; }
+
+    [JsonPropertyName("deezer")]
+    public string? Deezer { get; set; }
+
+    [JsonPropertyName("digitalocean")]
+    public string? DigitalOcean { get; set; }
+
+    [JsonPropertyName("discord")]
+    public string? Discord { get; set; }
+
+    [JsonPropertyName("dropbox")]
+    public string? Dropbox { get; set; }
+
+    [JsonPropertyName("eveonline")]
+    public string? EveOnline { get; set; }
+
+    [JsonPropertyName("fitbit")]
+    public string? Fitbit { get; set; }
+
+    [JsonPropertyName("gitea")]
+    public string? Gitea { get; set; }
+
+    [JsonPropertyName("heroku")]
+    public string? Heroku { get; set; }
+
+    [JsonPropertyName("influxcloud")]
+    public string? InfluxCloud { get; set; }
+
+    [JsonPropertyName("instagram")]
+    public string? Instagram { get; set; }
+
+    [JsonPropertyName("intercom")]
+    public string? Intercom { get; set; }
+
+    [JsonPropertyName("kakao")]
+    public string? Kakao { get; set; }
+
+    [JsonPropertyName("lastfm")]
+    public string? Lastfm { get; set; }
+
+    [JsonPropertyName("mailru")]
+    public string? Mailru { get; set; }
+
+    [JsonPropertyName("meetup")]
+    public string? Meetup { get; set; }
+
+    [JsonPropertyName("microsoftonline")]
+    public string? MicrosoftOnline { get; set; }
+
+    [JsonPropertyName("naver")]
+    public string? Naver { get; set; }
+
+    [JsonPropertyName("nextcloud")]
+    public string? Nextcloud { get; set; }
+
+    [JsonPropertyName("onedrive")]
+    public string? OneDrive { get; set; }
+
+    [JsonPropertyName("oura")]
+    public string? Oura { get; set; }
+
+    [JsonPropertyName("patreon")]
+    public string? Patreon { get; set; }
+
+    [JsonPropertyName("paypal")]
+    public string? Paypal { get; set; }
+
+    [JsonPropertyName("salesforce")]
+    public string? SalesForce { get; set; }
+
+    [JsonPropertyName("shopify")]
+    public string? Shopify { get; set; }
+
+    [JsonPropertyName("soundcloud")]
+    public string? Soundcloud { get; set; }
+
+    [JsonPropertyName("spotify")]
+    public string? Spotify { get; set; }
+
+    [JsonPropertyName("strava")]
+    public string? Strava { get; set; }
+
+    [JsonPropertyName("stripe")]
+    public string? Stripe { get; set; }
+
+    [JsonPropertyName("tiktok")]
+    public string? TikTok { get; set; }
+
+    [JsonPropertyName("tumblr")]
+    public string? Tumblr { get; set; }
+
+    [JsonPropertyName("twitch")]
+    public string? Twitch { get; set; }
+
+    [JsonPropertyName("twitter")]
+    public string? Twitter { get; set; }
+
+    [JsonPropertyName("typetalk")]
+    public string? Typetalk { get; set; }
+
+    [JsonPropertyName("uber")]
+    public string? Uber { get; set; }
+
+    [JsonPropertyName("vk")]
+    public string? VK { get; set; }
+
+    [JsonPropertyName("wepay")]
+    public string? Wepay { get; set; }
+
+    [JsonPropertyName("xero")]
+    public string? Xero { get; set; }
+
+    [JsonPropertyName("yahoo")]
+    public string? Yahoo { get; set; }
+
+    [JsonPropertyName("yammer")]
+    public string? Yammer { get; set; }
+
+    [JsonPropertyName("yandex")]
+    public string? Yandex { get; set; }
+
+    [JsonPropertyName("zoom")]
+    public string? Zoom { get; set; }
+
     [JsonPropertyName("custom")]
     public string? Custom { get; set; }
+
+    [JsonPropertyName("preferredMfaType")]
+    public string? PreferredMfaType { get; set; }
+
+    [JsonPropertyName("recoveryCodes")]
+    public string[]? RecoveryCodes { get; set; }
+
+    [JsonPropertyName("totpSecret")]
+    public string? TotpSecret { get; set; }
+
+    [JsonPropertyName("mfaPhoneEnabled")]
+    public bool? MfaPhoneEnabled { get; set; }
+
+    [JsonPropertyName("mfaEmailEnabled")]
+    public bool? MfaEmailEnabled { get; set; }
+
+    [JsonPropertyName("multiFactorAuths")]
+    public CasdoorMfaProps? MultiFactorAuths { get; set; }
 
     [JsonPropertyName("ldap")]
     public string? Ldap { get; set; }
@@ -239,4 +438,16 @@ public class CasdoorUser
 
     [JsonPropertyName("permissions")]
     public IEnumerable<CasdoorPermission>? Permissions { get; set; }
+
+    [JsonPropertyName("groups")]
+    public string[]? Groups { get; set; }
+
+    [JsonPropertyName("lastSigninWrongTime")]
+    public string? LastSigninWrongTime { get; set; }
+
+    [JsonPropertyName("signinWrongTimes")]
+    public int? SigninWrongTimes { get; set; }
+
+    [JsonPropertyName("managedAccounts")]
+    public IEnumerable<CasdoorManagedAccount>? ManagedAccounts { get; set; }
 }

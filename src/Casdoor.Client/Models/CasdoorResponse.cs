@@ -1,11 +1,11 @@
 // Copyright 2022 The Casdoor Authors. All Rights Reserved.
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,8 @@ public class CasdoorResponse
 {
     [JsonPropertyName("status")] public string? Status { get; set; }
     [JsonPropertyName("msg")] public string? Msg { get; set; }
+    [JsonPropertyName("sub")] public string? Sub { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
     [JsonPropertyName("data")] public object? Data { get; set; }
     [JsonPropertyName("data2")] public object? Data2 { get; set; }
 }
@@ -29,6 +31,8 @@ public class CasdoorResponse<T>
 {
     [JsonPropertyName("status")] public string? Status { get; set; }
     [JsonPropertyName("msg")] public string? Msg { get; set; }
+    [JsonPropertyName("sub")] public string? Sub { get; set; }
+    [JsonPropertyName("name")] public string? Name { get; set; }
     [JsonPropertyName("data")] public T? Data { get; set; }
     [JsonPropertyName("data2")] public object? Data2 { get; set; }
 }

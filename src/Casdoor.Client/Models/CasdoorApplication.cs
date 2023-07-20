@@ -20,22 +20,22 @@ public class CasdoorProviderItem
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
-    
+
     [JsonPropertyName("canSignUp")]
     public bool? CanSignUp { get; set; }
-    
+
     [JsonPropertyName("canSignIn")]
     public bool? CanSignIn { get; set; }
-    
+
     [JsonPropertyName("canUnlink")]
     public bool? CanUnlink { get; set; }
 
     [JsonPropertyName("prompted")]
     public bool? Prompted { get; set; }
-    
+
     [JsonPropertyName("alertType")]
     public string? AlertType { get; set; }
-    
+
     [JsonPropertyName("provider")]
     public CasdoorProvider? Provider { get; set; }
 }
@@ -44,7 +44,7 @@ public class CasdoorSignupItem
 {
     [JsonPropertyName("name")]
     public string? Name { get; set; }
-    
+
     [JsonPropertyName("visible")]
     public bool? Visible { get; set; }
 
@@ -108,18 +108,30 @@ public class CasdoorApplication
     [JsonPropertyName("enableWebAuth")]
     public bool? EnableWebAuth { get; set; }
 
+    [JsonPropertyName("enableLinkWithEmail")]
+    public bool? EnableLinkWithEmail { get; set; }
+
+    [JsonPropertyName("orgChoiceMode")]
+    public string? OrgChoiceMode { get; set; }
+
+    [JsonPropertyName("samlReplyUrl")]
+    public string? SamlReplyUrl { get; set; }
+
     [JsonPropertyName("providers")]
     public CasdoorProviderItem[]? Providers { get; set; }
-    
+
     [JsonPropertyName("signupItems")]
     public CasdoorSignupItem[]? SignupItems { get; set; }
 
-    [JsonPropertyName("grantTypes")] 
+    [JsonPropertyName("grantTypes")]
     public string[]? GrantTypes { get; set; }
 
     [JsonPropertyName("organizationObj")]
     public CasdoorOrganization? OrganizationObj { get; set; }
-    
+
+    [JsonPropertyName("tags")]
+    public string[]? Tags { get; set; }
+
     [JsonPropertyName("clientId")]
     public string? ClientId { get; set; }
 
@@ -159,9 +171,15 @@ public class CasdoorApplication
     [JsonPropertyName("signinHtml")]
     public string? SigninHtml { get; set; }
 
+    [JsonPropertyName("themeData")]
+    public CasdoorThemeData? ThemeData { get; set; }
+
     [JsonPropertyName("formCss")]
     public string? FormCss { get; set; }
-    
+
+    [JsonPropertyName("formCssMobile")]
+    public string? FormCssMobile { get; set; }
+
     [JsonPropertyName("formOffset")]
     public int? FormOffset { get; set; }
 

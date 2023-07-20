@@ -34,6 +34,9 @@ public class CasdoorRole
     [JsonPropertyName("displayName")]
     public string? DisplayName { get; set; }
 
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
     [JsonPropertyName("users")]
     public IEnumerable<string>? Users { get; set; }
 
