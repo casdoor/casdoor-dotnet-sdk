@@ -425,7 +425,7 @@ public class CasdoorUser
     public bool? MfaEmailEnabled { get; set; }
 
     [JsonPropertyName("multiFactorAuths")]
-    public CasdoorMfaProps? MultiFactorAuths { get; set; }
+    public IEnumerable<CasdoorMfaProps>? MultiFactorAuths { get; set; }
 
     [JsonPropertyName("ldap")]
     public string? Ldap { get; set; }
