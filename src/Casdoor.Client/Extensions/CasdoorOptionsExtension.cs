@@ -145,6 +145,12 @@ public static class CasdoorClientOptionsExtension
         }
         return options.Protocols.OpenIdConnectConfigurationManager.GetConfigurationAsync(cancellationToken);
     }
+    public static async Task LoadRemoteJwtPublicKeyAsync(this CasdoorOptions options)
+    {
+        var configuration = await options.GetOpenIdConnectConfigurationAsync();
+        options.Protocols.TokenValidationParameters ??= DefaultTokenValidationParameters;
+        options.Protocols.TokenValidationParameters.IssuerSigningKeys = configuration.SigningKeys;
+    }
 
     public static CasdoorOptions Validate(this CasdoorOptions options)
     {
@@ -227,14 +233,19 @@ public static class CasdoorClientOptionsExtension
                 new StaticConfigurationManager<OpenIdConnectConfiguration>(options.Protocols
                     .OpenIdConnectConfiguration);
         }
-
-        string metadataAddress = options.Protocols.Authority;
-        if (metadataAddress.EndsWith("/", StringComparison.Ordinal) is false)
+        else
         {
-            metadataAddress += "/";
+            string metadataAddress = options.Protocols.Authority;
+            if (metadataAddress.EndsWith("/", StringComparison.Ordinal) is false)
+            {
+                metadataAddress += "/";
+            }
+            metadataAddress += ".well-known/openid-configuration";
+            options.Protocols.OpenIdConnectConfigurationManager ??= options.CreateDefaultOpenIdConnectConfigurationManager(metadataAddress);
+            _ = options.LoadRemoteJwtPublicKeyAsync();
+            options.Protocols.TokenValidationParameters.ValidAudience = options.Protocols.Audience;
+            options.Protocols.TokenValidationParameters.ValidIssuer = options.Protocols.Issuer;
         }
-        metadataAddress += ".well-known/openid-configuration";
-        options.Protocols.OpenIdConnectConfigurationManager ??= options.CreateDefaultOpenIdConnectConfigurationManager(metadataAddress);
         return options;
     }
 }

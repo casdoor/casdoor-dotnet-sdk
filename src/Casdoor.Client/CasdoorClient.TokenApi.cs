@@ -64,12 +64,25 @@ public partial class CasdoorClient
         return await _httpClient.RequestRefreshTokenAsync(request, cancellationToken: cancellationToken);
     }
 
-    public virtual CasdoorUser? ParseJwtToken(string token)
+    public virtual CasdoorUser? ParseJwtToken(string token, bool validateToken = true)
     {
         var handler = new JwtSecurityTokenHandler();
-        var jsonToken = handler.ReadJwtToken(token);
-        var payload = jsonToken.Payload;
-        var result = JsonSerializer.Deserialize<CasdoorUser>(payload.SerializeToJson());
+        JwtSecurityToken? jwtToken;
+        if (validateToken)
+        {
+            handler.ValidateToken(token, _options.Protocols.TokenValidationParameters, out var validatedToken);
+            jwtToken = validatedToken as JwtSecurityToken;
+            if (jwtToken is null)
+            {
+                throw new InvalidOperationException("Invalid JWT token");
+            }
+        }
+        else
+        {
+            jwtToken = handler.ReadJwtToken(token);
+        }
+
+        var result = JsonSerializer.Deserialize<CasdoorUser>(jwtToken.Payload.SerializeToJson());
         return result;
     }
 }
