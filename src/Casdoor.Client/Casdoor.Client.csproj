@@ -7,6 +7,7 @@
     <LangVersion>10.0</LangVersion>
     <RootNamespace>Casdoor.Client</RootNamespace>
     <NoWarn>CS1591</NoWarn>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -38,6 +39,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="" />
     <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
     <None Remove="Casdoor.Client.csproj.DotSettings" />
     <PackageReference Include="Microsoft.SourceLink.Github" Version="1.1.1" PrivateAssets="All" />
