@@ -235,12 +235,7 @@ public static class CasdoorClientOptionsExtension
         }
         else
         {
-            string metadataAddress = options.Protocols.Authority;
-            if (metadataAddress.EndsWith("/", StringComparison.Ordinal) is false)
-            {
-                metadataAddress += "/";
-            }
-            metadataAddress += ".well-known/openid-configuration";
+            string metadataAddress = options.Protocols.Authority.TrimEnd('/') + "/.well-known/openid-configuration";
             options.Protocols.OpenIdConnectConfigurationManager ??= options.CreateDefaultOpenIdConnectConfigurationManager(metadataAddress);
             _ = options.LoadRemoteJwtPublicKeyAsync();
             options.Protocols.TokenValidationParameters.ValidAudience = options.Protocols.Audience;
