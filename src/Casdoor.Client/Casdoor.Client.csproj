@@ -7,12 +7,12 @@
     <LangVersion>10.0</LangVersion>
     <RootNamespace>Casdoor.Client</RootNamespace>
     <NoWarn>CS1591</NoWarn>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Casdoor.Client</PackageId>
     <PackageIcon>casdoor.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>The Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
     <Authors>Casdoor</Authors>
     <Product>Casdoor</Product>

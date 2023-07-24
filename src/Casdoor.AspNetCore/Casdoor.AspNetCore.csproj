@@ -4,12 +4,12 @@
     <TargetFrameworks>net7.0;net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
     <RootNamespace>Casdoor.AspNetCore.Authentication</RootNamespace>
     <NoWarn>CS1591</NoWarn>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Casdoor.AspNetCore</PackageId>
     <PackageIcon>casdoor.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>The Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
     <Authors>Casdoor</Authors>
     <Product>Casdoor</Product>
