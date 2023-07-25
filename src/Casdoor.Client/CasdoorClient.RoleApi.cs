@@ -24,4 +24,15 @@ public partial class CasdoorClient
         string url = _options.GetActionUrl("get-roles", queryMap);
         return GetFromJsonAsync<IEnumerable<CasdoorRole>>(url, cancellationToken);
     }
+
+    public virtual async Task<CasdoorResponse?> AddRoleAsync(CasdoorRole role, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(role.Owner))
+        {
+            role.Owner = CasdoorConstants.DefaultCasdoorOwner;
+        }
+
+        var url = _options.GetActionUrl("add-role");
+        return await PostAsJsonAsync(url, role, cancellationToken);
+    }
 }
