@@ -12,6 +12,7 @@
   <PropertyGroup>
     <PackageId>Casdoor.Client</PackageId>
     <PackageIcon>casdoor.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>The Casdoor's SDK for .NET, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.</Description>
     <Authors>Casdoor</Authors>
     <Product>Casdoor</Product>
@@ -38,6 +39,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="" />
     <None Include="../../assets/casdoor.png" Pack="true" Visible="false" PackagePath="" />
     <None Remove="Casdoor.Client.csproj.DotSettings" />
     <PackageReference Include="Microsoft.SourceLink.Github" Version="1.1.1" PrivateAssets="All" />
