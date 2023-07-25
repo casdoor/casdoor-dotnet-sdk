@@ -46,23 +46,26 @@ public partial class CasdoorClient
         return await PostAsJsonAsync(url, newProvider, cancellationToken);
     }
 
-    public virtual Task<CasdoorProvider?> GetProviderAsync(string id, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorProvider?> GetProviderAsync(string id, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-provider", queryMap);
-        return GetFromJsonAsync<CasdoorProvider>(url, cancellationToken: cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorProvider?>();
     }
 
-    public virtual Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-providers", queryMap);
-        return GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorProvider>?>();
     }
 
-    public virtual Task<IEnumerable<CasdoorProvider>?> GetGlobalProvidersAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorProvider>?> GetGlobalProvidersAsync(CancellationToken cancellationToken = default)
     {
         var url = _options.GetActionUrl("get-global-providers");
-        return GetFromJsonAsync<IEnumerable<CasdoorProvider>>(url, cancellationToken: cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorProvider>?>();
     }
 }
