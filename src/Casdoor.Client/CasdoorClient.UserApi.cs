@@ -18,44 +18,49 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<IEnumerable<CasdoorUser>?> GetUsersAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorUser>?> GetUsersAsync(CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-users", queryMap);
-        return GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorUser>?>();
     }
 
-    public virtual Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder()
             .Add("owner", _options.OrganizationName)
             .Add("sorter", sorter)
             .Add("limit", limit.ToString()).QueryMap;
         string url = _options.GetActionUrl("get-sorted-users", queryMap);
-        return GetFromJsonAsync<IEnumerable<CasdoorUser>>(url, cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorUser>?>();
     }
 
-    public virtual Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorUser?> GetUserAsync(string name, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
-        return GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorUser?>();
     }
 
-    public virtual Task<CasdoorUser?> GetUseByIdrAsync(string id, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorUser?> GetUseByIdrAsync(string id, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
-        return GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorUser?>();
     }
 
-    public virtual Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorUser?> GetUserByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder()
             .Add("owner", _options.OrganizationName)
             .Add("email", email).QueryMap;
         string url = _options.GetActionUrl("get-user", queryMap);
-        return GetFromJsonAsync<CasdoorUser>(url, cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorUser?>();
     }
 
     public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken = default)

@@ -18,10 +18,22 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<IEnumerable<CasdoorRole>?> GetRolesAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorRole>?> GetRolesAsync(CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-roles", queryMap);
-        return GetFromJsonAsync<IEnumerable<CasdoorRole>>(url, cancellationToken);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorRole>?>();
+    }
+
+    public virtual async Task<CasdoorResponse?> AddRoleAsync(CasdoorRole role, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(role.Owner))
+        {
+            role.Owner = CasdoorConstants.DefaultCasdoorOwner;
+        }
+
+        var url = _options.GetActionUrl("add-role");
+        return await PostAsJsonAsync(url, role, cancellationToken);
     }
 }
