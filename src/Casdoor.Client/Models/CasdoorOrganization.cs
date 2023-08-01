@@ -31,7 +31,7 @@ public class CasdoorAccountItem
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonPropertyName("visibles")]
+    [JsonPropertyName("visible")]
     public bool? Visible { get; set; }
 
     [JsonPropertyName("viewRule")]
