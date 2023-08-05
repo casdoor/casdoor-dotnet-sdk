@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Casdoor.AspNetCore.Authentication
 {
@@ -49,9 +50,10 @@ namespace Casdoor.AspNetCore.Authentication
         public static AuthenticationBuilder AddCasdoor(this AuthenticationBuilder builder, string applicationType, Action<CasdoorOptions> optionAction)
         {
             builder.Services.AddCasdoorClient(optionAction);
-            return applicationType switch {
-                CasdoorDefaults.WebAppApplicationType => builder.AddCasdoorWebApp(o => {}),
-                CasdoorDefaults.WebApiApplicationType => builder.AddCasdoorWebApi(o => {}),
+            return applicationType switch
+            {
+                CasdoorDefaults.WebAppApplicationType => builder.AddCasdoorWebApp(o => { }),
+                CasdoorDefaults.WebApiApplicationType => builder.AddCasdoorWebApi(o => { }),
                 _ => throw new ArgumentOutOfRangeException(nameof(applicationType))
             };
         }
@@ -85,9 +87,21 @@ namespace Casdoor.AspNetCore.Authentication
             return builder;
         }
 
-        public static AuthenticationBuilder AddCasdoorWebApi(this AuthenticationBuilder builder, Action<OpenIdConnectOptions> openIdOptionAction)
+        public static AuthenticationBuilder AddCasdoorWebApi(this AuthenticationBuilder builder, Action<JwtBearerOptions> jwtBearerOptionAction)
         {
-            throw new NotImplementedException("WebApi is not supported yet.");
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            });
+            builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme).Configure<CasdoorOptions>(
+                (options, casdoorOptions) =>
+                {
+                    options.Authority = casdoorOptions.Protocols.Authority;
+                    options.Audience = casdoorOptions.Protocols.Audience;
+                }
+            );
+            builder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme, jwtBearerOptionAction);
+            return builder;
         }
     }
 }
