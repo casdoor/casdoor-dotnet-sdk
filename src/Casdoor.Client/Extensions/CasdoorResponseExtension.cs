@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Casdoor.Client;
 
@@ -30,5 +31,38 @@ public static class CasdoorResponseExtension
         }
 
         return default;
+    }
+
+    internal static void DeserializeFromJson<T>(this CasdoorResponse<T> response, string json)
+    {
+        var parsedJson = JsonNode.Parse(json);
+        response.Status = parsedJson!["status"]!.ToString();
+        response.Msg = parsedJson["msg"]!.ToString();
+
+        if (response.Status != "ok")
+        {
+            return;
+        }
+
+        response.Sub = parsedJson["sub"]!.ToString();
+        response.Name = parsedJson["name"]!.ToString();
+
+        try
+        {
+            response.Data = parsedJson["data"].Deserialize<IEnumerable<T>>();
+        }
+        catch
+        {
+            var data = new List<T>();
+
+            foreach (var jsonElement in parsedJson["data"].Deserialize<IEnumerable<JsonElement>>()!)
+            {
+                data.AddRange(jsonElement.Deserialize<IEnumerable<T>>()!);
+            }
+
+            response.Data = data;
+        }
+
+        response.Data2 = parsedJson["data2"]?.ToString();
     }
 }
