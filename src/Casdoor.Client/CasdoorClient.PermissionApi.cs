@@ -18,6 +18,26 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
+    public virtual async Task<CasdoorResponse?> AddPermissionAsync(CasdoorPermission permission,
+        CancellationToken cancellationToken = default)
+    {
+        string url = _options.GetActionUrl("add-permission");
+        return await PostAsJsonAsync(url, permission, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorResponse?> UpdatePermissionAsync(CasdoorPermission permission, string permissionId,
+        CancellationToken cancellationToken = default)
+    {
+        string url = _options.GetActionUrl("update-permission", new QueryMapBuilder().Add("id", permissionId).QueryMap);
+        return await PostAsJsonAsync(url, permission, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorResponse?> DeletePermissionAsync(CasdoorPermission permission, CancellationToken cancellationToken = default)
+    {
+        string url = _options.GetActionUrl("delete-permission");
+        return await PostAsJsonAsync(url, permission, cancellationToken);
+    }
+
     public virtual async Task<IEnumerable<CasdoorPermission>?> GetPermissionsAsync(CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
