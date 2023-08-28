@@ -37,6 +37,7 @@ public partial class CasdoorClient
 
     internal async Task<CasdoorResponse?> PostAsJsonAsync<TValue>(string? requestUri, TValue value, CancellationToken cancellationToken = default)
     {
+        _httpClient.SetCasdoorAuthentication(_options);
         HttpResponseMessage resp = await _httpClient.PostAsJsonAsync(requestUri, value, cancellationToken);
         return await resp.ToCasdoorResponse(cancellationToken);
     }
