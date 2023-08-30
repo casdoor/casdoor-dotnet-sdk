@@ -69,7 +69,20 @@ public partial class CasdoorClient
     public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user,  IEnumerable<string> propertyNames, CancellationToken cancellationToken = default)
         => ModifyUserAsync("update-user", user, propertyNames, cancellationToken);
 
-    public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name, CancellationToken cancellationToken = default)
+    public Task<CasdoorResponse?> UpdateUserForbiddenFlagAsync(CasdoorUser user, CancellationToken cancellationToken = default)
+    {
+        user.IsForbidden = !user.IsForbidden;
+        return UpdateUserAsync(user, new List<string> { "is_forbidden" }, cancellationToken);
+    }
+
+    public Task<CasdoorResponse?> UpdateUserDeletedFlagAsync(CasdoorUser user, CancellationToken cancellationToken = default)
+    {
+        user.IsDeleted = !user.IsDeleted;
+        return UpdateUserAsync(user, new List<string> { "is_deleted" }, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name,
+        CancellationToken cancellationToken = default)
     {
         CasdoorUser? user = await GetUserAsync(name, cancellationToken);
         if (user is null)
