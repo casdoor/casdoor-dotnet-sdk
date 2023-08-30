@@ -62,7 +62,7 @@ namespace Casdoor.AspNetCore.Authentication
         /// <returns></returns>
         public async Task<CasdoorUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            return await _casdoorClient.GetUseByIdrAsync(userId, cancellationToken);
+            return await _casdoorClient.GetUserByIdAsync(userId, cancellationToken: cancellationToken);
         }
         /// <summary>
         /// Finds and returns a user, if any, who has the specified normalized user name.
@@ -72,7 +72,7 @@ namespace Casdoor.AspNetCore.Authentication
         /// <returns></returns>
         public async Task<CasdoorUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return await _casdoorClient.GetUserAsync(normalizedUserName, cancellationToken);
+            return await _casdoorClient.GetUserAsync(normalizedUserName, cancellationToken: cancellationToken);
         }
         /// <summary>
         /// Gets the normalized user name for the specified user.
