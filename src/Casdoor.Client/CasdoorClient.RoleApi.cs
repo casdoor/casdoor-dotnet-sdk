@@ -18,12 +18,21 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual async Task<IEnumerable<CasdoorRole>?> GetRolesAsync(CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorRole>?> GetRolesAsync(string? owner = null, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
+        var queryMap = new QueryMapBuilder().Add("owner", owner ?? _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-roles", queryMap);
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
         return result.DeserializeData<IEnumerable<CasdoorRole>?>();
+    }
+
+    public virtual async Task<CasdoorRole?> GetRoleAsync(string name, string? owner = null,
+        CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder().Add("id", $"{owner ?? _options.OrganizationName}/{name}").QueryMap;
+        string url = _options.GetActionUrl("get-role", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorRole?>();
     }
 
     public virtual async Task<CasdoorResponse?> AddRoleAsync(CasdoorRole role, CancellationToken cancellationToken = default)
@@ -33,7 +42,18 @@ public partial class CasdoorClient
             role.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
 
-        var url = _options.GetActionUrl("add-role");
+        string url = _options.GetActionUrl("add-role");
         return await PostAsJsonAsync(url, role, cancellationToken);
     }
+
+    public virtual async Task<CasdoorResponse?> UpdateRoleAsync(CasdoorRole role, string name, string? owner = null,
+        CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder().Add("id", $"{owner ?? _options.OrganizationName}/{name}").QueryMap;
+        string url = _options.GetActionUrl("update-role", queryMap);
+        return await PostAsJsonAsync(url, role, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorResponse?> DeleteRoleAsync(CasdoorRole role, CancellationToken cancellationToken = default) =>
+        await PostAsJsonAsync(_options.GetActionUrl("delete-role"), role, cancellationToken);
 }
