@@ -38,17 +38,17 @@ public partial class CasdoorClient
         return await PostAsJsonAsync(url, permission, cancellationToken);
     }
 
-    public virtual async Task<IEnumerable<CasdoorPermission>?> GetPermissionsAsync(CancellationToken cancellationToken = default)
+     public virtual async Task<IEnumerable<CasdoorPermission>?> GetPermissionsAsync(string? owner = null, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("owner", _options.OrganizationName).QueryMap;
+        var queryMap = new QueryMapBuilder().Add("owner", owner ?? _options.OrganizationName).QueryMap;
         string url = _options.GetActionUrl("get-permissions", queryMap);
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
         return result.DeserializeData<IEnumerable<CasdoorPermission>?>();
     }
 
-    public virtual async Task<IEnumerable<CasdoorPermission>?> GetPermissionsByRoleAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorPermission>?> GetPermissionsByRoleAsync(string name, string? owner = null, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
+        var queryMap = new QueryMapBuilder().Add("id", $"{owner ?? _options.OrganizationName}/{name}").QueryMap;
         string url = _options.GetActionUrl("get-permissions-by-role", queryMap);
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
         return result.DeserializeData<IEnumerable<CasdoorPermission>?>();
