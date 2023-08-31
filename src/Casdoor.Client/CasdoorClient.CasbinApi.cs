@@ -12,80 +12,90 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-using IdentityModel.Client;
+using System.Net.Http.Json;
 
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<CasdoorResponse<bool>> EnforceAsync(CasdoorEnforceData enforceData, string permissionId, CancellationToken cancellationToken = default) =>
-        DoEnforceAsync<bool>("enforce", enforceData.ToJsonArray(), permissionId, cancellationToken);
-
-    public virtual Task<CasdoorResponse<bool>> BatchEnforceAsync(IEnumerable<CasdoorEnforceData> enforceData, string permissionId, CancellationToken cancellationToken = default) =>
-        DoEnforceAsync<bool>("batch-enforce", enforceData.ToJsonArray(), permissionId, cancellationToken);
-
-    public virtual Task<CasdoorResponse<string>> GetAllObjectsAsync(CancellationToken cancellationToken = default) =>
-        GetAllAsync<string>("get-all-objects", cancellationToken);
-
-    public virtual Task<CasdoorResponse<string>> GetAllActionsAsync(CancellationToken cancellationToken = default) =>
-        GetAllAsync<string>("get-all-actions", cancellationToken);
-
-    public virtual Task<CasdoorResponse<string>> GetAllRolesAsync(CancellationToken cancellationToken = default) =>
-        GetAllAsync<string>("get-all-roles", cancellationToken);
-
-    private async Task<CasdoorResponse<T>> DoEnforceAsync<T>(string url, string data, string permissionId,
+    public virtual async Task<CasdoorEnforceResult?> EnforceAsync(
+        CasdoorEnforceData enforceData,
+        string? permissionId,
+        string? modelId,
+        string? resourceId,
+        string? enforcerId,
         CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("permissionId", permissionId).QueryMap;
-        var response = await SendRequestAsync(HttpMethod.Post,
-            new Uri(_options.GetActionUrl(url, queryMap)),
-            new StringContent(
-                data,
-                Encoding.UTF8,
-                "application/json"),
-            cancellationToken);
-        string responseContent = await response.Content.ReadAsStringAsync(); // netstandard2.0 does not support cancellationToken
+        var queryMapBuilder = new QueryMapBuilder();
 
-        if (!response.IsSuccessStatusCode)
+        if (!string.IsNullOrEmpty(permissionId))
         {
-            return new CasdoorResponse<T> { Status = response.StatusCode.ToString(), Msg = responseContent };
+            queryMapBuilder.Add(permissionId!);
         }
 
-        var deserializedResponse = new CasdoorResponse<T>();
-        deserializedResponse.DeserializeFromJson(responseContent);
-        return deserializedResponse;
-    }
-
-    private async Task<CasdoorResponse<T>> GetAllAsync<T>(string url, CancellationToken cancellationToken = default)
-    {
-        var response = await SendRequestAsync(HttpMethod.Get, new Uri(_options.GetActionUrl(url)),
-            cancellationToken: cancellationToken);
-        string responseContent = await response.Content.ReadAsStringAsync();
-
-        if (!response.IsSuccessStatusCode)
+        if (!string.IsNullOrEmpty(modelId))
         {
-            return new CasdoorResponse<T> { Status = response.StatusCode.ToString(), Msg = responseContent };
+            queryMapBuilder.Add(modelId!);
         }
 
-        var deserializedResponse = new CasdoorResponse<T>();
-        deserializedResponse.DeserializeFromJson(responseContent);
-        return deserializedResponse;
+        if (!string.IsNullOrEmpty(resourceId))
+        {
+            queryMapBuilder.Add(resourceId!);
+        }
+
+        if (!string.IsNullOrEmpty(enforcerId))
+        {
+            queryMapBuilder.Add(enforcerId!);
+        }
+
+        var queryMap = queryMapBuilder.QueryMap;
+        var response = await PostAsJsonAsync(_options.GetActionUrl("enforce", queryMap), enforceData.Data, cancellationToken);
+        return new CasdoorEnforceResult { Result = response.DeserializeData<IEnumerable<bool>>() };
     }
 
-    private Task<HttpResponseMessage> SendRequestAsync(HttpMethod method, Uri uri, HttpContent? content = default,
+    public virtual async Task<IEnumerable<CasdoorEnforceResult>?> BatchEnforceAsync(
+        IEnumerable<CasdoorEnforceData> enforceData,
+        string? permissionId,
+        string? modelId,
+        string? enforcerId,
         CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage
-        {
-            Method = method,
-            RequestUri = uri,
-            Content = content
-        };
-        request.SetBasicAuthentication(_options.ClientId, _options.ClientSecret);
+        var queryMapBuilder = new QueryMapBuilder();
 
-        return _httpClient.SendAsync(request, cancellationToken);
+        if (!string.IsNullOrEmpty(permissionId))
+        {
+            queryMapBuilder.Add(permissionId!);
+        }
+
+        if (!string.IsNullOrEmpty(modelId))
+        {
+            queryMapBuilder.Add(modelId!);
+        }
+
+        if (!string.IsNullOrEmpty(enforcerId))
+        {
+            queryMapBuilder.Add(enforcerId!);
+        }
+
+        var queryMap = queryMapBuilder.QueryMap;
+        var data = enforceData.Select(data => data.Data);
+        var response = await PostAsJsonAsync(_options.GetActionUrl("batch-enforce", queryMap), data, cancellationToken);
+        var results = response.DeserializeData<IEnumerable<IEnumerable<bool>>>();
+        return results!.Select(result => new CasdoorEnforceResult { Result = result });
+    }
+
+    public virtual Task<IEnumerable<string>?> GetAllObjectsAsync(CancellationToken cancellationToken = default) =>
+        GetAllAsync("get-all-objects", cancellationToken);
+
+    public virtual Task<IEnumerable<string>?> GetAllActionsAsync(CancellationToken cancellationToken = default) =>
+        GetAllAsync("get-all-actions", cancellationToken);
+
+    public virtual Task<IEnumerable<string>?> GetAllRolesAsync(CancellationToken cancellationToken = default) =>
+        GetAllAsync("get-all-roles", cancellationToken);
+
+    private async Task<IEnumerable<string>?> GetAllAsync(string url, CancellationToken cancellationToken = default)
+    {
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(_options.GetActionUrl(url), cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<string>>();
     }
 }
