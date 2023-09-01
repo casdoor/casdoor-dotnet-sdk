@@ -30,22 +30,22 @@ public partial class CasdoorClient
 
         if (!string.IsNullOrEmpty(permissionId))
         {
-            queryMapBuilder.Add(permissionId!);
+            queryMapBuilder.Add("permissionId", permissionId!);
         }
 
         if (!string.IsNullOrEmpty(modelId))
         {
-            queryMapBuilder.Add(modelId!);
+            queryMapBuilder.Add("modelId", modelId!);
         }
 
         if (!string.IsNullOrEmpty(resourceId))
         {
-            queryMapBuilder.Add(resourceId!);
+            queryMapBuilder.Add("resourceId", resourceId!);
         }
 
         if (!string.IsNullOrEmpty(enforcerId))
         {
-            queryMapBuilder.Add(enforcerId!);
+            queryMapBuilder.Add("enforcerId", enforcerId!);
         }
 
         var queryMap = queryMapBuilder.QueryMap;
@@ -64,17 +64,17 @@ public partial class CasdoorClient
 
         if (!string.IsNullOrEmpty(permissionId))
         {
-            queryMapBuilder.Add(permissionId!);
+            queryMapBuilder.Add("permissionId", permissionId!);
         }
 
         if (!string.IsNullOrEmpty(modelId))
         {
-            queryMapBuilder.Add(modelId!);
+            queryMapBuilder.Add("modelId", modelId!);
         }
 
         if (!string.IsNullOrEmpty(enforcerId))
         {
-            queryMapBuilder.Add(enforcerId!);
+            queryMapBuilder.Add("enforcerId", enforcerId!);
         }
 
         var queryMap = queryMapBuilder.QueryMap;

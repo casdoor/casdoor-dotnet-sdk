@@ -35,4 +35,7 @@ public class CasdoorModel
 
     [JsonPropertyName("modelText")]
     public string? ModelText { get; set; }
+
+    [JsonPropertyName("isEnabled")]
+    public bool IsEnabled { get; set; }
 }
