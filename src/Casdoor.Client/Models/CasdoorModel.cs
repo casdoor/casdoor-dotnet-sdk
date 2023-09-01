@@ -12,13 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Text.Json.Serialization;
+
 namespace Casdoor.Client;
 
-public static class CasdoorEnforceDataExtension
+public class CasdoorModel
 {
-    public static string ToJsonArray(this CasdoorEnforceData enforceData) =>
-        $"[\"{enforceData.Username}\", \"{enforceData.Resource}\", \"{enforceData.Action}\"]";
+    [JsonPropertyName("owner")]
+    public string? Owner { get; set; }
 
-    public static string ToJsonArray(this IEnumerable<CasdoorEnforceData> enforceData) =>
-        '[' + string.Join(", ", enforceData.Select(data => data.ToJsonArray())) + ']';
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("createdTime")]
+    public string? CreatedTime { get; set; }
+
+    [JsonPropertyName("displayName")]
+    public string? DisplayName { get; set; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("modelText")]
+    public string? ModelText { get; set; }
 }

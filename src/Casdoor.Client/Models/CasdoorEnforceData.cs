@@ -18,14 +18,12 @@ namespace Casdoor.Client;
 
 public class CasdoorEnforceData
 {
-    [JsonPropertyName("username")]
-    public string? Username { get; set; }
+    [JsonPropertyName("data")] public IEnumerable<string>? Data { get; set; }
+}
 
-    [JsonPropertyName("resource")]
-    public string? Resource { get; set; }
-
-    [JsonPropertyName("action")]
-    public string? Action { get; set; }
+public class CasdoorEnforceResult
+{
+    [JsonPropertyName("result")] public IEnumerable<bool>? Result { get; set; }
 }
 
 
