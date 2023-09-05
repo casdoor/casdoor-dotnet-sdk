@@ -12,14 +12,54 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using IdentityModel.Client;
 
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual async Task<CasdoorEnforceResult?> EnforceAsync(
-        CasdoorEnforceData enforceData,
+    public virtual Task<CasdoorResponse> EnforceAsync(
+        IEnumerable<string> permissionRule,
+        string? permissionId,
+        string? modelId,
+        string? resourceId,
+        string? enforcerId,
+        CancellationToken cancellationToken = default)
+    {
+        return DoEnforceAsync(
+            "enforce",
+            JsonSerializer.Serialize(permissionRule),
+            permissionId,
+            modelId,
+            resourceId,
+            enforcerId,
+            cancellationToken);
+    }
+
+    public virtual Task<CasdoorResponse> BatchEnforceAsync(
+        IEnumerable<IEnumerable<string>> permissionRule,
+        string? permissionId,
+        string? modelId,
+        string? enforcerId,
+        CancellationToken cancellationToken = default)
+    {
+        return DoEnforceAsync(
+            "batch-enforce",
+            JsonSerializer.Serialize(permissionRule),
+            permissionId,
+            modelId,
+            null,
+            enforcerId,
+            cancellationToken);
+    }
+
+    private async Task<CasdoorResponse> DoEnforceAsync(
+        string url,
+        string data,
         string? permissionId,
         string? modelId,
         string? resourceId,
@@ -31,57 +71,42 @@ public partial class CasdoorClient
         if (!string.IsNullOrEmpty(permissionId))
         {
             queryMapBuilder.Add(permissionId!);
+            queryMapBuilder.Add("permissionId", permissionId!);
         }
 
         if (!string.IsNullOrEmpty(modelId))
         {
             queryMapBuilder.Add(modelId!);
+            queryMapBuilder.Add("modelId", modelId!);
         }
 
         if (!string.IsNullOrEmpty(resourceId))
         {
             queryMapBuilder.Add(resourceId!);
+            queryMapBuilder.Add("resourceId", resourceId!);
         }
 
         if (!string.IsNullOrEmpty(enforcerId))
         {
             queryMapBuilder.Add(enforcerId!);
+            queryMapBuilder.Add("enforcerId", enforcerId!);
         }
 
-        var queryMap = queryMapBuilder.QueryMap;
-        var response = await PostAsJsonAsync(_options.GetActionUrl("enforce", queryMap), enforceData.Data, cancellationToken);
-        return new CasdoorEnforceResult { Result = response.DeserializeData<IEnumerable<bool>>() };
-    }
-
-    public virtual async Task<IEnumerable<CasdoorEnforceResult>?> BatchEnforceAsync(
-        IEnumerable<CasdoorEnforceData> enforceData,
-        string? permissionId,
-        string? modelId,
-        string? enforcerId,
-        CancellationToken cancellationToken = default)
-    {
-        var queryMapBuilder = new QueryMapBuilder();
-
-        if (!string.IsNullOrEmpty(permissionId))
+        var request = new HttpRequestMessage
         {
-            queryMapBuilder.Add(permissionId!);
-        }
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(_options.GetActionUrl(url, queryMapBuilder.QueryMap)),
+            Content = new StringContent(
+                data,
+                Encoding.UTF8,
+                "application/json")
+        };
+        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+        request.SetBasicAuthentication(_options.ClientId, _options.ClientSecret);
 
-        if (!string.IsNullOrEmpty(modelId))
-        {
-            queryMapBuilder.Add(modelId!);
-        }
-
-        if (!string.IsNullOrEmpty(enforcerId))
-        {
-            queryMapBuilder.Add(enforcerId!);
-        }
-
-        var queryMap = queryMapBuilder.QueryMap;
-        var data = enforceData.Select(data => data.Data);
-        var response = await PostAsJsonAsync(_options.GetActionUrl("batch-enforce", queryMap), data, cancellationToken);
-        var results = response.DeserializeData<IEnumerable<IEnumerable<bool>>>();
-        return results!.Select(result => new CasdoorEnforceResult { Result = result });
+        var response = await _httpClient.SendAsync(request, cancellationToken);
+        string responseContent = await response.Content.ReadAsStringAsync(); // netstandard2.0 does not support cancellationToken
+        return JsonSerializer.Deserialize<CasdoorResponse>(responseContent)!;
     }
 
     public virtual Task<IEnumerable<string>?> GetAllObjectsAsync(CancellationToken cancellationToken = default) =>
@@ -89,6 +114,7 @@ public partial class CasdoorClient
 
     public virtual Task<IEnumerable<string>?> GetAllActionsAsync(CancellationToken cancellationToken = default) =>
         GetAllAsync("get-all-actions", cancellationToken);
+
 
     public virtual Task<IEnumerable<string>?> GetAllRolesAsync(CancellationToken cancellationToken = default) =>
         GetAllAsync("get-all-roles", cancellationToken);
