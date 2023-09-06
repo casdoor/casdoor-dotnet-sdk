@@ -22,7 +22,7 @@ namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual Task<CasdoorResponse> EnforceAsync(
+    public virtual async Task<bool> EnforceAsync(
         IEnumerable<string> permissionRule,
         string? permissionId,
         string? modelId,
@@ -30,7 +30,7 @@ public partial class CasdoorClient
         string? enforcerId,
         CancellationToken cancellationToken = default)
     {
-        return DoEnforceAsync(
+        var response = await DoEnforceAsync(
             "enforce",
             JsonSerializer.Serialize(permissionRule),
             permissionId,
@@ -38,16 +38,18 @@ public partial class CasdoorClient
             resourceId,
             enforcerId,
             cancellationToken);
+
+        return response.DeserializeData<bool>();
     }
 
-    public virtual Task<CasdoorResponse> BatchEnforceAsync(
+    public virtual async Task<IEnumerable<bool>> BatchEnforceAsync(
         IEnumerable<IEnumerable<string>> permissionRule,
         string? permissionId,
         string? modelId,
         string? enforcerId,
         CancellationToken cancellationToken = default)
     {
-        return DoEnforceAsync(
+        var response = await DoEnforceAsync(
             "batch-enforce",
             JsonSerializer.Serialize(permissionRule),
             permissionId,
@@ -55,6 +57,8 @@ public partial class CasdoorClient
             null,
             enforcerId,
             cancellationToken);
+
+        return response.DeserializeData<IEnumerable<bool>>()!;
     }
 
     private async Task<CasdoorResponse> DoEnforceAsync(
