@@ -17,9 +17,9 @@ namespace Casdoor.Client;
 public interface ICasdoorProviderClient
 {
     public Task<CasdoorResponse?> AddProviderAsync(CasdoorProvider provider, CancellationToken cancellationToken = default);
-    public Task<CasdoorResponse?> DeleteProviderAsync(string name, CancellationToken cancellationToken = default);
-    public Task<CasdoorResponse?> UpdateProviderAsync(string id, CasdoorProvider newProvider, CancellationToken cancellationToken = default);
-    public Task<CasdoorProvider?> GetProviderAsync(string id, CancellationToken cancellationToken = default);
-    public Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> DeleteProviderAsync(string name, string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateProviderAsync(string name, CasdoorProvider newProvider, CancellationToken cancellationToken = default);
+    public Task<CasdoorProvider?> GetProviderAsync(string name, string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default);
     public Task<IEnumerable<CasdoorProvider>?> GetGlobalProvidersAsync(CancellationToken cancellationToken = default);
 }

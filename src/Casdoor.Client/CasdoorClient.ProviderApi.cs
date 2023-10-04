@@ -13,12 +13,14 @@
 // limitations under the License.
 
 using System.Net.Http.Json;
+using System.Web;
 
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    public virtual async Task<CasdoorResponse?> AddProviderAsync(CasdoorProvider provider, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorResponse?> AddProviderAsync(
+        CasdoorProvider provider, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(provider.Owner))
         {
@@ -28,33 +30,37 @@ public partial class CasdoorClient
         return await PostAsJsonAsync(url, provider, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> DeleteProviderAsync(string name, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorResponse?> DeleteProviderAsync(
+        string name, string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default)
     {
-        var provider = new CasdoorProvider {Owner = CasdoorConstants.DefaultCasdoorOwner, Name = name};
+        var provider = new CasdoorProvider { Owner = owner, Name = name };
         var url = _options.GetActionUrl("delete-provider");
         return await PostAsJsonAsync(url, provider, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> UpdateProviderAsync(string id, CasdoorProvider newProvider, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorResponse?> UpdateProviderAsync(string name, CasdoorProvider newProvider, CancellationToken cancellationToken = default)
     {
-        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         if (string.IsNullOrEmpty(newProvider.Owner))
         {
             newProvider.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
+        var id = $"{newProvider.Owner}/{HttpUtility.HtmlEncode(name)}";
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("update-provider", queryMap);
         return await PostAsJsonAsync(url, newProvider, cancellationToken);
     }
 
-    public virtual async Task<CasdoorProvider?> GetProviderAsync(string id, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorProvider?> GetProviderAsync(string name, string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default)
     {
+        var id = $"{owner}/{HttpUtility.HtmlEncode(name)}";
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-provider", queryMap);
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
         return result.DeserializeData<CasdoorProvider?>();
     }
 
-    public virtual async Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(string owner, CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<CasdoorProvider>?> GetProvidersAsync(
+        string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default)
     {
         var queryMap = new QueryMapBuilder().Add("owner", owner).QueryMap;
         var url = _options.GetActionUrl("get-providers", queryMap);
