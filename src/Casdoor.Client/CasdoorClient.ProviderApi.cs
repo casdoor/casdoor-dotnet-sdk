@@ -13,7 +13,11 @@
 // limitations under the License.
 
 using System.Net.Http.Json;
+#if NETFRAMEWORK
+using System.Net;
+#else
 using System.Web;
+#endif
 
 namespace Casdoor.Client;
 
@@ -38,21 +42,23 @@ public partial class CasdoorClient
         return await PostAsJsonAsync(url, provider, cancellationToken);
     }
 
-    public virtual async Task<CasdoorResponse?> UpdateProviderAsync(string name, CasdoorProvider newProvider, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorResponse?> UpdateProviderAsync(
+        string name, CasdoorProvider newProvider, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(newProvider.Owner))
         {
             newProvider.Owner = CasdoorConstants.DefaultCasdoorOwner;
         }
-        var id = $"{newProvider.Owner}/{HttpUtility.HtmlEncode(name)}";
+        var id = $"{newProvider.Owner}/{HtmlEncode(name)}";
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("update-provider", queryMap);
         return await PostAsJsonAsync(url, newProvider, cancellationToken);
     }
 
-    public virtual async Task<CasdoorProvider?> GetProviderAsync(string name, string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorProvider?> GetProviderAsync(
+        string name, string owner = CasdoorConstants.DefaultCasdoorOwner, CancellationToken cancellationToken = default)
     {
-        var id = $"{owner}/{HttpUtility.HtmlEncode(name)}";
+        var id = $"{owner}/{HtmlEncode(name)}";
         var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
         var url = _options.GetActionUrl("get-provider", queryMap);
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
@@ -73,5 +79,14 @@ public partial class CasdoorClient
         var url = _options.GetActionUrl("get-global-providers");
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
         return result.DeserializeData<IEnumerable<CasdoorProvider>?>();
+    }
+
+    private static string HtmlEncode(string value)
+    {
+#if NETFRAMEWORK
+        return WebUtility.HtmlEncode(value);
+#else
+        return HttpUtility.HtmlEncode(value);
+#endif
     }
 }
