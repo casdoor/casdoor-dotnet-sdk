@@ -16,7 +16,7 @@ namespace Casdoor.Client
 {
     public static class CasdoorConstants
     {
-        public static readonly string DefaultCasdoorSuccessStatus = "ok";
+        public const string DefaultCasdoorSuccessStatus = "ok";
         public static readonly string[] AllUserProperties = new string[]
         {
             "owner", "name", "createdTime", "updateTime", "id", "type",
@@ -30,7 +30,7 @@ namespace Casdoor.Client
             "wecom", "lark", "gitlab", "ldap", "properties"
         };
 
-        public static readonly string DefaultCasdoorOwner = "admin";
-        public static readonly string DefaultCasdoorLdapServerName = "Example LDAP Server";
+        public const string DefaultCasdoorOwner = "admin";
+        public const string DefaultCasdoorLdapServerName = "Example LDAP Server";
     }
 }
