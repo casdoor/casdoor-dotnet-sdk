@@ -23,11 +23,11 @@ public class ServicesFixture
         ServiceProvider = new ServiceCollection()
             .AddCasdoorClient(options =>
             {
-                options.Endpoint = "http://localhost:8000";
-                options.OrganizationName = "app-built-in";
-                options.ApplicationName = "app-built-in";
-                options.ClientId = "e47ada02bd296997a4e8";
-                options.ClientSecret = "760b303f6bbdce805ba8f2b765b71e07306b8134";
+                options.Endpoint = "https://demo.casdoor.com";
+                options.OrganizationName = "casbin";
+                options.ApplicationName = "app-example";
+                options.ClientId = "294b09fbc17f95daf2fe";
+                options.ClientSecret = "dd8982f7046ccba1bbd7851d5c1ece4e52bf039d";
                 options.ApplicationType = "webapp";
             }).BuildServiceProvider();
     }
