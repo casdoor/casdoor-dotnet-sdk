@@ -32,7 +32,7 @@ public class CasdoorOptions
     public string ApplicationType { get; set; } = string.Empty;
     public string CallbackPath { get; set; } = "/casdoor/signin-callback";
     public string Scope { get; set; } = "openid profile email";
-    public bool RequireHttpsMetadata { get; set; } = true;
+    public bool RequireHttpsMetadata { get; set; } = false;
     public CasdoorProtocolsOptions Protocols { get; set; } = new();
     public CasdoorPathOptions Path { get; set; } = new();
 }
