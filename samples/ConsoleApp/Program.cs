@@ -17,7 +17,7 @@ var options = new CasdoorOptions
     // after the user has authenticated. default is "/casdoor/signin-callback"
     CallbackPath = "/callback",
     // Optional: Whether require https for casdoor endpoint
-    RequireHttpsMetadata = true,
+    RequireHttpsMetadata = false,
     // Optional: The scopes that the client is requesting.
     Scope = "openid profile email"
 
