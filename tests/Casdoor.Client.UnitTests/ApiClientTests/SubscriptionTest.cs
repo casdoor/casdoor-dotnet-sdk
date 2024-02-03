@@ -26,7 +26,7 @@ public class SubscriptionTest : IClassFixture<ServicesFixture>
     public async void TestSubscription()
     {
         var userClient = _servicesFixture.ServiceProvider.GetService<ICasdoorClient>();
-        string name = "Subscription_" + DateTime.Now.ToLongTimeString().Substring(0, 6);
+        string name = "Subscription_" + DateTime.Now.ToLongTimeString();
 
         CasdoorSubscription subscription = new CasdoorSubscription()
         {

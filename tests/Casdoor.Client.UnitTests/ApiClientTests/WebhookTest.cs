@@ -27,7 +27,7 @@ public class WebhookTest : IClassFixture<ServicesFixture>
     {
 
         var userClient = _servicesFixture.ServiceProvider.GetService<ICasdoorClient>();
-        string name = "Webhook_" + DateTime.Now.ToLongTimeString().Substring(0, 6);
+        string name = "Webhook_" + DateTime.Now.ToLongTimeString();
         string appName = $"admin/{name}";
 
         CasdoorWebhook webhook = new CasdoorWebhook()
