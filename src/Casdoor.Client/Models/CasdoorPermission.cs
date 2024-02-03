@@ -78,4 +78,7 @@ public class CasdoorPermission
 
     [JsonPropertyName("isEnabled")]
     public bool IsEnabled { get; set; }
+
+    [JsonPropertyName("groups")]
+    public IEnumerable<string>? Groups { get; set; }
 }

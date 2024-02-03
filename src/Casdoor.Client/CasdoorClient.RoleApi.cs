@@ -37,10 +37,7 @@ public partial class CasdoorClient
 
     public virtual async Task<CasdoorResponse?> AddRoleAsync(CasdoorRole role, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(role.Owner))
-        {
-            role.Owner = CasdoorConstants.DefaultCasdoorOwner;
-        }
+        role.Owner = _options.OrganizationName;
 
         string url = _options.GetActionUrl("add-role");
         return await PostAsJsonAsync(url, role, cancellationToken);

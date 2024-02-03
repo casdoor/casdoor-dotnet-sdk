@@ -20,4 +20,13 @@ public interface ICasdoorResourceClient
         Stream fileStream, string createdTime = "", string description = "", CancellationToken cancellationToken = default);
 
     public Task<CasdoorResponse?> DeleteResourceAsync(string name, CancellationToken cancellationToken = default);
+
+    public Task<CasdoorResponse?> AddResourceAsync(CasdoorUserResource casdoorUserResource, CancellationToken cancellationToken = default);
+
+    public Task<CasdoorUserResource?> GetResourceAsync(string name, CancellationToken cancellationToken = default);
+
+    public Task<IEnumerable<CasdoorUserResource>?> GetResourcesAsync(string owner, string user,
+        string field, string value, string sortField, string sortOrder, CancellationToken cancellationToken = default);
+
+    public Task<IEnumerable<CasdoorUserResource>?> GetPaginationResourcesAsync(string owner, string user, int pageSize, int p, string field, string value, string sortField, string sortOrder, CancellationToken cancellationToken = default);
 }

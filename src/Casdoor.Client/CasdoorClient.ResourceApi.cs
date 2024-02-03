@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
+
 namespace Casdoor.Client;
 
 public partial class CasdoorClient
 {
-    // TODO: what are `createdTime` and `description` for?
     public virtual Task<CasdoorResponse?> UploadResourceAsync(
         string user, string tag, string parent, string fullFilePath,
         Stream fileStream, string createdTime = "", string description = "", CancellationToken cancellationToken = default)
@@ -29,12 +32,63 @@ public partial class CasdoorClient
             .Add("parent", parent)
             .Add("fullFilePath", fullFilePath).QueryMap;
         string url = _options.GetActionUrl("upload-resource", queryMap);
-        return _httpClient.PostFileAsync(url, new StreamContent(fileStream), cancellationToken: cancellationToken);
+        return PostFileAsync(url, new StreamContent(fileStream), cancellationToken: cancellationToken);
     }
 
     public virtual Task<CasdoorResponse?> DeleteResourceAsync(string name, CancellationToken cancellationToken = default)
     {
         CasdoorUserResource resource = new() {Owner = _options.OrganizationName, Name = name};
-        return PostAsJsonAsync("delete-resource", resource, cancellationToken);
+        var url = _options.GetActionUrl("delete-resource");
+        return PostAsJsonAsync(url, resource, cancellationToken);
+    }
+
+    public virtual Task<CasdoorResponse?> AddResourceAsync(CasdoorUserResource casdoorUserResource,
+        CancellationToken cancellationToken = default)
+    {
+        string url = _options.GetActionUrl("add-resource");
+        return PostAsJsonAsync(url, casdoorUserResource, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorUserResource?> GetResourceAsync(string name, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("id", $"{_options.OrganizationName}/{name}").QueryMap;
+        string url = _options.GetActionUrl("get-resource", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorUserResource?>();
+    }
+
+    public virtual async Task<IEnumerable<CasdoorUserResource>?> GetResourcesAsync(string owner, string user, 
+        string field, string value, string sortField, string sortOrder, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", owner)
+            .Add("user", user)
+            .Add("field", field)
+            .Add("value", value)
+            .Add("sortField", sortField)
+            .Add("sortOrder", sortOrder)
+            .QueryMap;
+        string url = _options.GetActionUrl("get-resources", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorUserResource>?>();
+    }
+
+    public virtual async Task<IEnumerable<CasdoorUserResource>?> GetPaginationResourcesAsync(string owner, string user, int pageSize, int p,
+        string field, string value, string sortField, string sortOrder, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", owner)
+            .Add("user", user)
+            .Add("pageSize", pageSize.ToString())
+            .Add("p", p.ToString())
+            .Add("field", field)
+            .Add("value", value)
+            .Add("sortField", sortField)
+            .Add("sortOrder", sortOrder)
+            .QueryMap;
+        string url = _options.GetActionUrl("get-resources", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorUserResource>?>();
     }
 }

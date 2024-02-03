@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -43,5 +44,9 @@ public partial class CasdoorClient
     }
 
     internal Task<CasdoorResponse?> PostFileAsync(string? requestUri, StreamContent postStream, CancellationToken cancellationToken = default)
-        => _httpClient.PostFileAsync(requestUri, postStream, cancellationToken);
+    {
+        _httpClient.SetCasdoorAuthentication(_options);
+        return _httpClient.PostFileAsync(requestUri, postStream, cancellationToken);
+    }
+    
 }

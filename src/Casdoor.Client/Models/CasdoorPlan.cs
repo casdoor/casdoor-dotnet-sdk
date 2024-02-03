@@ -30,8 +30,8 @@ public class CasdoorPlan
 
     [JsonPropertyName("pricePerMonth")] public double PricePerMonth { get; set; }
     [JsonPropertyName("pricePerYear")] public double PricePerYear { get; set; }
-    [JsonPropertyName("currency")] public string Currency { get; set; }
+    [JsonPropertyName("currency")] public string? Currency { get; set; }
     [JsonPropertyName("isEnabled")] public bool IsEnabled { get; set; }
-    [JsonPropertyName("role")] public string Role { get; set; }
-    [JsonPropertyName("options")] public List<string> Options { get; set; }
+    [JsonPropertyName("role")] public string? Role { get; set; }
+    [JsonPropertyName("options")] public List<string>? Options { get; set; }
 }
