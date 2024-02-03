@@ -21,8 +21,7 @@ namespace Casdoor.Client;
 public partial class CasdoorClient
 {
 
-    public virtual Task<CasdoorResponse?> AddAdapterAsync(CasdoorAdapter casdoorUserAdapter,
-        CancellationToken cancellationToken = default)
+    public virtual Task<CasdoorResponse?> AddAdapterAsync(CasdoorAdapter casdoorUserAdapter, CancellationToken cancellationToken = default)
     {
         string url = _options.GetActionUrl("add-adapter");
         return PostAsJsonAsync(url, casdoorUserAdapter, cancellationToken);
