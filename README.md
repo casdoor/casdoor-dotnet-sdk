@@ -5,8 +5,6 @@
 
 The Casdoor's SDK for .NET/ASP.NET Core, which will allow you to easily connect your application to the Casdoor authentication system without having to implement it from scratch.
 
-**Note:** This SDK is currently in beta and is not yet ready for use.
-
 ## Packages
 
 This SDK is built using the following packages for different platforms:
