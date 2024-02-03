@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\src\Casdoor.Client\Casdoor.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Examples\ResourceUploadTest.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

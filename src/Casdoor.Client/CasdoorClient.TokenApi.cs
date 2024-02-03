@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Json;
 using System.Text.Json;
 using IdentityModel.Client;
 
@@ -84,5 +85,83 @@ public partial class CasdoorClient
 
         var result = JsonSerializer.Deserialize<CasdoorUser>(jwtToken.Payload.SerializeToJson());
         return result;
+    }
+
+    public virtual Task<CasdoorResponse?> AddTokenAsync(CasdoorToken casdoorToken,
+        CancellationToken cancellationToken = default)
+    {
+        var url = _options.GetActionUrl("add-token");
+        return PostAsJsonAsync(url, casdoorToken, cancellationToken);
+    }
+
+    public virtual Task<CasdoorResponse?> DeleteTokenAsync(CasdoorToken casdoorToken,
+        CancellationToken cancellationToken = default)
+    {
+        var url = _options.GetActionUrl("delete-token");
+        return PostAsJsonAsync(url, casdoorToken, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorResponse?> GetCaptchaStatusAsync(string id,
+        CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder().Add("id", id).QueryMap;
+        var url = _options.GetActionUrl("get-captcha-status", queryMap);
+        return await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken);
+    }
+
+    public virtual async Task<CasdoorToken?> GetTokenAsync(string owner, string name,
+        CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("id", $"{owner}/{name}").QueryMap;
+
+        var url = _options.GetActionUrl("get-token", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken);
+        return result.DeserializeData<CasdoorToken?>();
+    }
+
+    public virtual async Task<IEnumerable<CasdoorToken>?> GetTokensAsync(string owner,
+        CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", owner).QueryMap;
+        var url = _options.GetActionUrl("get-tokens", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorToken>?>();
+    }
+
+    public virtual async Task<IEnumerable<CasdoorToken>?> GetPaginationTokensAsync(string owner, int pageSize, int p,
+        List<KeyValuePair<string, string?>>? queryMap, CancellationToken cancellationToken = default)
+    {
+
+        queryMap ??= new List<KeyValuePair<string, string?>>();
+        queryMap.Add(new KeyValuePair<string, string?>("owner", owner));
+        queryMap.Add(new KeyValuePair<string, string?>("pageSize", pageSize.ToString()));
+        queryMap.Add(new KeyValuePair<string, string?>("p", p.ToString()));
+
+        var url = _options.GetActionUrl("get-tokens", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken);
+        return result.DeserializeData<IEnumerable<CasdoorToken>?>();
+    }
+
+    public virtual Task<CasdoorResponse?> UpdateTokenAsync(CasdoorToken token, IEnumerable<string> propertyNames, CancellationToken cancellationToken = default)
+        => ModifyTokenAsync("update-token", token, propertyNames, cancellationToken: cancellationToken);
+
+    public virtual Task<CasdoorResponse?> UpdateTokenColumnsAsync(CasdoorToken token, IEnumerable<string>? columns, CancellationToken cancellationToken = default)
+        => ModifyTokenAsync("update-token", token, columns, cancellationToken: cancellationToken);
+
+    private Task<CasdoorResponse?> ModifyTokenAsync(string action, CasdoorToken token, IEnumerable<string>? columns, string? owner = null, CancellationToken cancellationToken = default)
+    {
+        var queryMapBuilder = new QueryMapBuilder().Add("id", $"{token.Owner}/{token.Name}");
+
+        string columnsValue = string.Join(",", columns ?? Array.Empty<string>());
+
+        if (!string.IsNullOrEmpty(columnsValue))
+        {
+            queryMapBuilder.Add("columns", columnsValue);
+        }
+
+        string url = _options.GetActionUrl(action, queryMapBuilder.QueryMap);
+        return PostAsJsonAsync(url, token, cancellationToken);
     }
 }

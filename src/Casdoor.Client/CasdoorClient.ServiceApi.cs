@@ -41,4 +41,14 @@ public partial class CasdoorClient
         string url = _options.GetActionUrl("send-email");
         return PostAsJsonAsync(url, form, cancellationToken);
     }
+
+    public virtual Task<CasdoorResponse?> SendNotification(string content, CancellationToken cancellationToken = default)
+    {
+        string url = _options.GetActionUrl("send-notification");
+        CasdoorNotificationForm form = new()
+        {
+            Content = content,
+        };
+        return PostAsJsonAsync(url, form, cancellationToken);
+    }
 }

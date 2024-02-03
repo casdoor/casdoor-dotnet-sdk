@@ -20,10 +20,14 @@ public interface ICasdoorUserClient
     public Task<IEnumerable<CasdoorUser>?> GetSortedUsersAsync(string sorter, int limit, string? owner = null, CancellationToken cancellationToken = default);
     public Task<CasdoorUser?> GetUserAsync(string name, string? owner = null, CancellationToken cancellationToken = default);
     public Task<CasdoorUser?> GetUserByEmailAsync(string email, string? owner = null, CancellationToken cancellationToken = default);
+    public Task<CasdoorUser?> GetUserByPhoneAsync(string phone, string? owner = null, CancellationToken cancellationToken = default);
     public Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken = default);
     public Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user, IEnumerable<string> propertyNames, CancellationToken cancellationToken = default );
+    public Task<CasdoorResponse?> UpdateUserByIdAsync(string userId, CasdoorUser user, CancellationToken cancellationToken);
+    public Task<CasdoorResponse?> UpdateUserForColumns(CasdoorUser user, IEnumerable<string> columns, CancellationToken cancellationToken);
     public Task<CasdoorResponse?> UpdateUserForbiddenFlagAsync(CasdoorUser user, CancellationToken cancellationToken = default);
     public Task<CasdoorResponse?> UpdateUserDeletedFlagAsync(CasdoorUser user, CancellationToken cancellationToken = default);
     public Task<CasdoorResponse?> DeleteUserAsync(string name, CancellationToken cancellationToken = default);
     public Task<CasdoorResponse?> CheckUserPasswordAsync(string name, CancellationToken cancellationToken = default);
+    public Task<int?> GetUserCount(string owner, int isOnline, CancellationToken cancellationToken = default);
 }

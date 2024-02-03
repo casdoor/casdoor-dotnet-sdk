@@ -31,4 +31,18 @@ public static class CasdoorResponseExtension
 
         return default;
     }
+
+    internal static T? DeserializeData2<T>(this CasdoorResponse? response)
+    {
+        if (response?.Status != "ok")
+        {
+            throw new CasdoorApiException(response?.Msg);
+        }
+        if (response.Data2 is JsonElement element)
+        {
+            return element.Deserialize<T>();
+        }
+
+        return default;
+    }
 }

@@ -22,4 +22,14 @@ public interface ICasdoorTokenClient
     public Task<TokenResponse> RequestPasswordTokenAsync(string username, string password, CancellationToken cancellationToken = default);
     public Task<TokenResponse> RequestAuthorizationCodeTokenAsync(string code, string redirectUri, string codeVerifier = "", CancellationToken cancellationToken = default);
     public Task<TokenResponse> RequestRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> AddTokenAsync(CasdoorToken casdoorToken, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> DeleteTokenAsync(CasdoorToken casdoorToken, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> GetCaptchaStatusAsync(string id, CancellationToken cancellationToken = default);
+    public Task<CasdoorToken?> GetTokenAsync(string owner, string name, CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorToken>?> GetTokensAsync(string owner,CancellationToken cancellationToken = default);
+    public Task<IEnumerable<CasdoorToken>?> GetPaginationTokensAsync(string owner, int pageSize, int p,
+        List<KeyValuePair<string, string?>>? queryMap, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateTokenAsync(CasdoorToken casdoorToken, IEnumerable<string> propertyNames, CancellationToken cancellationToken = default);
+    public Task<CasdoorResponse?> UpdateTokenColumnsAsync(CasdoorToken token, IEnumerable<string>? columns, CancellationToken cancellationToken = default);
+
 }

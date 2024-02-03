@@ -31,5 +31,5 @@ public class CasdoorEmailForm
     public string[] Receivers { get; set; } = Array.Empty<string>();
 
     [JsonPropertyName("provider")]
-    public string Provider { get; set; }
+    public string? Provider { get; set; }
 }

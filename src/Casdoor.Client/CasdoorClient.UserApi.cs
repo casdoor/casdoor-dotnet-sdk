@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Http.Json;
+using System.Threading;
 
 namespace Casdoor.Client;
 
@@ -65,11 +69,29 @@ public partial class CasdoorClient
         var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
         return result.DeserializeData<CasdoorUser?>();
     }
+    public virtual async Task<CasdoorUser?> GetUserByPhoneAsync(string phone, string? owner = null, CancellationToken cancellationToken = default)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", _options.OrganizationName)
+            .Add("phone", phone).QueryMap;
+        string url = _options.GetActionUrl("get-user", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<CasdoorUser?>();
+    }
 
     public virtual Task<CasdoorResponse?> AddUserAsync(CasdoorUser user, CancellationToken cancellationToken = default)
         => ModifyUserAsync("add-user", user, null, cancellationToken: cancellationToken);
 
-    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user,  IEnumerable<string> propertyNames, CancellationToken cancellationToken = default)
+    public virtual Task<CasdoorResponse?> UpdateUserByIdAsync(string userId, CasdoorUser user, CancellationToken cancellationToken)
+    {
+        user.Id = userId;
+        return ModifyUserAsync("update-user", user, null, cancellationToken: cancellationToken);
+    }
+
+    public virtual Task<CasdoorResponse?> UpdateUserForColumns(CasdoorUser user,IEnumerable<string> columns, CancellationToken cancellationToken)
+        => ModifyUserAsync("update-user", user, columns, cancellationToken: cancellationToken);
+
+    public virtual Task<CasdoorResponse?> UpdateUserAsync(CasdoorUser user,IEnumerable<string> propertyNames, CancellationToken cancellationToken = default)
         => ModifyUserAsync("update-user", user, propertyNames, cancellationToken: cancellationToken);
 
     public Task<CasdoorResponse?> UpdateUserForbiddenFlagAsync(CasdoorUser user, CancellationToken cancellationToken = default)
@@ -82,6 +104,20 @@ public partial class CasdoorClient
     {
         user.IsDeleted = !user.IsDeleted;
         return UpdateUserAsync(user, new List<string> { "is_deleted" }, cancellationToken);
+    }
+
+    public Task<CasdoorResponse?> SetPasswordAsync(string owner, string name, string oldPassword, string newPassword, CancellationToken cancellationToken)
+    {
+        var param = new Dictionary<string, string>
+        {
+            { "owner", owner },
+            { "name", name },
+            { "oldPassword", oldPassword },
+            { "newPassword", newPassword }
+        };
+
+        string url = _options.GetActionUrl("set-password");
+        return PostAsJsonAsync(url, param, cancellationToken);
     }
 
     public virtual async Task<CasdoorResponse?> DeleteUserAsync(string name,
@@ -119,5 +155,15 @@ public partial class CasdoorClient
         user.Owner = owner ?? _options.OrganizationName;
         string url = _options.GetActionUrl(action, queryMapBuilder.QueryMap);
         return PostAsJsonAsync(url, user, cancellationToken);
+    }
+
+    public virtual async Task<int?> GetUserCount(string owner,int isOnline, CancellationToken cancellationToken)
+    {
+        var queryMap = new QueryMapBuilder()
+            .Add("owner", owner)
+            .Add("isOnline", isOnline.ToString()).QueryMap;
+        string url = _options.GetActionUrl("get-user-count", queryMap);
+        var result = await _httpClient.GetFromJsonAsync<CasdoorResponse?>(url, cancellationToken: cancellationToken);
+        return result.DeserializeData<int?>();
     }
 }

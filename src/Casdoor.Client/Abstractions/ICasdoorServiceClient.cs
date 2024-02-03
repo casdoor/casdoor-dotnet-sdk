@@ -20,4 +20,6 @@ public interface ICasdoorServiceClient
 
     public Task<CasdoorResponse?> SendEmailAsync(string title, string content, string sender,
         IEnumerable<string> receivers, CancellationToken cancellationToken = default);
+
+    public Task<CasdoorResponse?> SendNotification(string content, CancellationToken cancellationToken = default);
 }
