@@ -26,8 +26,26 @@ public class ServicesFixture
                 options.Endpoint = "https://demo.casdoor.com";
                 options.OrganizationName = "casbin";
                 options.ApplicationName = "app-example";
-                options.ClientId = "294b09fbc17f95daf2fe";
-                options.ClientSecret = "dd8982f7046ccba1bbd7851d5c1ece4e52bf039d";
+                options.ClientId = "b800a86702dd4d29ec4d";
+                options.ClientSecret = "1219843a8db4695155699be3a67f10796f2ec1d5";
+                options.ApplicationType = "webapp";
+            }).BuildServiceProvider();
+    }
+
+    public IServiceProvider ServiceProvider { get; set; }
+}
+
+public class ServicesFixtureWithoutSecret
+{
+    public ServicesFixtureWithoutSecret()
+    {
+        ServiceProvider = new ServiceCollection()
+            .AddCasdoorClient(options =>
+            {
+                options.Endpoint = "https://demo.casdoor.com";
+                options.OrganizationName = "casbin";
+                options.ApplicationName = "app-example";
+                options.ClientId = "b800a86702dd4d29ec4d";
                 options.ApplicationType = "webapp";
             }).BuildServiceProvider();
     }

@@ -52,7 +52,7 @@ public partial class CasdoorClient
     {
         var request = new AuthorizationCodeTokenRequest
         {
-            Code = code, RedirectUri = redirectUri, CodeVerifier = codeVerifier
+            Code = code, RedirectUri = redirectUri, CodeVerifier = codeVerifier, ClientId = _options.ClientId
         };
         request = await ApplyConfigurationAsync(request, cancellationToken);
         return await _httpClient.RequestAuthorizationCodeTokenAsync(request, cancellationToken: cancellationToken);

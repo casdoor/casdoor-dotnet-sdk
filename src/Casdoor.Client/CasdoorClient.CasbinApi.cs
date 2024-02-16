@@ -107,7 +107,11 @@ public partial class CasdoorClient
                 "application/json")
         };
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-        request.SetBasicAuthentication(_options.ClientId, _options.ClientSecret);
+
+        if (_options.ClientSecret != "")
+        {
+            request.SetBasicAuthentication(_options.ClientId, _options.ClientSecret);
+        }
 
         var response = await _httpClient.SendAsync(request, cancellationToken);
         string responseContent = await response.Content.ReadAsStringAsync(); // netstandard2.0 does not support cancellationToken

@@ -34,4 +34,7 @@ public partial class CasdoorClient : ICasdoorClient
         _httpClient.SetBearerToken(accessToken);
         return this;
     }
+
+    public string GetSigninUrl(string redirectUrl) => _options.GetSigninUrl(redirectUrl);
+    public string GetSigninUrl(string codeVerifier, bool noRedirect) => _options.GetSigninUrl(_options.CallbackPath, codeVerifier, noRedirect);
 }
