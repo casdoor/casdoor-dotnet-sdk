@@ -21,5 +21,7 @@ public interface ICasdoorClient :
     ICasdoorAdapterClient, ICasdoorCertClient, ICasdoorPaymentClient, ICasdoorPricingClient, ICasdoorProductClient, ICasdoorSessionClient,
     ICasdoorRoleClient, ICasdoorRecordClient
 {
+    public string GetSigninUrl(string redirectUrl);
+    public string GetSigninUrl(string codeVerifier, bool noRedirect);
 
 }

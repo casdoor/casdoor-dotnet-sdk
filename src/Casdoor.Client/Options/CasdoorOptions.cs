@@ -40,8 +40,8 @@ public class CasdoorOptions
 public class CasdoorPathOptions
 {
     public string ApiPath { get; set; } = "/api";
-    public string LoginAuthorizePath { get; set; } = "/api/login/oauth/authorize";
-    public string SignupAuthorizePath { get; set; } = "/api/signup/oauth/authorize";
+    public string LoginAuthorizePath { get; set; } = "/login/oauth/authorize";
+    public string SignupAuthorizePath { get; set; } = "/signup/oauth/authorize";
     public string TokenPath { get; set; } = "/api/login/oauth/access_token";
 }
 

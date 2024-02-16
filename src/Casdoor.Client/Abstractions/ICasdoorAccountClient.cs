@@ -36,5 +36,5 @@ public interface ICasdoorAccountClient
 
     public Task<CasdoorLaravelResponse?> User(CancellationToken cancellationToken = default);
 
-    public Task<CasdoorUserInfo?> UserInfo(CancellationToken cancellationToken = default);
+    public Task<CasdoorUserInfo?> UserInfo(string accessToken, CancellationToken cancellationToken = default);
 }

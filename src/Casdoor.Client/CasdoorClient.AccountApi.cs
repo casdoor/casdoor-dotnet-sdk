@@ -120,9 +120,16 @@ public partial class CasdoorClient
         return await _httpClient.GetFromJsonAsync<CasdoorLaravelResponse?>(url, cancellationToken: cancellationToken);
     }
 
-    public virtual async Task<CasdoorUserInfo?> UserInfo(CancellationToken cancellationToken = default)
+    public virtual async Task<CasdoorUserInfo?> UserInfo(string accessToken = "" ,CancellationToken cancellationToken = default)
     {
         var url = _options.GetActionUrl("userinfo");
+
+        if (accessToken != "")
+        {
+            var queryMap = new QueryMapBuilder().Add("accessToken", accessToken).QueryMap;
+            url = _options.GetActionUrl("userinfo", queryMap);
+        }
+        
         return await _httpClient.GetFromJsonAsync<CasdoorUserInfo?>(url, cancellationToken: cancellationToken);
     }
 }

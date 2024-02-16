@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -21,17 +22,27 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Casdoor.Client;
 
-// TODO: Need to support PKCE
-// TODO: Need to improve the url APIs
+
 public static class CasdoorClientOptionsExtension
 {
     internal static string GetSigninUrl(this CasdoorOptions options, string redirectUrl)
     {
-        const string scope = "read";
         string state = options.ApplicationName;
         string urlEncodeRedirectUrl = Base64UrlEncoder.Encode(redirectUrl);
         return
-            $"{options.Path.LoginAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={urlEncodeRedirectUrl}&scope={scope}&state={state}";
+            $"{options.Endpoint}{options.Path.LoginAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={redirectUrl}&scope={options.Scope}&state={state}";
+    }
+
+    internal static string GetSigninUrl(this CasdoorOptions options, string redirectUrl, string codeVerifier, bool noRedirect)
+    {
+        var baseUrl = GetSigninUrl(options, redirectUrl);
+
+        var sha256Instance = SHA256.Create();
+        byte[] bytes = Encoding.Default.GetBytes(codeVerifier);
+        byte[] chanllengeCodeEncoded = sha256Instance.ComputeHash(bytes);
+        string chanllengeCodeBase64Encoded = Convert.ToBase64String(chanllengeCodeEncoded).Replace("+", "-").Replace("/", "_").Replace("=", "");
+
+        return $"{baseUrl}&code_challenge={chanllengeCodeBase64Encoded}&code_challenge_method=S256&noRedirect={noRedirect.ToString().ToLower()}";
     }
 
     internal static string GetActionUrl(this CasdoorOptions options, string action,
@@ -74,9 +85,9 @@ public static class CasdoorClientOptionsExtension
 
         const string scope = "read";
         string state = options.ApplicationName;
-        string urlEncodeRedirectUrl = Base64UrlEncoder.Encode(redirectUrl);
+        //string urlEncodeRedirectUrl = Base64UrlEncoder.Encode(redirectUrl);
         return
-            $"{options.Path.SignupAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={urlEncodeRedirectUrl}&scope={scope}&state={state}";
+            $"{options.Endpoint}{options.Path.SignupAuthorizePath}?client_id={options.ClientId}&response_type=code&redirect_uri={redirectUrl}&scope={scope}&state={state}";
     }
 
     internal static string GetUserProfileUrl(this CasdoorOptions options, string username, string accessToken = "")
@@ -162,11 +173,6 @@ public static class CasdoorClientOptionsExtension
         if (string.IsNullOrWhiteSpace(options.ClientId))
         {
             throw new ArgumentException("ClientId is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(options.ClientSecret))
-        {
-            throw new ArgumentException("ClientSecret is required.");
         }
 
         if (string.IsNullOrWhiteSpace(options.OrganizationName))
