@@ -20,7 +20,7 @@ public class TokenTest : IClassFixture<ServicesFixture>
     public async void TestToken()
     {
         var tokenClient = _servicesFixture.ServiceProvider.GetService<ICasdoorClient>();
-        string name = "Token_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds().ToString();
+        string name = "Token_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
         _testOutputHelper.WriteLine($"test with token name {name}");
         string owner = "admin";
 
