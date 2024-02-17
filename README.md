@@ -9,11 +9,11 @@ The Casdoor's SDK for .NET/ASP.NET Core, which will allow you to easily connect 
 
 This SDK is built using the following packages for different platforms:
 
-| Package Name         | Develop (MyGet)                                                                                                                                                  | Release (NuGet)                                                                                                     | Description          | Supported frameworks                   |
-|----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|----------------------|----------------------------------------|
-| `Casdoor.Client`     | [![MyGet](https://img.shields.io/casdoor.myget/casdoor/v/Casdoor.Client?label=Version)](https://www.myget.org/feed/casdoor/package/nuget/Casdoor.Client)         | [![NuGet](https://img.shields.io/nuget/vpre/Casdoor.Client)](https://www.nuget.org/packages/Casdoor.Client)         | SDK for .NET         | .NET Standard 2.0/.NET 4.6.1 and newer |
-| `Casdoor.AspNetCore` | [![MyGet](https://img.shields.io/casdoor.myget/casdoor/v/Casdoor.AspNetCore?label=Version)](https://www.myget.org/feed/casdoor/package/nuget/Casdoor.AspNetCore) | [![NuGet](https://img.shields.io/nuget/vpre/Casdoor.AspNetCore)](https://www.nuget.org/packages/Casdoor.AspNetCore) | SDK for ASP.NET Core | .NET Core 3.1 and newer                |
-| `Casdoor.Native`     | `wait develop`                                                                                                                                                   | `wait publish`                                                                                                      | SDK for WPF or Maui  | -                                      |
+| Package Name         | NuGet                                                                                                               | Description          | Supported frameworks                   |
+|----------------------|---------------------------------------------------------------------------------------------------------------------|----------------------|----------------------------------------|
+| `Casdoor.Client`     | [![NuGet](https://img.shields.io/nuget/vpre/Casdoor.Client)](https://www.nuget.org/packages/Casdoor.Client)         | SDK for .NET         | .NET Standard 2.0/.NET 4.6.1 and newer |
+| `Casdoor.AspNetCore` | [![NuGet](https://img.shields.io/nuget/vpre/Casdoor.AspNetCore)](https://www.nuget.org/packages/Casdoor.AspNetCore) | SDK for ASP.NET Core | .NET Core 3.1 and newer                |
+| `Casdoor.Native`     | `wait publish`                                                                                                      | SDK for WPF or Maui  | -                                      |
 
 ## Casdoor Client
 
@@ -113,7 +113,7 @@ The default settings use the public demo Casdoor and Casnode configuration, you 
 dotnet run
 ```
 
-Or change the settings in the appsettings.json according to your deployed casdoor configuration.
+Or change the settings in the appsettings.json according to your deployed casdoor configuration.[README.md](README.md)
 
 ## License
 
