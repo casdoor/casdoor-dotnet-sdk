@@ -28,7 +28,7 @@ namespace Casdoor.Client.UnitTests.ApiClientTests;
         public async void TestClient()
         {
             var tokenClient = _servicesFixture.ServiceProvider.GetService<ICasdoorClient>();
-            string name = "Token_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
+            string name = "TokenClient_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
             string code = "Code_" + new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds().ToString();
             _testOutputHelper.WriteLine($"test with token name {name}");
             string owner = "admin";
