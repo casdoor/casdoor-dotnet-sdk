@@ -98,6 +98,7 @@ namespace Casdoor.AspNetCore.Authentication
                 {
                     options.Authority = casdoorOptions.Protocols.Authority;
                     options.Audience = casdoorOptions.Protocols.Audience;
+                    options.RequireHttpsMetadata = casdoorOptions.RequireHttpsMetadata;
                 }
             );
             builder.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, JwtBearerDefaults.AuthenticationScheme, jwtBearerOptionAction);
